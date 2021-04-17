@@ -1,7 +1,19 @@
 Többlethalálozási adatok európai összevetésben
 ================
 
-Ez az oldal
+-   [A többlethalálozási mutatóról
+    általában](#a-többlethalálozási-mutatóról-általában)
+    -   [A haláloki statisztikák
+        problémái](#a-haláloki-statisztikák-problémái)
+    -   [A magyar haláloki statisztikák adatszolgáltatási
+        folyamata](#a-magyar-haláloki-statisztikák-adatszolgáltatási-folyamata)
+    -   [A többlethalálozási mutató előnyei és
+        hátrányai](#a-többlethalálozási-mutató-előnyei-és-hátrányai)
+    -   [A hazai többlethalálozási adatok, és nemzetközi
+        viszonyításuk](#a-hazai-többlethalálozási-adatok-és-nemzetközi-viszonyításuk)
+    -   [Záró gondolatok](#záró-gondolatok)
+-   [Az európai többlethalálozási adatok
+    elemzése](#az-eur-pai-t-bblethal-loz-si-adatok-elemz-se)
 
 ## A többlethalálozási mutatóról általában
 
@@ -19,8 +31,8 @@ Elöljáróban fontos rögzíteni, hogy *minden* haláloki besoroláson alapuló
 statisztika közös problémája, hogy ezt a besorolást szinte soha nem
 lehet jól elvégezni. A probléma oka, hogy kivételes esetektől eltekintve
 – egészséges fiatalt elgázol egy autó – egy embernek általában nem *egy*
-haláloka van. Ez a mostani járványtól függetlenül is igaz, de a COVID is
-jó példát szolgáltat rá: elveszítünk egy tumoros, cukorbeteg
+haláloka van. Ez a mostani járványtól függetlenül is igaz, de ez is jó
+példát szolgáltat rá: elveszítünk egy tumoros, cukorbeteg
 koronavírus-fertőzöttet; ő akkor most mibe halt bele? A rákba? A
 cukorbetegségbe? A fertőzésbe? Nem arról van szó, hogy ez bonyolult
 probléma, hanem arról, hogy ez *megoldhatatlan* probléma. Valamennyi ok
