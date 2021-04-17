@@ -1,16 +1,12 @@
 Többlethalálozási adatok európai összevetésben
 ================
 
-A
+Ez az oldal
 
-## A többlethalálozási adatok általános gondolatai
+## A többlethalálozási mutatóról általában
 
-Windisch László jogász, a KSH alelnöke nemrégiben egy cikket közölt az
-Index hasábjain, melyben a hazai többlethalálozás és a regisztrált
-koronavírusos halálozás viszonyát vizsgálta, európai összevetésben.
-
-Jelen írásomban megpróbálom a kérdéskör hátterét és tágabb kontextusát
-bemutatni az olvasóknak, megvilágítva a kérdés tudományos hátterét,
+Jelen írásomban megpróbálom a többlethalálozási mutató hátterét és
+tágabb kontextusát bemutatni, megvilágítva a kérdés tudományos hátterét,
 nehézségeit. Úgy vélem, hogy ezek a kérdések nem lehetnek a tudósok meg
 politikusok belügyei, a számok áradatában való tájékozódáshoz
 mindenkinek meg kell adni a lehetőséget, hogy megismerje a járványügyi,
@@ -43,22 +39,21 @@ rendeljük, ez egy megoldhatatlan probléma.
 
 Hozzá kell azt is tenni, hogy ez csak a probléma egyik fele, a másik,
 konkrétabban a mostani helyzetre jellemző nehézség, hogy valójában a
-halálozási statisztika is függ a tesztelési aktivitástól. Az igazolt
-esetekből alkotott járványgörbe hatalmas hátránya, hogy erősen függ a
-tesztelés intenzitásától, és az is kétségtelen, hogy ezen a problémán a
-halálozások görbéjének használata sokat javít – de azért tökéletesen nem
-oldja meg. Rosszabb esetben elképzelhető, hogy még egy gyanús tünetet
-mutató elhunytat sem tesztelnek a halál után sem, de nem csak erről van
-szó, minden rosszhiszeműség nélkül is előfordulhatnak „hát igen, a
-nagymamának gyenge volt a szíve, erre sajnos fel kellett készülni"
-típusú esetek, ahol senki nem végzett tesztet, és soha nem derül ki,
-hogy azért a dolog nem volt teljesen véletlen, mert a háttérben volt egy
-infekció is. Az ilyen esetek előfordulása azonban függ a tesztelési
-aktivitástól.
+halálozási statisztika is függ némileg a tesztelési aktivitástól. Az
+igazolt esetekből alkotott járványgörbe hatalmas hátránya, hogy erősen
+függ a tesztelés intenzitásától, és az is kétségtelen, hogy ezen a
+problémán a halálozások görbéjének használata sokat javít – de azért
+tökéletesen nem oldja meg. Rosszabb esetben elképzelhető, hogy még egy
+gyanús tünetet mutató elhunytat sem tesztelnek a halál után sem, de nem
+csak erről van szó, minden rosszhiszeműség nélkül is előfordulhatnak
+„hát igen, a nagymamának gyenge volt a szíve, erre sajnos fel kellett
+készülni" típusú esetek, ahol senki nem végzett tesztet, és soha nem
+derül ki, hogy azért a dolog nem volt teljesen véletlen, mert a
+háttérben volt egy infekció is. Az ilyen esetek előfordulása azonban
+függ a tesztelési aktivitástól.
 
-Windisch László tehát helyesen utal rá, hogy itt nagyon komoly
-definíciós kérdések vannak, ebből fakadóan pedig sajnos nagy a tér az
-országok közötti eltéréseknek.
+Itt tehát nagyon komoly definíciós kérdések vannak, ebből fakadóan pedig
+sajnos nagy tere van az országok közötti adatszolgáltatási eltéréseknek.
 
 ### A magyar haláloki statisztikák adatszolgáltatási folyamata
 
@@ -72,16 +67,16 @@ halottvizsgálatot végző orvos kitölt egy Halottvizsgálati Bizonyítványt
 melyben rögzíti a halálozással kapcsolatos fontos tényeket,
 standardizált formátumban. (Apróbb kivételek vannak, például magzati
 halálozás esetén, bizonyos folyamatok elektronizáltak, de ez most
-számunkra nem lényeges.) A HVB egyik példánya ezt követően a Központi
-Statisztikai Hivatal megfelelő szervéhez kerül, ahol az Egészségügyi
-Világszervezet ajánlásának megfelelő, részletekbe menően szabályozott
-algoritmus szerint elvégzik a haláloki besorolást. Ez aprólékos munka,
-például, ha nem egyértelmű a kitöltés, akkor a KSH validálja az adatokat
-a területileg illetékes kormányhivatallal együttműködve. Természetesen
-az eredmény nem mutathat pontosabb képet annál, ahogy a HVB-t
-kitöltötték, illetve fontos hangsúlyozni, hogy akármilyen aprólékosan is
-dolgoznak, az előző részben ismertetett limitációt nem lehet feloldani,
-hiszen az elvileg lehetetlen.
+számunkra nem lényeges.) A HVB egyik példánya ezt követően a KSH
+megfelelő szervéhez kerül, ahol az Egészségügyi Világszervezet
+ajánlásának megfelelő, részletekbe menően szabályozott algoritmus
+szerint elvégzik a haláloki besorolást. Ez aprólékos munka, például, ha
+nem egyértelmű a kitöltés, akkor a KSH validálja az adatokat a
+területileg illetékes kormányhivatallal együttműködve. Természetesen az
+eredmény nem mutathat pontosabb képet annál, ahogy a HVB-t kitöltötték,
+illetve fontos hangsúlyozni, hogy akármilyen aprólékosan is dolgoznak,
+az előző részben ismertetett limitációt nem lehet feloldani, hiszen az
+elvileg lehetetlen.
 
 Ez a folyamat nagyon lassú, heteket vesz igénybe, így egy éppen zajló
 járvány esetén, ahol napi sűrűséggel van szükség adatra, nem
@@ -89,11 +84,11 @@ használható. Szükség van tehát egy gyorsabb besorolásra is; ez az,
 aminek az adatait mindannyian halljuk a napi kommunikációban.
 
 Sajnálatos módon Magyarországon a mai napig nincsen nyilvánosan, írásban
-rögzítve, milyen eljárásrend határozza meg, hogy ezen besorolás szerint
-ki minősül koronavírusos halottnak. Tovább rontja a helyzetet, hogy
-elhangzott ezzel kapcsolatban egy nyilvánvaló nyelvbotlás, miszerint
-„valamennyi olyan elhunytat, akinél a betegség időtartama alatt, vagy
-előtte bármikor
+rögzítve, hogy milyen eljárásrend határozza meg, hogy ezen besorolás
+szerint ki minősül koronavírusos halottnak. Tovább rontja a helyzetet,
+hogy elhangzott ezzel kapcsolatban egy nyilvánvaló nyelvbotlás,
+miszerint „valamennyi olyan elhunytat, akinél a betegség időtartama
+alatt, vagy előtte bármikor
 !
 pozitív személynek regisztráltak, tehát készült nála laboratóriumi
 vizsgálat, ami pozitivitást mutatott, mindenkit beszámolunk az elhunytak
@@ -101,14 +96,14 @@ közé". Ez természetesen – szerencsére – nem igaz, hiszen ha szó szerint
 vennénk, akkor valakit, aki tavaly áprilisban megbetegedett majd
 meggyógyult, majd ma elüti egy autó, azt elvileg koronavírusos
 halottként kellene elszámolni. (Most olyan apróságokról nem beszélve,
-hogy így a koronavírus halálozási aránya, értve ez alatt azt, hogy a
-fertőzöttek mekkora hányada hal bele a betegségbe, garantáltan 100
-százalék lenne…) Erről természetesen nincs szó, a gyakorlatban sem fog
-senki törődni azzal, hogy egy éve a gázoltnak volt egy pozitív tesztje,
-de az nagyon fontos lenne, hogy közzé legyen téve, hogy elvileg milyen
-szempontok döntenek abban a kérdésben, hogy kit milyen eljárás alapján
-lehet koronavírusos elhunytnak minősíteni. Az európai járványügyi
-szervezet, az ECDC például [azt az
+hogy így a koronavírus halálozási aránya, tehát, hogy a fertőzöttek
+mekkora hányada hal bele a betegségbe, garantáltan 100 százalék lenne…)
+Erről természetesen nincs szó, a gyakorlatban senki sem fog törődni
+azzal, hogy egy éve az elgázoltnak volt egy pozitív tesztje, de az
+nagyon fontos lenne, hogy közzé legyen téve, hogy elvileg milyen
+szempontok döntenek abban a kérdésben, hogy kit lehet koronavírusos
+elhunytnak minősíteni. Az európai járványügyi szervezet, az ECDC például
+[azt az
 ajánlást](https://www.ecdc.europa.eu/en/covid-19/surveillance/surveillance-definitions)
 fogalmazza meg, hogy nem koronavírus a halálok akkor, ha (1) van
 egyértelmű, alternatív, a koronavírustól független mechanizmussal ható
@@ -122,16 +117,16 @@ fertőzéssel való küzdelmet a negyvenediken), de ez legalább egy
 definiált, reprodukálható algoritmus.
 
 Senkit nem szeretnék kérdőre vonni egy szerencsétlen nyelvbotlás miatt,
-de az probléma, hogy ennek a nyelvbotlásnak a korrekciója, és a valódi
-eljárásrend közlésével való helyesbítése a mai napig nem történt meg.
+de az már probléma, hogy ennek a nyelvbotlásnak a korrekciója, és a
+valódi eljárásrend közlésével való helyesbítése a mai napig nem történt
+meg.
 
 ### A többlethalálozási mutató előnyei és hátrányai
 
-A többlethalálozás az első mutatónk, ami immár *tényleg* semmilyen
-szinten nem függ a tesztelési aktivitástól. Ilyen szempontból úgy
-tűnhet, hogy ez a legjobb (eltekintve most attól, hogy az összes mutató
-közül a legnagyobb a késleltetése), azonban a helyzet sajnos nem ilyen
-egyszerű.
+A többlethalálozás nagy előnye, hogy *tényleg* semmilyen szinten nem
+függ a tesztelési aktivitástól. Ilyen szempontból úgy tűnhet, hogy ez a
+legjobb indikátor (eltekintve most attól, hogy az összes mutató közül a
+legnagyobb a késleltetése), azonban a helyzet sajnos nem ilyen egyszerű.
 
 A többlethalálozásnak ugyanis két problémája is van. Az egyik, hogy a
 többlethalálozás – definíció szerint – a tényleges halálozás és a
@@ -143,7 +138,7 @@ de csak egyetlen évnyi adat, így bizonytalanabb), vagy vehetjük a
 2015-2019 évek átlagát (a hosszabb periódus miatt biztosabb számok, de
 gond lehet, ha időközben változtak a halálozási trendek), és akadnak
 bonyolultabb módszerek is (görbét rakunk a megelőző évekre és azt
-meghosszabbítjuk), ám végeredményben mindegyik egy becslés. Ebből
+meghosszabbítjuk), ám végeredményben mindegyik egy *becslés*. Ebből
 fakadóan mindig ott lesz a kérdés, hogy igazából mi sem tudhatjuk, hogy
 tényleg ennyi halálozás lett-e volna, ha nincs a járvány.
 
@@ -160,22 +155,21 @@ távlatibb kérdésekre gondolni, például mi van, ha megnő az
 – egészségügyi állapotot közismerten rontó – munkanélküliség a gazdaság
 visszaesése miatt. Ezek feltárása véleményem szerint rendkívül fontos
 feladat, és az első empirikus eredmények már meg is jelentek. (Amerikai
-adatok szerint például sajnálatosan megnőtt a kórházon kívüli
-szívmegállások előfordulása és halálozási aránya, de az öngyilkosságra
-vonatkozóan nincs egyértelmű negatív trend.) Nagyon fontos azonban
-hangsúlyozni, hogy ezek elkülönítése lehetetlen a többlethalálozás
-alapján!
+adatok szerint például megnőtt a kórházon kívüli szívmegállások
+előfordulása és halálozási aránya, de az öngyilkosságra vonatkozóan
+nincs egyértelmű negatív trend.) Nagyon fontos azonban hangsúlyozni,
+hogy ezek elkülönítése lehetetlen a többlethalálozás alapján!
 
 Sajnos a dolog mindkét irányban előfordulhat: elképzelhető olyan
 helyzet, hogy nem halnak meg sokan, de a többlethalálozás magas (komoly
 negatív indirekt hatások vannak), illetve az is, hogy sokan meghalnak,
 még sincs lényeges többlethalálozás (komoly pozitív indirekt hatások
-vannak). Ez sajnos szükségszerűen korlátozza a többlethalálozás
-gyakorlati hasznosíthatóságát.
+vannak). Ez szükségszerűen korlátozza a többlethalálozás gyakorlati
+hasznosíthatóságát.
 
 (A többlethalálozás további problémái és kérdései kapcsán bátran merem
 ajánlani Janine Aron és John Muellbauer átfogó
-[cikkét](https://ourworldindata.org/covid-excess-mortality).
+[cikkét](https://ourworldindata.org/covid-excess-mortality).)
 
 Remélem, a fentiekből is érzékelhető, hogy nincsenek univerzálisan
 „jobb" és „rosszabb" mutatók, az ilyen indikátorokat mindig egészében
@@ -183,21 +177,15 @@ kell vizsgálni, és az átfogó kép alapján értékelni.
 
 ### A hazai többlethalálozási adatok, és nemzetközi viszonyításuk
 
-Windisch László a cikkében több adatot is közöl: először megadja
-mindössze két ország, Spanyolország és Szlovákia adatait abszolút
-többlethalálozás és relatív (százalékos) többlet formában is 2019 és
-2020 összevetésében, utána erről az összevetésről áttér a 2021-es
-adatokra, ahol már egy sor ország számait közli, viszont itt nem ad meg
-abszolút számokat.
-
-Tegyük ezt áttekinthetőbbé! Először is, ne év alapú mutatókat nézzük
-(semmilyen kitüntetett járványügyi jelentősége nincs a december 31-nek,
-hogy akkor vágjuk el az adatokat), hanem egyszerűen folytonosan kezeljük
-az időt. Másrészt, érdemesebb relatív mutató gyanánt a lélekszámmal
-osztani, így ugyanis egy olyan mutatót kapunk, ami analóg a regisztrált
-halálozások közlésével, hiszen azt is halál / millió főben szokták
-megadni. Ha a többletet is millió lakosra osztjuk rá, akkor a kettő
-egymással is jól összehasonlítható lesz.
+Próbáljuk meg áttekinthetővé tenni a többlethalálozási mutatókat!
+Először is, ne év alapú mutatókat nézzük (semmilyen kitüntetett
+járványügyi jelentősége nincs a december 31-nek, hogy akkor vágjuk el az
+adatokat), hanem egyszerűen folytonosan kezeljük az időt. Másrészt,
+érdemesebb relatív mutató gyanánt a lélekszámmal osztani, így ugyanis
+egy olyan mutatót kapunk, ami analóg a regisztrált halálozások
+közlésével, hiszen azt is halál / millió főben szokták megadni. Ha a
+többletet is millió lakosra osztjuk rá, akkor a kettő egymással is jól
+összehasonlítható lesz.
 
 Én az Eurostat
 [adatai](https://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=demo_r_mwk_ts&lang=en)
@@ -223,19 +211,27 @@ közölte a halálozások hetét.)
 Kezdjük a járvány kezdete óta összesített adatokkal (piros görbe
 Magyarország, a szürke görbék a többi európai országot jelölik):
 
+![](Index_20200415_2_abra1.png)
+
+(Az ábra a 2020. 04. 15. szerinti állapotot mutatja.)
+
 Látható, hogy a legfrissebb adatok szerint – persze ne felejtsük, ez egy
 hónappal ezelőtti állapotot jelent! – nagyjából a középmezőnyben
 vagyunk, a rossz hír, hogy a nálunk rosszabb 5 ország mindegyikében már
 javult a helyzet, míg nálunk gyorsan romlott ebben az időszakban, így
-könnyen lehet, hogy őket meg fogjuk előzni. (Azaz már megelőztük, csak
-még nincsenek meg róla az adatok.)
+könnyen lehet, hogy őket meg fogjuk előzni. (Azaz már megelőztük, és így
+a legrosszabb harmadban vagyunk, csak még nincsenek meg róla az adatok.)
 
 Mit tudunk mondani az aktuális helyzetről? Ezt mutatják a heti adatok:
 
+![](Index_20200415_2_abra2.png)
+
+(Az ábra a 2020. 04. 15. szerinti állapotot mutatja.)
+
 Mint látszik, itt már „most" (azaz március elején) rosszul állunk, tehát
-április elején nagyon valószínű, hogy a járványügyi helyzetünk – még e
-mutató szerint is – az összes európai ország között a legrosszabbak
-között van.
+április elején nagyon valószínű, hogy az aktuális járványügyi helyzetünk
+– még e mutató szerint is – az összes európai ország közül a
+legrosszabbak között van.
 
 ### Záró gondolatok
 
@@ -272,21 +268,21 @@ mentén zajlik? Itt jön képbe a másik vesszőparipám, járványtól
 függetlenül: az objektív és transzparens teljesítménymérés hiánya a
 magyar egészségügyben. Amíg nincsenek definiált, standard indikátorok,
 melyek jellemzik az ellátásminőséget, fogalmunk sem lehet arról sem,
-hogy egyáltalán ki csinál valamit jól, és ki mit rosszul, nem tudhatjuk,
+hogy egyáltalán ki csinál valamit jól, és ki rosszul, nem tudhatjuk,
 hogy melyik kórházról vagy osztályról kell példát venni, és melyiknél
-feltárni, hogy mi a rossz teljesítmény oka.
+feltárni, hogy mi a rossz teljesítmény oka; végképp nem tudjuk az
+egészségügyi rendszer egészét értékelni és összehasonlítani, akár
+időben, akár más országokkal.
 
 Nem állítom, hogy ezek a kérdések könnyen megválaszolhatóak, és részben
-egyet is értek Windisch Lászlóval, hogy a járványkezelés kiértékelése
-távlatot és rálátást igényel, de nem teljes mértékben: ha valamit
-rosszul csinálunk, azt jó minél hamarabb kideríteni, mielőtt túl sokáig
-csináljuk tovább rosszul. Ennek előfeltétele, hogy jó minőségű adatokkal
-rendelkezzünk, melyeknek a limitációit is jól ismerjük.
+egyet is értek azzal, hogy a járványkezelés kiértékelése távlatot és
+rálátást igényel, de nem teljes mértékben: ha valamit rosszul csinálunk,
+azt jó minél hamarabb kideríteni, mielőtt túl sokáig csináljuk tovább
+rosszul.
 
-*A szerző klinikai biostatisztikus, orvosbiológiai mérnök, az Óbudai
-Egyetem habilitált egyetemi docense.*
+## Az európai többlethalálozási adatok elemzése
 
-## Számítások
+A számítások aktualizálásának dátuma: 2021-04-17.
 
 Elsőként betöltjük a szükséges könyvtárakat:
 
@@ -303,11 +299,6 @@ majd kikóduljuk az évet és a hónapot:
 
 ``` r
 RawData <- as.data.table(eurostat::get_eurostat("demo_r_mwk_ts", time_format = "raw"))
-```
-
-    ## Table demo_r_mwk_ts cached at C:\Users\FERENC~1\AppData\Local\Temp\RtmpS0KDTn/eurostat/demo_r_mwk_ts_raw_code_FF.rds
-
-``` r
 RawData <- RawData[sex=="T"]
 RawData$year <- as.numeric(substring(RawData$time, 1, 4))
 RawData$week <- as.numeric(substring(RawData$time, 6, 7))
@@ -342,11 +333,6 @@ A háttérpopuláció létszám adatait szintén az Eurostat-tól kérjük le
 
 ``` r
 PopData <- as.data.table(eurostat::get_eurostat("demo_pjan"))
-```
-
-    ## Table demo_pjan cached at C:\Users\FERENC~1\AppData\Local\Temp\RtmpS0KDTn/eurostat/demo_pjan_date_code_FF.rds
-
-``` r
 PopData$numdate <- as.numeric(PopData$time-as.Date("1960-01-01"))
 PopData <- PopData[age=="TOTAL"&sex=="T"]
 PopData$geo <- as.factor(PopData$geo)
@@ -362,7 +348,8 @@ adni magyarázó változóként.
 TempData <- merge(RawData, rbindlist(lapply(unique(RawData$geo), function(g)
   data.frame(date = unique(RawData$date), geo = g,
              population = predict(mgcv::gam(values ~ s(numdate), data = PopData[geo==g]),
-                                  data.frame(numdate = as.numeric(unique(RawData$date)-as.Date("1960-01-01"))))))))
+                                  data.frame(numdate =
+                                               as.numeric(unique(RawData$date)-as.Date("1960-01-01"))))))))
 ```
 
 A többlethalálozás becsléséhez kizárjuk a mostani járvány időszakát (az
@@ -385,216 +372,6 @@ res <- rbindlist(setNames(lapply(unique(TempData$geo), function(cntry)
                     sqrt(mu %*% x %*% betacov %*% t(x) %*% t(mu))
                   })))), unique(TempData$geo)), idcol = "geo")
 ```
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 3.76.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 7.96.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 9.49.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 9.26.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 9.76.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 15.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 8.07.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 6.89.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 10.5.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 11.4.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 9.46.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 12.2.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 11.5.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 8.73.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 9.46.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 9.04.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 12.6.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 12.3.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 13.2.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 6.33.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 10.7.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 6.61.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 13.6.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 7.4.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 9.92.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 7.65.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 8.53.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 8.31.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 10.2.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 10.3.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 13.7.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 14.3.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 9.52.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 9.88.
-
-    ## Computing expected counts.
-
-    ## No frequency provided, determined to be 52 measurements per year.
-
-    ## Overall death rate is 9.3.
 
 Egyesítjük a többlethalálozási adatbázist a korábbi adatokkal, leszűrjük
 a járvány időszakára, és kizárjuk az 1 millió lakosúnál kisebb
@@ -627,7 +404,8 @@ Az aktuális többlethalálozás:
 ``` r
 ggplot(res, aes(x = date, y = excess/population*1e6, group = geo)) + geom_line(aes(color = geo=="HU")) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(col = FALSE) +
-  labs(x = "", y = "Többlethalálozás [fő/1M fő]") + scale_x_date(date_breaks = "months", date_labels = "%b") + theme_bw()
+  labs(x = "", y = "Többlethalálozás [fő/1M fő]") + scale_x_date(date_breaks = "months", date_labels = "%b") +
+  theme_bw()
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
@@ -637,7 +415,8 @@ Az összesített többlethalálozás:
 ``` r
 ggplot(res, aes(x = date, y = cumexcess/cumpopulation*1e6, group = geo)) + geom_line(aes(color = geo=="HU")) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(col = FALSE) +
-  labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]") + scale_x_date(date_breaks = "months", date_labels = "%b") + theme_bw()
+  labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]") +
+  scale_x_date(date_breaks = "months", date_labels = "%b") + theme_bw()
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
@@ -653,7 +432,7 @@ A jelentett halálozás céljából letöltjük az OWID adatbázist, kikóduljuk
 ott is az évet és a hetet, majd áttérünk heti adatokra:
 
 ``` r
-EpiData <- fread("https://covid.ourworldindata.org/data/owid-covid-data.csv")
+EpiData <- fread("https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv")
 EpiData$year <- lubridate::year(EpiData$date)
 EpiData$week <- lubridate::isoweek(EpiData$date)
 EpiData$new_deaths[is.na(EpiData$new_deaths)] <- 0
@@ -671,7 +450,8 @@ res[, cumnewdeaths := cumsum(new_deaths), .(geo)]
 Megnézhetjük Magyarország példáján a kétféle adatsort:
 
 ``` r
-ggplot(res[geo=="HU"], aes(x = date)) + geom_line(aes(y = excess/population*1e6, color = "red")) + geom_line(aes(y=new_deaths/population*1e6))
+ggplot(res[geo=="HU"], aes(x = date)) + geom_line(aes(y = excess/population*1e6, color = "red")) +
+  geom_line(aes(y=new_deaths/population*1e6))
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
@@ -681,7 +461,8 @@ országra:
 
 ``` r
 ggplot(res, aes(x = date, y = cumexcess/cumnewdeaths, group = geo)) + geom_line() +
-  coord_cartesian(xlim = c(as.Date("2020-07-01"), NA), ylim = c(-1, 3)) + facet_wrap(~geo) + geom_hline(yintercept = 1, col = "red")
+  coord_cartesian(xlim = c(as.Date("2020-07-01"), NA), ylim = c(-1, 3)) + facet_wrap(~geo) +
+  geom_hline(yintercept = 1, col = "red")
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
@@ -690,7 +471,8 @@ ggplot(res, aes(x = date, y = cumexcess/cumnewdeaths, group = geo)) + geom_line(
 
 ``` r
 ggplot(res[,tail(.SD, 1), .(geo)], aes(x = cumexcess/population*1e6, y = cumnewdeaths/population*1e6)) +
-  geom_point(aes(col = geo=="HU")) + geom_abline() + scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(col = FALSE)
+  geom_point(aes(col = geo=="HU")) + geom_abline() +
+  scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(col = FALSE)
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
@@ -700,7 +482,8 @@ egy régebbi állapotot nézni:
 
 ``` r
 ggplot(res[year==2021&week==1], aes(x = cumexcess/population*1e6, y = cumnewdeaths/population*1e6)) +
-  geom_point(aes(col = geo=="HU")) + geom_abline() + scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(col = FALSE)
+  geom_point(aes(col = geo=="HU")) + geom_abline() +
+  scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(col = FALSE)
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
