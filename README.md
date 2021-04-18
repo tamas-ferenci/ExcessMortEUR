@@ -431,8 +431,8 @@ Az aktuális többlethalálozás (relatív mutató, korábbi adatokra vetítve):
 ``` r
 ggplot(res, aes(x = date, y = increase, group = geo)) + geom_line(aes(color = geo=="HU")) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(col = FALSE) +
-  labs(x = "", y = "Relatív többlethalálozás [%]") + scale_x_date(date_breaks = "months", date_labels = "%b") +
-  theme_bw()
+  labs(x = "", y = "Relatív többlethalálozás [%]") +
+  scale_x_date(date_breaks = "months", date_labels = "%b") + theme_bw()
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
@@ -443,8 +443,8 @@ Kicsit direktebben is összevethetjük őket, ha országonként külön-külön
 
 ``` r
 ggplot(res, aes(x = increase, y = excess/population*1e6)) + geom_line() +
-  labs(x = "Relatív többlethalálozás [%]", y = "Többlethalálozás [fő/1M fő]") +  theme_bw() + facet_wrap(~geo) +
-  geom_abline(intercept = 0, slope =  2, alpha = 0.3)
+  labs(x = "Relatív többlethalálozás [%]", y = "Többlethalálozás [fő/1M fő]") +  theme_bw() +
+  facet_wrap(~geo) + geom_abline(intercept = 0, slope =  2, alpha = 0.3)
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
@@ -476,8 +476,8 @@ is ábrázolni, hogy jobban látható legyen, az egyes országok hogyan
 teljesítettek a járvány kezelésében, mik a jó és a rossz példák:
 
 ``` r
-ggplot(res, aes(x = date, y = excess/population*1e6, group = geo)) + geom_line() +
-  labs(x = "", y = "Többlethalálozás [fő/1M fő]") +
+ggplot(res, aes(x = date, y = increase, group = geo)) + geom_line() +
+  labs(x = "", y = "Relatív többlethalálozás [%]") +
   scale_x_date(date_breaks = "2 months", labels = function(z) gsub("^0", "", strftime(z, "%m"))) +
   theme_bw() + facet_wrap(~geo)
 ```
@@ -534,6 +534,11 @@ ggplot(res, aes(x = date, y = cumexcess/cumnewdeaths, group = geo)) + geom_line(
 
 ![](README_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
 
+Ezen az ábrán a többlet és a jelentett halálozás hányadosa látható, a
+piros vonal jelzi a kettő egyenlőségét, tehát a fölötte lévő érték
+jelenti azt, hogy a többlet meghaladja a jelentett halálozást, az alatta
+lévő azt, hogy kisebb a többlet, mint a jelentett.
+
 Érdekes lehet összevetni a kétféle mutatót az aktuális helyzet szerint
 (a fekete vonal az egyenlőség vonala, ahol a többlethalálozás egyezne a
 jelentett halálozással):
@@ -548,11 +553,20 @@ ggplot(res[,tail(.SD, 1), .(geo)], aes(x = cumexcess/population*1e6,
 
 ![](README_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
 
+(Ennél az ábránál és a következőnél nem ugyanaz az időpont van az egyes
+országoknál, hiszen mindegyiknél a saját legrégebbi közölt adata az
+alap.)
+
 Mivel a többlethalálozás utolsó adatai nem véglegesek, ezért korrektebb
-egy régebbi állapotot nézni:
+egy régebbi állapotot nézni, vegyük az egy hónappal megelőzőt (az
+Eurostat
+[adatai](https://ec.europa.eu/eurostat/cache/metadata/en/demomwk_esms.htm#accuracy1612863315336)
+szerint ilyenkor már 90% vagy a fölötti a regisztráltság minden
+országban):
 
 ``` r
-ggplot(res[year==2021&week==1], aes(x = cumexcess/population*1e6, y = cumnewdeaths/population*1e6, label = geo)) +
+ggplot(res[,.SD[nrow(.SD)-4], .(geo)], aes(x = cumexcess/population*1e6,
+                                           y = cumnewdeaths/population*1e6, label = geo)) +
   geom_point(aes(col = geo=="HU")) + geom_abline() + geom_text(hjust = "left", nudge_x = 30) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(col = FALSE) +
   labs(x = "Összesített többlethalálozás [fő/1M fő]", y = "Összesített jelentett halálozás [fő/M fő]")
@@ -565,7 +579,7 @@ jelentett (és ahol nem, ott is csak minimális a különbség).
 
 Továbbfejlesztési ötletek:
 
--   Életkori és nemi lebontás. (Hátha mások a mortalitási trendek!)
--   Életkorra és nemre standardizálás.
--   A jelentés teljességének a vizsgálata (mennyire nőnek még az utolsó
-    adatok, és meddig?).
+-   [ ] Életkori és nemi lebontás. (Hátha mások a mortalitási trendek!)
+-   [ ] Életkorra és nemre standardizálás.
+-   [x] A jelentés teljességének a vizsgálata (mennyire nőnek még az
+    utolsó adatok, és meddig?). Válasz: Eurostat metadata 13.1-es pont.
