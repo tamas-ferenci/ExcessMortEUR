@@ -1,5 +1,6 @@
 Többlethalálozási adatok európai összevetésben
 ================
+Ferenci Tamás
 
 -   [A többlethalálozási mutatóról
     általában](#a-többlethalálozási-mutatóról-általában)

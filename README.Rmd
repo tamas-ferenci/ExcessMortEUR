@@ -1,5 +1,6 @@
 ---
 title: "Többlethalálozási adatok európai összevetésben"
+author: "Ferenci Tamás"
 output: github_document
 ---
 
