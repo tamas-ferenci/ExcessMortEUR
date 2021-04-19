@@ -294,7 +294,7 @@ rosszul.
 
 ## Az európai többlethalálozási adatok elemzése
 
-A számítások aktualizálásának dátuma: 2021-04-18.
+A számítások aktualizálásának dátuma: 2021-04-19.
 
 Elsőként betöltjük a szükséges könyvtárakat:
 
@@ -418,10 +418,11 @@ res$geo <- forcats::fct_relevel(as.factor(res$geo), "HU", after = Inf)
 Az aktuális többlethalálozás (relatív mutató, népességszámra vetítve):
 
 ``` r
-ggplot(res, aes(x = date, y = excess/population*1e6, group = geo)) + geom_line(aes(color = geo=="HU")) +
+ggplot(res, aes(x = date, y = excess/population*1e6, group = geo, label = geo)) +
+  geom_line(aes(color = geo=="HU")) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(col = FALSE) +
   labs(x = "", y = "Többlethalálozás [fő/1M fő]") + scale_x_date(date_breaks = "months", date_labels = "%b") +
-  theme_bw()
+  theme_bw() + directlabels::geom_dl(method = list("last.points", cex = 0.6))
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
@@ -429,10 +430,11 @@ ggplot(res, aes(x = date, y = excess/population*1e6, group = geo)) + geom_line(a
 Az aktuális többlethalálozás (relatív mutató, korábbi adatokra vetítve):
 
 ``` r
-ggplot(res, aes(x = date, y = increase, group = geo)) + geom_line(aes(color = geo=="HU")) +
+ggplot(res, aes(x = date, y = increase, group = geo, label = geo)) + geom_line(aes(color = geo=="HU")) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(col = FALSE) +
   labs(x = "", y = "Relatív többlethalálozás [%]") +
-  scale_x_date(date_breaks = "months", date_labels = "%b") + theme_bw()
+  scale_x_date(date_breaks = "months", date_labels = "%b") + theme_bw() +
+  directlabels::geom_dl(method = list("last.points", cex = 0.6))
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
@@ -463,10 +465,12 @@ Az összesített többlethalálozás (relatív mutató, népességszámra
 vetítve):
 
 ``` r
-ggplot(res, aes(x = date, y = cumexcess/cumpopulation*1e6, group = geo)) + geom_line(aes(color = geo=="HU")) +
+ggplot(res, aes(x = date, y = cumexcess/cumpopulation*1e6, group = geo, label = geo)) +
+  geom_line(aes(color = geo=="HU")) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(col = FALSE) +
   labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]") +
-  scale_x_date(date_breaks = "months", date_labels = "%b") + theme_bw()
+  scale_x_date(date_breaks = "months", date_labels = "%b") + theme_bw() +
+  directlabels::geom_dl(method = list("last.points", cex = 0.6))
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
