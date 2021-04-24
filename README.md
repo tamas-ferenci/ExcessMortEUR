@@ -101,22 +101,20 @@ rögzítve, hogy milyen eljárásrend határozza meg, hogy ezen besorolás
 szerint ki minősül koronavírusos halottnak. Tovább rontja a helyzetet,
 hogy elhangzott ezzel kapcsolatban egy nyilvánvaló nyelvbotlás,
 miszerint „valamennyi olyan elhunytat, akinél a betegség időtartama
-alatt, vagy előtte bármikor
-!
-pozitív személynek regisztráltak, tehát készült nála laboratóriumi
-vizsgálat, ami pozitivitást mutatott, mindenkit beszámolunk az elhunytak
-közé". Ez természetesen – szerencsére – nem igaz, hiszen ha szó szerint
-vennénk, akkor valakit, aki tavaly áprilisban megbetegedett majd
-meggyógyult, majd ma elüti egy autó, azt elvileg koronavírusos
-halottként kellene elszámolni. (Most olyan apróságokról nem beszélve,
-hogy így a koronavírus halálozási aránya, tehát, hogy a fertőzöttek
-mekkora hányada hal bele a betegségbe, garantáltan 100 százalék lenne…)
-Erről természetesen nincs szó, a gyakorlatban senki sem fog törődni
-azzal, hogy egy éve az elgázoltnak volt egy pozitív tesztje, de az
-nagyon fontos lenne, hogy közzé legyen téve, hogy elvileg milyen
-szempontok döntenek abban a kérdésben, hogy kit lehet koronavírusos
-elhunytnak minősíteni. Az európai járványügyi szervezet, az ECDC például
-[azt az
+alatt, vagy előtte bármikor \[!\] pozitív személynek regisztráltak,
+tehát készült nála laboratóriumi vizsgálat, ami pozitivitást mutatott,
+mindenkit beszámolunk az elhunytak közé". Ez természetesen – szerencsére
+– nem igaz, hiszen ha szó szerint vennénk, akkor valakit, aki tavaly
+áprilisban megbetegedett majd meggyógyult, majd ma elüti egy autó, azt
+elvileg koronavírusos halottként kellene elszámolni. (Most olyan
+apróságokról nem beszélve, hogy így a koronavírus halálozási aránya,
+tehát, hogy a fertőzöttek mekkora hányada hal bele a betegségbe,
+garantáltan 100 százalék lenne…) Erről természetesen nincs szó, a
+gyakorlatban senki sem fog törődni azzal, hogy egy éve az elgázoltnak
+volt egy pozitív tesztje, de az nagyon fontos lenne, hogy közzé legyen
+téve, hogy elvileg milyen szempontok döntenek abban a kérdésben, hogy
+kit lehet koronavírusos elhunytnak minősíteni. Az európai járványügyi
+szervezet, az ECDC például [azt az
 ajánlást](https://www.ecdc.europa.eu/en/covid-19/surveillance/surveillance-definitions)
 fogalmazza meg, hogy nem koronavírus a halálok akkor, ha (1) van
 egyértelmű, alternatív, a koronavírustól független mechanizmussal ható
@@ -295,7 +293,7 @@ rosszul.
 
 ## Az európai többlethalálozási adatok elemzése
 
-A számítások aktualizálásának dátuma: 2021-04-19.
+A számítások aktualizálásának dátuma: 2021-04-24.
 
 Elsőként betöltjük a szükséges könyvtárakat:
 
@@ -317,15 +315,49 @@ RawData$year <- as.numeric(substring(RawData$time, 1, 4))
 RawData$week <- as.numeric(substring(RawData$time, 6, 7))
 ```
 
-Kidobjuk a 2002 előtti adatokat, és Svédországot valamint Lettországot,
-így nem marad 99-es (azaz héthez nem rendelt) mortalitási adat:
+A 99-es hét jelenti azokat a halálokat, amiket a kérdéses ország nem
+héthez rendelten jelentett. Ilyen csak kevés országnál fordul elő, és
+ott sem sok halálesettel (a táblázat százalékban adja meg, hogy az
+összes adott évi haláleset mekkora hányada volt 99-es, azaz héthez nem
+rendelt az adott országban):
 
 ``` r
-RawData <- RawData[year>=2002&!geo%in%c("SE", "LV")]
-sum(RawData$week==99)
+knitr::kable(dcast(RawData[,.(values[week==99]/sum(values)*100),.(geo, year)],
+                   year ~ geo, value.var = "V1"), digits = 2)
 ```
 
-    ## [1] 0
+| year |  HU |   LV |   SE |
+|-----:|----:|-----:|-----:|
+| 2000 |   0 | 0.28 | 1.61 |
+| 2001 |   0 | 0.22 | 1.64 |
+| 2002 |  NA | 0.19 | 1.61 |
+| 2003 |  NA | 0.13 | 1.55 |
+| 2004 |  NA | 0.06 | 1.24 |
+| 2005 |  NA | 0.10 | 0.90 |
+| 2006 |  NA | 0.09 | 0.82 |
+| 2007 |  NA | 0.10 | 0.71 |
+| 2008 |  NA | 0.11 | 0.57 |
+| 2009 |  NA | 0.06 | 0.59 |
+| 2010 |  NA | 0.07 | 0.45 |
+| 2011 |  NA | 0.05 | 0.48 |
+| 2012 |  NA | 0.06 | 0.48 |
+| 2013 |  NA |   NA | 0.51 |
+| 2014 |  NA |   NA | 0.55 |
+| 2015 |  NA |   NA | 1.04 |
+| 2016 |  NA |   NA | 2.17 |
+| 2017 |  NA |   NA | 2.43 |
+| 2018 |  NA |   NA | 2.73 |
+| 2019 |  NA |   NA | 2.95 |
+| 2020 |  NA |   NA | 2.67 |
+| 2021 |  NA |   NA | 2.88 |
+
+Éppen ezért – hogy ne kelljen emiatt országokat elhagynunk – egyszerűen
+szétosztjuk egyenletesen ezeket az eseteket a hetek között:
+
+``` r
+RawData[ , values := round(values*sum(values)/sum(values[week!=99])), .(geo, year)]
+RawData <- RawData[week!=99]
+```
 
 Dátumként az adott hét első napját használjuk; fontos, hogy az ISO 8601
 szerinti hétbesorolást használja az Eurostat, amit az `ISOweek` csomag
@@ -426,7 +458,7 @@ ggplot(res, aes(x = date, y = excess/population*1e6, group = geo, label = geo)) 
   theme_bw() + directlabels::geom_dl(method = list("last.points", cex = 0.6))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
 Az aktuális többlethalálozás (relatív mutató, korábbi adatokra vetítve):
 
@@ -438,7 +470,7 @@ ggplot(res, aes(x = date, y = increase, group = geo, label = geo)) + geom_line(a
   directlabels::geom_dl(method = list("last.points", cex = 0.6))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 Látszik, hogy a kétféle relatív mutató között nincs nagy különbség.
 Kicsit direktebben is összevethetjük őket, ha országonként külön-külön
@@ -450,7 +482,7 @@ ggplot(res, aes(x = increase, y = excess/population*1e6)) + geom_line() +
   facet_wrap(~geo) + geom_abline(intercept = 0, slope =  2, alpha = 0.3)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 Az ábra az origón átmenő, 2 meredekségű egyenest tünteti fel a
 viszonyítást segítendő. (Miért pont erre illeszkednek jól? E szerint a
@@ -474,7 +506,7 @@ ggplot(res, aes(x = date, y = cumexcess/cumpopulation*1e6, group = geo, label = 
   directlabels::geom_dl(method = list("last.points", cex = 0.6))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
 Visszatérve a relatív mutatókhoz, érdemes lehet országonként külön-külön
 is ábrázolni, hogy jobban látható legyen, az egyes országok hogyan
@@ -487,7 +519,7 @@ ggplot(res, aes(x = date, y = increase, group = geo)) + geom_line() +
   theme_bw() + facet_wrap(~geo)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 Következő lépésben kiszámoljuk a 3 betűs ISO-országkódot, a 2 betűs
 Eurostat kódból, hogy később az OWID adatbázissal lehessen egyesíteni:
@@ -525,7 +557,7 @@ ggplot(melt(res[geo=="HU", .(date, excess = excess/population*1e6,
   scale_x_date(date_breaks = "months", date_labels = "%b")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
 
 Vagy a kettő viszonyát (pontosabban annak alakulását időben) az összes
 országra:
@@ -537,7 +569,7 @@ ggplot(res, aes(x = date, y = cumexcess/cumnewdeaths, group = geo)) + geom_line(
   scale_x_date(date_breaks = "2 months", labels = function(z) gsub("^0", "", strftime(z, "%m")))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
 
 Ezen az ábrán a többlet és a jelentett halálozás hányadosa látható, a
 piros vonal jelzi a kettő egyenlőségét, tehát a fölötte lévő érték
@@ -556,7 +588,7 @@ ggplot(res[,tail(.SD, 1), .(geo)], aes(x = cumexcess/population*1e6,
   labs(x = "Összesített többlethalálozás [fő/1M fő]", y = "Összesített jelentett halálozás [fő/M fő]")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
 
 (Ennél az ábránál és a következőnél nem ugyanaz az időpont van az egyes
 országoknál, hiszen mindegyiknél a saját legrégebbi közölt adata az
@@ -577,7 +609,7 @@ ggplot(res[,.SD[nrow(.SD)-4], .(geo)], aes(x = cumexcess/population*1e6,
   labs(x = "Összesített többlethalálozás [fő/1M fő]", y = "Összesített jelentett halálozás [fő/M fő]")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
 
 Látszik, hogy az országok többségében a többlethalálozás meghaladja a
 jelentett (és ahol nem, ott is csak minimális a különbség).
