@@ -8,6 +8,91 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE, fig.width = 12, dpi = 300)
 ```
 
+```{r konyvtar, echo = FALSE}
+library(data.table)
+library(excessmort)
+library(ggplot2)
+```
+
+```{r adatbetoltes, message=FALSE, echo = FALSE}
+RawData <- as.data.table(eurostat::get_eurostat("demo_r_mwk_ts", time_format = "raw"))
+RawData <- RawData[sex=="T"]
+RawData <- RawData[geo%in%eurostat::eu_countries$code|geo%in%eurostat::efta_countries$code]
+RawData <- RawData[geo!="UK"]
+RawDataUK <- fread("https://www.mortality.org/Public/STMF/Outputs/stmf.csv")
+RawDataUK <- RawDataUK[Year>=2015&CountryCode%in%c("GBRTENW", "GBR_NIR", "GBR_SCO")&Sex=="b"][
+  ,.(time = paste0(Year, "W", sprintf("%02d", Week)), values = sum(DTotal)),.(Year, Week)][
+    ,.(sex = "T", unit = "NR", geo = "UK", time, values)][order(time)]
+RawDataUK <- RawDataUK[1:(nrow(RawDataUK)-1)]
+RawData <- rbind(RawData, RawDataUK)
+```
+
+```{r evhonap, message=FALSE, echo = FALSE}
+RawData$year <- as.numeric(substring(RawData$time, 1, 4))
+RawData$week <- as.numeric(substring(RawData$time, 6, 7))
+```
+
+```{r hetszetosztas, echo = FALSE}
+RawData[ , values := round(values*sum(values)/sum(values[week!=99])), .(geo, year)]
+RawData <- RawData[week!=99]
+```
+
+```{r datum, echo = FALSE}
+RawData$date <- ISOweek::ISOweek2date(paste0(RawData$year, "-W", sprintf("%02d", RawData$week), "-1"))
+```
+
+```{r atnevezes, echo = FALSE}
+names(RawData)[names(RawData)=="values"] <- "outcome"
+```
+
+```{r hatterpopulacio, message = FALSE, echo = FALSE}
+PopData <- as.data.table(eurostat::get_eurostat("demo_pjan"))
+PopData$numdate <- as.numeric(PopData$time-as.Date("1960-01-01"))
+PopData <- PopData[age=="TOTAL"&sex=="T"]
+PopData$geo <- as.factor(PopData$geo)
+```
+
+```{r adatbazis, echo = FALSE}
+TempData <- merge(RawData, rbindlist(lapply(unique(RawData$geo), function(g)
+  data.frame(date = unique(RawData$date), geo = g,
+             population = predict(mgcv::gam(values ~ s(numdate), data = PopData[geo==g]),
+                                  data.frame(numdate =
+                                               as.numeric(unique(RawData$date)-as.Date("1960-01-01"))))))))
+```
+
+```{r szamitas, message = FALSE, echo = FALSE}
+exclude_dates <- seq(as.Date("2020-03-01"), max(RawData$date), by = "day")
+
+res <- rbindlist(setNames(lapply(unique(TempData$geo), function(cntry)
+  with(excess_model(TempData[geo==cntry], start = min(TempData[geo==cntry]$date),
+                    end = max(TempData[geo==cntry]$date), exclude = exclude_dates),
+       data.table(date = date, observed = observed, expected = expected,
+                  y = 100 * (observed - expected)/expected,
+                  increase = 100 * fitted,
+                  excess = expected*fitted,
+                  se = sapply(1:length(date), function(i) {
+                    mu <- matrix(expected[i], nr = 1)
+                    x <- matrix(x[i,], nr = 1)
+                    sqrt(mu %*% x %*% betacov %*% t(x) %*% t(mu))
+                  })))), unique(TempData$geo)), idcol = "geo")
+```
+
+```{r veglegesadatok, echo = FALSE}
+res <- merge(res, TempData, by = c("geo", "date"))
+res <- res[order(geo, date)]
+res <- res[date>=as.Date("2020-03-01")]
+res <- res[geo%in%res[,.(tail(population,1)), .(geo)][V1>1e6]$geo]
+```
+
+```{r tobbletszamolas, echo = FALSE}
+res[, cumexcess := cumsum(excess), .(geo)]
+res[, cumpopulation := dplyr::cummean(population), .(geo)]
+```
+
+```{r geofaktor, echo = FALSE}
+res$geo <- forcats::fct_relevel(as.factor(res$geo), "HU", after = Inf)
+```
+
 - [A többlethalálozási mutatóról általában](#a-többlethalálozási-mutatóról-általában)
   * [A haláloki statisztikák problémái](#a-haláloki-statisztikák-problémái)
   * [A magyar haláloki statisztikák adatszolgáltatási folyamata](#a-magyar-haláloki-statisztikák-adatszolgáltatási-folyamata)
@@ -36,7 +121,7 @@ Az egyik az az eljárás, amely bármely haláleset bekövetkezésekor megtört�
 
 Ez a folyamat nagyon lassú, heteket vesz igénybe, így egy éppen zajló járvány esetén, ahol napi sűrűséggel van szükség adatra, nem használható. Szükség van tehát egy gyorsabb besorolásra is; ez az, aminek az adatait mindannyian halljuk a napi kommunikációban.
 
-Sajnálatos módon Magyarországon a mai napig nincsen nyilvánosan, írásban rögzítve, hogy milyen eljárásrend határozza meg, hogy ezen besorolás szerint ki minősül koronavírusos halottnak. Tovább rontja a helyzetet, hogy elhangzott ezzel kapcsolatban egy nyilvánvaló nyelvbotlás, miszerint „valamennyi olyan elhunytat, akinél a betegség időtartama alatt, vagy előtte bármikor [!] pozitív személynek regisztráltak, tehát készült nála laboratóriumi vizsgálat, ami pozitivitást mutatott, mindenkit beszámolunk az elhunytak közé". Ez természetesen -- szerencsére -- nem igaz, hiszen ha szó szerint vennénk, akkor valakit, aki tavaly áprilisban megbetegedett majd meggyógyult, majd ma elüti egy autó, azt elvileg koronavírusos halottként kellene elszámolni. (Most olyan apróságokról nem beszélve, hogy így a koronavírus halálozási aránya, tehát, hogy a fertőzöttek mekkora hányada hal bele a betegségbe, garantáltan 100 százalék lenne...) Erről természetesen nincs szó, a gyakorlatban senki sem fog törődni azzal, hogy egy éve az elgázoltnak volt egy pozitív tesztje, de az nagyon fontos lenne, hogy közzé legyen téve, hogy elvileg milyen szempontok döntenek abban a kérdésben, hogy kit lehet koronavírusos elhunytnak minősíteni. Az európai járványügyi szervezet, az ECDC például [azt az ajánlást](https://www.ecdc.europa.eu/en/covid-19/surveillance/surveillance-definitions) fogalmazza meg, hogy nem koronavírus a halálok akkor, ha (1) van egyértelmű, alternatív, a koronavírustól független mechanizmussal ható halálok (pl. trauma autóbalesetben), vagy ha (2) a diagnózis és a halál között teljes gyógyulás következett be. Több ország nem ez követi, hanem egyszerűen bevezetett egy időbeli küszöböt is, tipikusan a diagnózistól számított 28 napot, ameddig koronavírusos halálozásnak mutat ki egy halálesetet, minden további vizsgálat nélkül. Persze, ez sem tökéletes (valakit elüthet az autó a tizedik napon, vagy fordítva, feladhatja a fertőzéssel való küzdelmet a negyvenediken), de ez legalább egy definiált, reprodukálható algoritmus.
+Sajnálatos módon Magyarországon a mai napig nincsen nyilvánosan, írásban rögzítve, hogy milyen eljárásrend határozza meg, hogy ezen besorolás szerint ki minősül koronavírusos halottnak. Tovább rontja a helyzetet, hogy elhangzott ezzel kapcsolatban egy nyilvánvaló nyelvbotlás, miszerint „valamennyi olyan elhunytat, akinél a betegség időtartama alatt, vagy előtte bármikor [!] pozitív személynek regisztráltak, tehát készült nála laboratóriumi vizsgálat, ami pozitivitást mutatott, mindenkit beszámolunk az elhunytak közé". Ez természetesen -- szerencsére -- nem igaz, hiszen ha szó szerint vennénk, akkor valakit, aki tavaly áprilisban megbetegedett majd meggyógyult, majd ma elüti egy autó, azt elvileg koronavírusos halottként kellene elszámolni. (Most olyan apróságokról nem beszélve, hogy így a koronavírus halálozási aránya, tehát, hogy a fertőzöttek mekkora hányada hal bele a betegségbe, garantáltan 100 százalék lenne...) Erről természetesen nincs szó, a gyakorlatban senki sem fog törődni azzal, hogy egy éve az elgázoltnak volt egy pozitív tesztje, de az nagyon fontos lenne, hogy közzé legyen téve, hogy elvileg milyen szempontok döntenek abban a kérdésben, hogy kit lehet koronavírusos elhunytnak minősíteni. Az európai járványügyi szervezet, az ECDC például [azt az ajánlást](https://www.ecdc.europa.eu/en/covid-19/surveillance/surveillance-definitions) fogalmazza meg, hogy nem koronavírus a halálok akkor, ha (1) van egyértelmű, alternatív, a koronavírustól független mechanizmussal ható halálok (pl. trauma autóbalesetben), vagy ha (2) a diagnózis és a halál között teljes gyógyulás következett be. Több ország nem ez követi, hanem egyszerűen bevezetett egy [időbeli küszöböt is](https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/916035/RA_Technical_Summary_-_PHE_Data_Series_COVID_19_Deaths_20200812.pdf), tipikusan a diagnózistól számított 28 napot, ameddig koronavírusos halálozásnak mutat ki egy halálesetet, minden további vizsgálat nélkül. Persze, ez sem tökéletes (valakit elüthet az autó a tizedik napon, vagy fordítva, feladhatja a fertőzéssel való küzdelmet a negyvenediken), de ez legalább egy definiált, reprodukálható algoritmus.
 
 Senkit nem szeretnék kérdőre vonni egy szerencsétlen nyelvbotlás miatt, de az már probléma, hogy ennek a nyelvbotlásnak a korrekciója, és a valódi eljárásrend közlésével való helyesbítése a mai napig nem történt meg.
 
@@ -60,21 +145,30 @@ Próbáljuk meg áttekinthetővé tenni a többlethalálozási mutatókat! Elős
 
 Én az Eurostat [adatai](https://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=demo_r\_mwk_ts&lang=en) alapján kiszámítottam a többlethalálozást, mégpedig heti alapon, egységesen az országokra, és valamennyi európai országra. Az elemzéshez és ábrázoláshoz használt programot -- a „nyílt tudomány" jegyében -- teljes egészében [nyilvánosságra hozom](https://github.com/tamas-ferenci/ExcessMortEUR), így bárki reprodukálhatja, ellenőrizheti és továbbfejlesztheti a számításaimat, illetve itt elolvashatóak a módszertani részletek is.
 
-A többlethalálozás számítása az egyik legkorszerűbb eljárással, [Acosta és Irizzary módszerével](https://www.medrxiv.org/content/10.1101/2020.06.06.20120857v2) történt, mely kifinomult statisztikai eljárással igyekszik jól meghatározni a múltbeli adatokból a viszonyítási alapot. Kihagytam azokat az országokat, melyeknek 1 milliónál kevesebb lakosa van, illetve nem volt megfelelő adat Svédországra és Lettországra. (Az 1 milliónál kisebb országokat a lakosságszámra való ráosztás miatt hagytam el, Svédország és Lettország pedig sajnos nem elhanyagolható mértékben nem közölte a halálozások hetét.)
+A többlethalálozás számítása az egyik legkorszerűbb eljárással, [Acosta és Irizzary módszerével](https://www.medrxiv.org/content/10.1101/2020.06.06.20120857v2) történt, mely kifinomult statisztikai eljárással igyekszik jól meghatározni a múltbeli adatokból a viszonyítási alapot. Kihagytam azokat az országokat, melyeknek 1 milliónál kevesebb lakosa van (a lakosságszámra való későbbi ráosztás miatt), illetve amelyik nem tagja az EU-nak vagy EFTA-nak.
 
 Kezdjük a járvány kezdete óta összesített adatokkal (piros görbe Magyarország, a szürke görbék a többi európai országot jelölik):
 
-![](Index_20200415_2_abra1.png)
-
-(Az ábra a 2020. 04. 15. szerinti állapotot mutatja.)
+```{r kumulaltlelekszam, echo = FALSE}
+ggplot(res, aes(x = date, y = cumexcess/cumpopulation*1e6, group = geo, label = geo)) +
+  geom_line(aes(color = geo=="HU")) +
+  scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(col = FALSE) +
+  labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]") +
+  scale_x_date(date_breaks = "months", date_labels = "%b") + theme_bw() +
+  directlabels::geom_dl(method = list("last.points", cex = 0.6))
+```
 
 Látható, hogy a legfrissebb adatok szerint -- persze ne felejtsük, ez egy hónappal ezelőtti állapotot jelent! -- nagyjából a középmezőnyben vagyunk, a rossz hír, hogy a nálunk rosszabb 5 ország mindegyikében már javult a helyzet, míg nálunk gyorsan romlott ebben az időszakban, így könnyen lehet, hogy őket meg fogjuk előzni. (Azaz már megelőztük, és így a legrosszabb harmadban vagyunk, csak még nincsenek meg róla az adatok.)
 
 Mit tudunk mondani az aktuális helyzetről? Ezt mutatják a heti adatok:
 
-![](Index_20200415_2_abra2.png)
-
-(Az ábra a 2020. 04. 15. szerinti állapotot mutatja.)
+```{r aktualislelekszam, echo = FALSE}
+ggplot(res, aes(x = date, y = excess/population*1e6, group = geo, label = geo)) +
+  geom_line(aes(color = geo=="HU")) +
+  scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(col = FALSE) +
+  labs(x = "", y = "Többlethalálozás [fő/1M fő]") + scale_x_date(date_breaks = "months", date_labels = "%b") +
+  theme_bw() + directlabels::geom_dl(method = list("last.points", cex = 0.6))
+```
 
 Mint látszik, itt már „most" (azaz március elején) rosszul állunk, tehát április elején nagyon valószínű, hogy az aktuális járványügyi helyzetünk -- még e mutató szerint is -- az összes európai ország közül a legrosszabbak között van.
 
@@ -93,18 +187,19 @@ A számítások aktualizálásának dátuma: `r Sys.Date()`.
 Elsőként betöltjük a szükséges könyvtárakat:
 
 ```{r}
-library(data.table)
-library(excessmort)
-library(ggplot2)
+<<konyvtar>>
 ```
 
-A mortalitási adatokat az Eurostat-tól kérjük le (`demo_r_mwk_ts` adatbázis), az `eurostat` csomag használatával. Leszűrjük, hogy mindkét nem összesített adata legyen benne (ahogy életkor szerint sem bontunk), majd kikóduljuk az évet és a hónapot:
+A mortalitási adatokat az Eurostat-tól kérjük le (`demo_r_mwk_ts` adatbázis), az `eurostat` csomag használatával. Leszűrjük, hogy mindkét nem összesített adata legyen benne (ahogy életkor szerint sem bontunk), és megszorítjuk magunkat az EU/EFTA-országokra és az Egyesült Királyságra. Ez utóbbi sajnos az Eurostat adatbázisból problémás: az adatsor 2020 végén megszakad, ráadásul félő lehet az is, hogy az Unióból történő kilépés miatt végleg. Éppen ezért az angol adatokat a Short Term Mortality Fluctuations (STMF) adatbázisból kérjük le:
 
-```{r, message=FALSE}
-RawData <- as.data.table(eurostat::get_eurostat("demo_r_mwk_ts", time_format = "raw"))
-RawData <- RawData[sex=="T"]
-RawData$year <- as.numeric(substring(RawData$time, 1, 4))
-RawData$week <- as.numeric(substring(RawData$time, 6, 7))
+```{r, message = FALSE}
+<<adatbetoltes>>
+```
+
+Kikódoljuk az évet és a hónapot:
+
+```{r}
+<<evhonap>>
 ```
 
 A 99-es hét jelenti azokat a halálokat, amiket a kérdéses ország nem héthez rendelten jelentett. Ilyen csak kevés országnál fordul elő, és ott sem sok halálesettel (a táblázat százalékban adja meg, hogy az összes adott évi haláleset mekkora hányada volt 99-es, azaz héthez nem rendelt az adott országban):
@@ -117,90 +212,61 @@ knitr::kable(dcast(RawData[,.(values[week==99]/sum(values)*100),.(geo, year)],
 Éppen ezért -- hogy ne kelljen emiatt országokat elhagynunk -- egyszerűen szétosztjuk egyenletesen ezeket az eseteket a hetek között:
 
 ```{r}
-RawData[ , values := round(values*sum(values)/sum(values[week!=99])), .(geo, year)]
-RawData <- RawData[week!=99]
+<<hetszetosztas>>
 ```
 
 Dátumként az adott hét első napját használjuk; fontos, hogy az ISO 8601 szerinti hétbesorolást használja az Eurostat, amit az `ISOweek` csomag kezel:
 
 ```{r}
-RawData$date <- ISOweek::ISOweek2date(paste0(RawData$year, "-W", sprintf("%02d", RawData$week), "-1"))
+<<datum>>
 ```
 
 Csinálunk egy átnevezést, hogy később egyszerűbb legyen az illesztés:
 
 ```{r}
-names(RawData)[names(RawData)=="values"] <- "outcome"
+<<atnevezes>>
 ```
 
 A háttérpopuláció létszám adatait szintén az Eurostat-tól kérjük le (`demo_pjan` adatbázis); szintén összes nemre és életkorra együtt:
 
-```{r, message=FALSE}
-PopData <- as.data.table(eurostat::get_eurostat("demo_pjan"))
-PopData$numdate <- as.numeric(PopData$time-as.Date("1960-01-01"))
-PopData <- PopData[age=="TOTAL"&sex=="T"]
-PopData$geo <- as.factor(PopData$geo)
+```{r, message = FALSE}
+<<hatterpopulacio>>
 ```
 
 Ez minden év január 1-re vonatkozóan tartalmazza a lélekszámokat, ebből úgy kapjuk meg az egyes hetek adatait, hogy egy spline illesztünk rá, és abból kérjük le a megfelelő napokat. Ehhez az `mgcv` csomagot használjuk; a dátumot pedig numerikussá kell alakítanunk, hogy át tudjuk adni magyarázó változóként.
 
 ```{r}
-TempData <- merge(RawData, rbindlist(lapply(unique(RawData$geo), function(g)
-  data.frame(date = unique(RawData$date), geo = g,
-             population = predict(mgcv::gam(values ~ s(numdate), data = PopData[geo==g]),
-                                  data.frame(numdate =
-                                               as.numeric(unique(RawData$date)-as.Date("1960-01-01"))))))))
+<<adatbazis>>
 ```
 
 A többlethalálozás becsléséhez kizárjuk a mostani járvány időszakát (az alapráta meghatározásához), majd az `excessmort` csomaggal elvégeztetjük a számításokat. Kiszedjük a tényleges és a várt halálozást, a nyersen számolt és modellel simított többletet, a többlet abszolút értékét, illetve ez utóbbihoz standard hibát is számolunk (ezt kénytelenek vagyunk kézzel megtenni), bár a mostani számításban nem lesz rá szükségünk:
 
-```{r, message=FALSE}
-exclude_dates <- seq(as.Date("2020-03-01"), max(RawData$date), by = "day")
-
-res <- rbindlist(setNames(lapply(unique(TempData$geo), function(cntry)
-  with(excess_model(TempData[geo==cntry], start = min(TempData[geo==cntry]$date),
-                    end = max(TempData[geo==cntry]$date), exclude = exclude_dates),
-       data.table(date = date, observed = observed, expected = expected,
-                  y = 100 * (observed - expected)/expected,
-                  increase = 100 * fitted,
-                  excess = expected*fitted,
-                  se = sapply(1:length(date), function(i) {
-                    mu <- matrix(expected[i], nr = 1)
-                    x <- matrix(x[i,], nr = 1)
-                    sqrt(mu %*% x %*% betacov %*% t(x) %*% t(mu))
-                  })))), unique(TempData$geo)), idcol = "geo")
+```{r, message = FALSE}
+<<szamitas>>
 ```
 
 Egyesítjük a többlethalálozási adatbázist a korábbi adatokkal, leszűrjük a járvány időszakára, és kizárjuk az 1 millió lakosúnál kisebb országokat (mert később lélekszámra akarunk osztani):
 
 ```{r}
-res <- merge(res, TempData, by = c("geo", "date"))
-res <- res[order(geo, date)]
-res <- res[date>=as.Date("2020-03-01")]
-res <- res[geo%in%res[,.(tail(population,1)), .(geo)][V1>1e6]$geo]
+<<veglegesadatok>>
 ```
 
 Kiszámoljuk a -- járvány eleje óta -- kumulált többletet, illetve a populációból is egy átlagot:
 
 ```{r}
-res[, cumexcess := cumsum(excess), .(geo)]
-res[, cumpopulation := dplyr::cummean(population), .(geo)]
+<<tobbletszamolas>>
 ```
 
 A `geo` átalakítjuk faktorrá, és beállítjuk, hogy Magyarország az utolsó legyen, hogy az ábrázolásnál az kerüljön a legtetejére:
 
 ```{r}
-res$geo <- forcats::fct_relevel(as.factor(res$geo), "HU", after = Inf)
+<<geofaktor>>
 ```
 
 Az aktuális többlethalálozás (relatív mutató, népességszámra vetítve):
 
 ```{r}
-ggplot(res, aes(x = date, y = excess/population*1e6, group = geo, label = geo)) +
-  geom_line(aes(color = geo=="HU")) +
-  scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(col = FALSE) +
-  labs(x = "", y = "Többlethalálozás [fő/1M fő]") + scale_x_date(date_breaks = "months", date_labels = "%b") +
-  theme_bw() + directlabels::geom_dl(method = list("last.points", cex = 0.6))
+<<aktualislelekszam>>
 ```
 
 Az aktuális többlethalálozás (relatív mutató, korábbi adatokra vetítve):
@@ -226,12 +292,7 @@ Az ábra az origón átmenő, 2 meredekségű egyenest tünteti fel a viszonyít
 Az összesített többlethalálozás (relatív mutató, népességszámra vetítve):
 
 ```{r}
-ggplot(res, aes(x = date, y = cumexcess/cumpopulation*1e6, group = geo, label = geo)) +
-  geom_line(aes(color = geo=="HU")) +
-  scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(col = FALSE) +
-  labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]") +
-  scale_x_date(date_breaks = "months", date_labels = "%b") + theme_bw() +
-  directlabels::geom_dl(method = list("last.points", cex = 0.6))
+<<kumulaltlelekszam>>
 ```
 
 Visszatérve a relatív mutatókhoz, érdemes lehet országonként külön-külön is ábrázolni, hogy jobban látható legyen, az egyes országok hogyan teljesítettek a járvány kezelésében, mik a jó és a rossz példák:
@@ -316,3 +377,4 @@ Továbbfejlesztési ötletek:
 - [ ] Életkori és nemi lebontás. (Hátha mások a mortalitási trendek!)
 - [ ] Életkorra és nemre standardizálás.
 - [x] A jelentés teljességének a vizsgálata (mennyire nőnek még az utolsó adatok, és meddig?). Válasz: Eurostat metadata 13.1-es pont.
+- [ ] Területi adatok használata.

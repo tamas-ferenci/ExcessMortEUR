@@ -120,12 +120,13 @@ fogalmazza meg, hogy nem koronavírus a halálok akkor, ha (1) van
 egyértelmű, alternatív, a koronavírustól független mechanizmussal ható
 halálok (pl. trauma autóbalesetben), vagy ha (2) a diagnózis és a halál
 között teljes gyógyulás következett be. Több ország nem ez követi, hanem
-egyszerűen bevezetett egy időbeli küszöböt is, tipikusan a diagnózistól
-számított 28 napot, ameddig koronavírusos halálozásnak mutat ki egy
-halálesetet, minden további vizsgálat nélkül. Persze, ez sem tökéletes
-(valakit elüthet az autó a tizedik napon, vagy fordítva, feladhatja a
-fertőzéssel való küzdelmet a negyvenediken), de ez legalább egy
-definiált, reprodukálható algoritmus.
+egyszerűen bevezetett egy [időbeli küszöböt
+is](https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/916035/RA_Technical_Summary_-_PHE_Data_Series_COVID_19_Deaths_20200812.pdf),
+tipikusan a diagnózistól számított 28 napot, ameddig koronavírusos
+halálozásnak mutat ki egy halálesetet, minden további vizsgálat nélkül.
+Persze, ez sem tökéletes (valakit elüthet az autó a tizedik napon, vagy
+fordítva, feladhatja a fertőzéssel való küzdelmet a negyvenediken), de
+ez legalább egy definiált, reprodukálható algoritmus.
 
 Senkit nem szeretnék kérdőre vonni egy szerencsétlen nyelvbotlás miatt,
 de az már probléma, hogy ennek a nyelvbotlásnak a korrekciója, és a
@@ -213,18 +214,14 @@ A többlethalálozás számítása az egyik legkorszerűbb eljárással, [Acosta
 módszerével](https://www.medrxiv.org/content/10.1101/2020.06.06.20120857v2)
 történt, mely kifinomult statisztikai eljárással igyekszik jól
 meghatározni a múltbeli adatokból a viszonyítási alapot. Kihagytam
-azokat az országokat, melyeknek 1 milliónál kevesebb lakosa van, illetve
-nem volt megfelelő adat Svédországra és Lettországra. (Az 1 milliónál
-kisebb országokat a lakosságszámra való ráosztás miatt hagytam el,
-Svédország és Lettország pedig sajnos nem elhanyagolható mértékben nem
-közölte a halálozások hetét.)
+azokat az országokat, melyeknek 1 milliónál kevesebb lakosa van (a
+lakosságszámra való későbbi ráosztás miatt), illetve amelyik nem tagja
+az EU-nak vagy EFTA-nak.
 
 Kezdjük a járvány kezdete óta összesített adatokkal (piros görbe
 Magyarország, a szürke görbék a többi európai országot jelölik):
 
-![](Index_20200415_2_abra1.png)
-
-(Az ábra a 2020. 04. 15. szerinti állapotot mutatja.)
+![](README_files/figure-gfm/kumulaltlelekszam-1.png)<!-- -->
 
 Látható, hogy a legfrissebb adatok szerint – persze ne felejtsük, ez egy
 hónappal ezelőtti állapotot jelent! – nagyjából a középmezőnyben
@@ -235,9 +232,7 @@ a legrosszabb harmadban vagyunk, csak még nincsenek meg róla az adatok.)
 
 Mit tudunk mondani az aktuális helyzetről? Ezt mutatják a heti adatok:
 
-![](Index_20200415_2_abra2.png)
-
-(Az ábra a 2020. 04. 15. szerinti állapotot mutatja.)
+![](README_files/figure-gfm/aktualislelekszam-1.png)<!-- -->
 
 Mint látszik, itt már „most" (azaz március elején) rosszul állunk, tehát
 április elején nagyon valószínű, hogy az aktuális járványügyi helyzetünk
@@ -293,7 +288,7 @@ rosszul.
 
 ## Az európai többlethalálozási adatok elemzése
 
-A számítások aktualizálásának dátuma: 2021-04-24.
+A számítások aktualizálásának dátuma: 2021-04-27.
 
 Elsőként betöltjük a szükséges könyvtárakat:
 
@@ -306,11 +301,28 @@ library(ggplot2)
 A mortalitási adatokat az Eurostat-tól kérjük le (`demo_r_mwk_ts`
 adatbázis), az `eurostat` csomag használatával. Leszűrjük, hogy mindkét
 nem összesített adata legyen benne (ahogy életkor szerint sem bontunk),
-majd kikóduljuk az évet és a hónapot:
+és megszorítjuk magunkat az EU/EFTA-országokra és az Egyesült
+Királyságra. Ez utóbbi sajnos az Eurostat adatbázisból problémás: az
+adatsor 2020 végén megszakad, ráadásul félő lehet az is, hogy az Unióból
+történő kilépés miatt végleg. Éppen ezért az angol adatokat a Short Term
+Mortality Fluctuations (STMF) adatbázisból kérjük le:
 
 ``` r
 RawData <- as.data.table(eurostat::get_eurostat("demo_r_mwk_ts", time_format = "raw"))
 RawData <- RawData[sex=="T"]
+RawData <- RawData[geo%in%eurostat::eu_countries$code|geo%in%eurostat::efta_countries$code]
+RawData <- RawData[geo!="UK"]
+RawDataUK <- fread("https://www.mortality.org/Public/STMF/Outputs/stmf.csv")
+RawDataUK <- RawDataUK[Year>=2015&CountryCode%in%c("GBRTENW", "GBR_NIR", "GBR_SCO")&Sex=="b"][
+  ,.(time = paste0(Year, "W", sprintf("%02d", Week)), values = sum(DTotal)),.(Year, Week)][
+    ,.(sex = "T", unit = "NR", geo = "UK", time, values)][order(time)]
+RawDataUK <- RawDataUK[1:(nrow(RawDataUK)-1)]
+RawData <- rbind(RawData, RawDataUK)
+```
+
+Kikódoljuk az évet és a hónapot:
+
+``` r
 RawData$year <- as.numeric(substring(RawData$time, 1, 4))
 RawData$week <- as.numeric(substring(RawData$time, 6, 7))
 ```
@@ -458,7 +470,7 @@ ggplot(res, aes(x = date, y = excess/population*1e6, group = geo, label = geo)) 
   theme_bw() + directlabels::geom_dl(method = list("last.points", cex = 0.6))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 Az aktuális többlethalálozás (relatív mutató, korábbi adatokra vetítve):
 
@@ -470,7 +482,7 @@ ggplot(res, aes(x = date, y = increase, group = geo, label = geo)) + geom_line(a
   directlabels::geom_dl(method = list("last.points", cex = 0.6))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 Látszik, hogy a kétféle relatív mutató között nincs nagy különbség.
 Kicsit direktebben is összevethetjük őket, ha országonként külön-külön
@@ -482,7 +494,7 @@ ggplot(res, aes(x = increase, y = excess/population*1e6)) + geom_line() +
   facet_wrap(~geo) + geom_abline(intercept = 0, slope =  2, alpha = 0.3)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
 Az ábra az origón átmenő, 2 meredekségű egyenest tünteti fel a
 viszonyítást segítendő. (Miért pont erre illeszkednek jól? E szerint a
@@ -506,7 +518,7 @@ ggplot(res, aes(x = date, y = cumexcess/cumpopulation*1e6, group = geo, label = 
   directlabels::geom_dl(method = list("last.points", cex = 0.6))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 Visszatérve a relatív mutatókhoz, érdemes lehet országonként külön-külön
 is ábrázolni, hogy jobban látható legyen, az egyes országok hogyan
@@ -519,7 +531,7 @@ ggplot(res, aes(x = date, y = increase, group = geo)) + geom_line() +
   theme_bw() + facet_wrap(~geo)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
 
 Következő lépésben kiszámoljuk a 3 betűs ISO-országkódot, a 2 betűs
 Eurostat kódból, hogy később az OWID adatbázissal lehessen egyesíteni:
@@ -557,7 +569,7 @@ ggplot(melt(res[geo=="HU", .(date, excess = excess/population*1e6,
   scale_x_date(date_breaks = "months", date_labels = "%b")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
 
 Vagy a kettő viszonyát (pontosabban annak alakulását időben) az összes
 országra:
@@ -569,7 +581,7 @@ ggplot(res, aes(x = date, y = cumexcess/cumnewdeaths, group = geo)) + geom_line(
   scale_x_date(date_breaks = "2 months", labels = function(z) gsub("^0", "", strftime(z, "%m")))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
 
 Ezen az ábrán a többlet és a jelentett halálozás hányadosa látható, a
 piros vonal jelzi a kettő egyenlőségét, tehát a fölötte lévő érték
@@ -588,7 +600,7 @@ ggplot(res[,tail(.SD, 1), .(geo)], aes(x = cumexcess/population*1e6,
   labs(x = "Összesített többlethalálozás [fő/1M fő]", y = "Összesített jelentett halálozás [fő/M fő]")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
 
 (Ennél az ábránál és a következőnél nem ugyanaz az időpont van az egyes
 országoknál, hiszen mindegyiknél a saját legrégebbi közölt adata az
@@ -609,7 +621,7 @@ ggplot(res[,.SD[nrow(.SD)-4], .(geo)], aes(x = cumexcess/population*1e6,
   labs(x = "Összesített többlethalálozás [fő/1M fő]", y = "Összesített jelentett halálozás [fő/M fő]")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->
 
 Látszik, hogy az országok többségében a többlethalálozás meghaladja a
 jelentett (és ahol nem, ott is csak minimális a különbség).
@@ -620,3 +632,4 @@ Továbbfejlesztési ötletek:
 -   [ ] Életkorra és nemre standardizálás.
 -   [x] A jelentés teljességének a vizsgálata (mennyire nőnek még az
     utolsó adatok, és meddig?). Válasz: Eurostat metadata 13.1-es pont.
+-   [ ] Területi adatok használata.
