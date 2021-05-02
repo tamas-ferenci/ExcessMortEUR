@@ -288,7 +288,7 @@ rosszul.
 
 ## Az európai többlethalálozási adatok elemzése
 
-A számítások aktualizálásának dátuma: 2021-04-27.
+A számítások aktualizálásának dátuma: 2021-05-02.
 
 Elsőként betöltjük a szükséges könyvtárakat:
 
@@ -361,7 +361,7 @@ knitr::kable(dcast(RawData[,.(values[week==99]/sum(values)*100),.(geo, year)],
 | 2018 |  NA |   NA | 2.73 |
 | 2019 |  NA |   NA | 2.95 |
 | 2020 |  NA |   NA | 2.67 |
-| 2021 |  NA |   NA | 2.88 |
+| 2021 |  NA |   NA | 2.91 |
 
 Éppen ezért – hogy ne kelljen emiatt országokat elhagynunk – egyszerűen
 szétosztjuk egyenletesen ezeket az eseteket a hetek között:
