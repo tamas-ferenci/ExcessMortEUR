@@ -1,7 +1,10 @@
 ---
 title: "Többlethalálozási adatok európai összevetésben"
 author: "Ferenci Tamás"
-output: github_document
+output:
+  github_document:
+    toc: true
+    toc_depth: 3
 ---
 
 ```{r setup, include=FALSE}
@@ -93,14 +96,6 @@ res[, cumpopulation := dplyr::cummean(population), .(geo)]
 res$geo <- forcats::fct_relevel(as.factor(res$geo), "HU", after = Inf)
 ```
 
-- [A többlethalálozási mutatóról általában](#a-többlethalálozási-mutatóról-általában)
-  * [A haláloki statisztikák problémái](#a-haláloki-statisztikák-problémái)
-  * [A magyar haláloki statisztikák adatszolgáltatási folyamata](#a-magyar-haláloki-statisztikák-adatszolgáltatási-folyamata)
-  * [A többlethalálozási mutató előnyei és hátrányai](#a-többlethalálozási-mutató-előnyei-és-hátrányai)
-  * [A hazai többlethalálozási adatok, és nemzetközi viszonyításuk](#a-hazai-többlethalálozási-adatok-és-nemzetközi-viszonyításuk)
-  * [Záró gondolatok](#záró-gondolatok)
-- [Az európai többlethalálozási adatok elemzése](#az-európai-többlethalálozási-adatok-elemzése)
-
 ## A többlethalálozási mutatóról általában
 
 Jelen írásomban megpróbálom a többlethalálozási mutató hátterét és tágabb kontextusát bemutatni, megvilágítva a kérdés tudományos hátterét, nehézségeit. Úgy vélem, hogy ezek a kérdések nem lehetnek a tudósok meg politikusok belügyei, a számok áradatában való tájékozódáshoz mindenkinek meg kell adni a lehetőséget, hogy megismerje a járványügyi, módszertani hátteret, mert csak így lehet értékelni, kritikusan értékelni és értelmezni az elhangzó adatokat.
@@ -182,7 +177,7 @@ Nem állítom, hogy ezek a kérdések könnyen megválaszolhatóak, és részben
 
 ## Az európai többlethalálozási adatok elemzése
 
-A számítások aktualizálásának dátuma: `r Sys.Date()`.
+A számítások aktualizálásának dátuma: `r Sys.Date()`. A többlethalálozást számító csomag (`excessmort`) verziószáma `r packageVersion("excessmort")`, az Eurostat-tól adatokat lekérő csomagé (`eurostat`) `r packageVersion("eurostat")`.
 
 Elsőként betöltjük a szükséges könyvtárakat:
 
