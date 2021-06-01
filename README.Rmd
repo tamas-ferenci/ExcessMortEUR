@@ -150,10 +150,13 @@ ggplot(res, aes(x = date, y = cumexcess/cumpopulation*1e6, group = geo, label = 
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(col = FALSE) +
   labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]") +
   scale_x_date(date_breaks = "months", date_labels = "%b") + theme_bw() +
-  directlabels::geom_dl(method = list("last.points", cex = 0.6))
+  directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
+  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom", legend.title=element_blank()) +
+  labs(caption = paste0("Ferenci Tamás, https://github.com/tamas-ferenci/ExcessMortEUR/\nAdatok forrása: Eurostat és STMF, lekérdezés dátuma: ",
+                        format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
-Látható, hogy a legfrissebb adatok szerint -- persze ne felejtsük, ez egy hónappal ezelőtti állapotot jelent! -- nagyjából a középmezőnyben vagyunk, a rossz hír, hogy a nálunk rosszabb 5 ország mindegyikében már javult a helyzet, míg nálunk gyorsan romlott ebben az időszakban, így könnyen lehet, hogy őket meg fogjuk előzni. (Azaz már megelőztük, és így a legrosszabb harmadban vagyunk, csak még nincsenek meg róla az adatok.)
+Látható, hogy a legfrissebb adatok szerint -- persze ne felejtsük, ez egy hónappal ezelőtti állapotot jelent! -- nagyjából a legrosszabb harmad közepén/elején vagyunk.
 
 Mit tudunk mondani az aktuális helyzetről? Ezt mutatják a heti adatok:
 
@@ -162,10 +165,13 @@ ggplot(res, aes(x = date, y = excess/population*1e6, group = geo, label = geo)) 
   geom_line(aes(color = geo=="HU")) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(col = FALSE) +
   labs(x = "", y = "Többlethalálozás [fő/1M fő]") + scale_x_date(date_breaks = "months", date_labels = "%b") +
-  theme_bw() + directlabels::geom_dl(method = list("last.points", cex = 0.6))
+  theme_bw() + directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
+  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom", legend.title=element_blank()) +
+  labs(caption = paste0("Ferenci Tamás, https://github.com/tamas-ferenci/ExcessMortEUR/\nAdatok forrása: Eurostat és STMF, lekérdezés dátuma: ",
+                        format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
-Mint látszik, itt már „most" (azaz március elején) rosszul állunk, tehát április elején nagyon valószínű, hogy az aktuális járványügyi helyzetünk -- még e mutató szerint is -- az összes európai ország közül a legrosszabbak között van.
+Jól látszik, hogy az első hullám teljesen kimutathatatlan volt (legalábbis többlethalálozás tekintetében) Magyarországon, addig a második már súlyosan érintett minket, a harmadikban pedig gyakorlatilag egész Európában a legrosszabbak között volt az aktuális járványügyi helyzetünk.
 
 ### Záró gondolatok
 
@@ -186,19 +192,19 @@ Elsőként betöltjük a szükséges könyvtárakat:
 ```
 
 A mortalitási adatokat az Eurostat-tól kérjük le (`demo_r_mwk_ts` adatbázis), az `eurostat` csomag használatával. Leszűrjük, hogy mindkét nem összesített adata legyen benne (ahogy életkor szerint sem bontunk), és megszorítjuk magunkat az EU/EFTA-országokra és az Egyesült Királyságra. Ez utóbbi sajnos az Eurostat adatbázisból problémás: az adatsor 2020 végén megszakad, ráadásul félő lehet az is, hogy az Unióból történő kilépés miatt végleg. Éppen ezért az angol adatokat a Short Term Mortality Fluctuations (STMF) adatbázisból kérjük le:
-
+  
 ```{r, message = FALSE}
 <<adatbetoltes>>
 ```
 
 Kikódoljuk az évet és a hónapot:
-
+  
 ```{r}
 <<evhonap>>
 ```
 
 A 99-es hét jelenti azokat a halálokat, amiket a kérdéses ország nem héthez rendelten jelentett. Ilyen csak kevés országnál fordul elő, és ott sem sok halálesettel (a táblázat százalékban adja meg, hogy az összes adott évi haláleset mekkora hányada volt 99-es, azaz héthez nem rendelt az adott országban):
-
+  
 ```{r}
 knitr::kable(dcast(RawData[,.(values[week==99]/sum(values)*100),.(geo, year)],
                    year ~ geo, value.var = "V1"), digits = 2)
@@ -217,13 +223,13 @@ Dátumként az adott hét első napját használjuk; fontos, hogy az ISO 8601 sz
 ```
 
 Csinálunk egy átnevezést, hogy később egyszerűbb legyen az illesztés:
-
+  
 ```{r}
 <<atnevezes>>
 ```
 
 A háttérpopuláció létszám adatait szintén az Eurostat-tól kérjük le (`demo_pjan` adatbázis); szintén összes nemre és életkorra együtt:
-
+  
 ```{r, message = FALSE}
 <<hatterpopulacio>>
 ```
@@ -233,9 +239,9 @@ Ez minden év január 1-re vonatkozóan tartalmazza a lélekszámokat, ebből ú
 ```{r}
 <<adatbazis>>
 ```
-
-A többlethalálozás becsléséhez kizárjuk a mostani járvány időszakát (az alapráta meghatározásához), majd az `excessmort` csomaggal elvégeztetjük a számításokat. Kiszedjük a tényleges és a várt halálozást, a nyersen számolt és modellel simított többletet, a többlet abszolút értékét, illetve ez utóbbihoz standard hibát is számolunk (ezt kénytelenek vagyunk kézzel megtenni), bár a mostani számításban nem lesz rá szükségünk:
-
+  
+  A többlethalálozás becsléséhez kizárjuk a mostani járvány időszakát (az alapráta meghatározásához), majd az `excessmort` csomaggal elvégeztetjük a számításokat. Kiszedjük a tényleges és a várt halálozást, a nyersen számolt és modellel simított többletet, a többlet abszolút értékét, illetve ez utóbbihoz standard hibát is számolunk (ezt kénytelenek vagyunk kézzel megtenni), bár a mostani számításban nem lesz rá szükségünk:
+  
 ```{r, message = FALSE}
 <<szamitas>>
 ```
@@ -247,31 +253,34 @@ Egyesítjük a többlethalálozási adatbázist a korábbi adatokkal, leszűrjü
 ```
 
 Kiszámoljuk a -- járvány eleje óta -- kumulált többletet, illetve a populációból is egy átlagot:
-
+  
 ```{r}
 <<tobbletszamolas>>
 ```
 
 A `geo` átalakítjuk faktorrá, és beállítjuk, hogy Magyarország az utolsó legyen, hogy az ábrázolásnál az kerüljön a legtetejére:
-
+  
 ```{r}
 <<geofaktor>>
 ```
 
 Az aktuális többlethalálozás (relatív mutató, népességszámra vetítve):
-
+  
 ```{r}
 <<aktualislelekszam>>
 ```
 
 Az aktuális többlethalálozás (relatív mutató, korábbi adatokra vetítve):
-
+  
 ```{r}
 ggplot(res, aes(x = date, y = increase, group = geo, label = geo)) + geom_line(aes(color = geo=="HU")) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(col = FALSE) +
   labs(x = "", y = "Relatív többlethalálozás [%]") +
   scale_x_date(date_breaks = "months", date_labels = "%b") + theme_bw() +
-  directlabels::geom_dl(method = list("last.points", cex = 0.6))
+  directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
+  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom", legend.title=element_blank()) +
+  labs(caption = paste0("Ferenci Tamás, https://github.com/tamas-ferenci/ExcessMortEUR/\nAdatok forrása: Eurostat és STMF, lekérdezés dátuma: ",
+                        format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
 Látszik, hogy a kétféle relatív mutató között nincs nagy különbség. Kicsit direktebben is összevethetjük őket, ha országonként külön-külön ábrázoljuk, egymással szemben:
@@ -279,7 +288,10 @@ Látszik, hogy a kétféle relatív mutató között nincs nagy különbség. Ki
 ```{r}
 ggplot(res, aes(x = increase, y = excess/population*1e6)) + geom_line() +
   labs(x = "Relatív többlethalálozás [%]", y = "Többlethalálozás [fő/1M fő]") +  theme_bw() +
-  facet_wrap(~geo) + geom_abline(intercept = 0, slope =  2, alpha = 0.3)
+  facet_wrap(~geo) + geom_abline(intercept = 0, slope =  2, alpha = 0.3) +
+  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom", legend.title=element_blank()) +
+  labs(caption = paste0("Ferenci Tamás, https://github.com/tamas-ferenci/ExcessMortEUR/\nAdatok forrása: Eurostat és STMF, lekérdezés dátuma: ",
+                        format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
 Az ábra az origón átmenő, 2 meredekségű egyenest tünteti fel a viszonyítást segítendő. (Miért pont erre illeszkednek jól? E szerint a 100% többlet -- azaz épp a halálozás -- 200 fő/M főnek felel meg. De vigyázat, ez heti adat, így az éves az $52 \cdot 200 = 10 400$, ami ezer főre vetítve 10,4, és csakugyan ennyi nagyjából az európai országok nyers halálozási rátája.) Ez egyúttal arra is rámutat, hogy mi a lélekszámra vetítés baja: függ a nyers halandóságtól. Ilyen szempontból az alapértékre való vetítés jobb, de mint láthatjuk, a különbség európai viszonyokon belül nem nagy.
@@ -291,12 +303,15 @@ Az összesített többlethalálozás (relatív mutató, népességszámra vetít
 ```
 
 Visszatérve a relatív mutatókhoz, érdemes lehet országonként külön-külön is ábrázolni, hogy jobban látható legyen, az egyes országok hogyan teljesítettek a járvány kezelésében, mik a jó és a rossz példák:
-
+  
 ```{r}
 ggplot(res, aes(x = date, y = increase, group = geo)) + geom_line() +
   labs(x = "", y = "Relatív többlethalálozás [%]") +
   scale_x_date(date_breaks = "2 months", labels = function(z) gsub("^0", "", strftime(z, "%m"))) +
-  theme_bw() + facet_wrap(~geo)
+  theme_bw() + facet_wrap(~geo) +
+  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom", legend.title=element_blank()) +
+  labs(caption = paste0("Ferenci Tamás, https://github.com/tamas-ferenci/ExcessMortEUR/\nAdatok forrása: Eurostat és STMF, lekérdezés dátuma: ",
+                        format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
 Következő lépésben kiszámoljuk a 3 betűs ISO-országkódot, a 2 betűs Eurostat kódból, hogy később az OWID adatbázissal lehessen egyesíteni:
@@ -308,7 +323,7 @@ res$iso_code <- countrycode::countrycode(res$geo, "eurostat", "iso3c")
 A jelentett halálozás céljából letöltjük az OWID adatbázist, kikóduljuk ott is az évet és a hetet, majd ott is áttérünk heti adatokra:
 
 ```{r}
-EpiData <- fread("https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv")
+EpiData <- fread("https://covid.ourworldindata.org/data/owid-covid-data.csv")
 EpiData$year <- lubridate::year(EpiData$date)
 EpiData$week <- lubridate::isoweek(EpiData$date)
 EpiData$new_deaths[is.na(EpiData$new_deaths)] <- 0
@@ -325,11 +340,14 @@ res[, cumnewdeaths := cumsum(new_deaths), .(geo)]
 Megnézhetjük Magyarország példáján a kétféle adatsort:
 
 ```{r}
-ggplot(melt(res[geo=="HU", .(date, excess = excess/population*1e6,
-                             new_deaths = new_deaths/population*1e6)], id.vars = "date"),
+ggplot(melt(res[geo=="HU", .(date, `Többlethalálozás` = excess/population*1e6,
+                             `Regisztrált koronavírus-halálozás` = new_deaths/population*1e6)], id.vars = "date"),
        aes(x = date, y = value, group = variable, color = variable)) + geom_line() +
   labs(x = "", y = "Halálozás [fő/M fő]") +
-  scale_x_date(date_breaks = "months", date_labels = "%b")
+  scale_x_date(date_breaks = "months", date_labels = "%b") +
+  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom", legend.title=element_blank()) +
+  labs(caption = paste0("Ferenci Tamás, https://github.com/tamas-ferenci/ExcessMortEUR/\nAdatok forrása: Eurostat és OWID, lekérdezés dátuma: ",
+                        format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
 Vagy a kettő viszonyát (pontosabban annak alakulását időben) az összes országra:
@@ -338,7 +356,10 @@ Vagy a kettő viszonyát (pontosabban annak alakulását időben) az összes ors
 ggplot(res, aes(x = date, y = cumexcess/cumnewdeaths, group = geo)) + geom_line() +
   coord_cartesian(xlim = c(as.Date("2020-07-01"), NA), ylim = c(-1, 3)) + facet_wrap(~geo) +
   geom_hline(yintercept = 1, col = "red") + labs(x = "", y = "Többlethalálozás / jelentett halálozás") +
-  scale_x_date(date_breaks = "2 months", labels = function(z) gsub("^0", "", strftime(z, "%m")))
+  scale_x_date(date_breaks = "2 months", labels = function(z) gsub("^0", "", strftime(z, "%m"))) +
+  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom", legend.title=element_blank()) +
+  labs(caption = paste0("Ferenci Tamás, https://github.com/tamas-ferenci/ExcessMortEUR/\nAdatok forrása: Eurostat és STMF, lekérdezés dátuma: ",
+                        format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
 Ezen az ábrán a többlet és a jelentett halálozás hányadosa látható, a piros vonal jelzi a kettő egyenlőségét, tehát a fölötte lévő érték jelenti azt, hogy a többlet meghaladja a jelentett halálozást, az alatta lévő azt, hogy kisebb a többlet, mint a jelentett.
@@ -350,7 +371,10 @@ ggplot(res[,tail(.SD, 1), .(geo)], aes(x = cumexcess/population*1e6,
                                        y = cumnewdeaths/population*1e6, label = geo)) +
   geom_point(aes(col = geo=="HU")) + geom_abline() + geom_text(hjust = "left", nudge_x = 30) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(col = FALSE) +
-  labs(x = "Összesített többlethalálozás [fő/1M fő]", y = "Összesített jelentett halálozás [fő/M fő]")
+  labs(x = "Összesített többlethalálozás [fő/1M fő]", y = "Összesített jelentett halálozás [fő/M fő]") +
+  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom", legend.title=element_blank()) +
+  labs(caption = paste0("Ferenci Tamás, https://github.com/tamas-ferenci/ExcessMortEUR/\nAdatok forrása: Eurostat és STMF, lekérdezés dátuma: ",
+                        format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
 (Ennél az ábránál és a következőnél nem ugyanaz az időpont van az egyes országoknál, hiszen mindegyiknél a saját legrégebbi közölt adata az alap.)
@@ -362,7 +386,10 @@ ggplot(res[,.SD[nrow(.SD)-4], .(geo)], aes(x = cumexcess/population*1e6,
                                            y = cumnewdeaths/population*1e6, label = geo)) +
   geom_point(aes(col = geo=="HU")) + geom_abline() + geom_text(hjust = "left", nudge_x = 30) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(col = FALSE) +
-  labs(x = "Összesített többlethalálozás [fő/1M fő]", y = "Összesített jelentett halálozás [fő/M fő]")
+  labs(x = "Összesített többlethalálozás [fő/1M fő]", y = "Összesített jelentett halálozás [fő/M fő]") +
+  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom", legend.title=element_blank()) +
+  labs(caption = paste0("Ferenci Tamás, https://github.com/tamas-ferenci/ExcessMortEUR/\nAdatok forrása: Eurostat és STMF, lekérdezés dátuma: ",
+                        format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
 Látszik, hogy az országok többségében a többlethalálozás meghaladja a jelentett (és ahol nem, ott is csak minimális a különbség).
