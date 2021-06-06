@@ -286,7 +286,7 @@ rosszul.
 
 ## Az európai többlethalálozási adatok elemzése
 
-A számítások aktualizálásának dátuma: 2021-06-01. A többlethalálozást
+A számítások aktualizálásának dátuma: 2021-06-06. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.4.9, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) 3.7.5.
 
@@ -361,7 +361,7 @@ knitr::kable(dcast(RawData[,.(values[week==99]/sum(values)*100),.(geo, year)],
 | 2018 |  NA |   NA | 2.73 |
 | 2019 |  NA |   NA | 2.95 |
 | 2020 |  NA |   NA | 2.67 |
-| 2021 |  NA |   NA | 2.91 |
+| 2021 |  NA |   NA | 2.94 |
 
 Éppen ezért – hogy ne kelljen emiatt országokat elhagynunk – egyszerűen
 szétosztjuk egyenletesen ezeket az eseteket a hetek között:
