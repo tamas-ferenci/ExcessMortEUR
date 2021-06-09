@@ -286,7 +286,7 @@ rosszul.
 
 ## Az európai többlethalálozási adatok elemzése
 
-A számítások aktualizálásának dátuma: 2021-06-06. A többlethalálozást
+A számítások aktualizálásának dátuma: 2021-06-09. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.4.9, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) 3.7.5.
 
@@ -296,6 +296,8 @@ Elsőként betöltjük a szükséges könyvtárakat:
 library(data.table)
 library(excessmort)
 library(ggplot2)
+captionlab <- paste0("Ferenci Tamás, https://github.com/tamas-ferenci/ExcessMortEUR/\nAdatok forrása: ",
+                     "Eurostat és STMF, lekérdezés dátuma: ")
 ```
 
 A mortalitási adatokat az Eurostat-tól kérjük le (`demo_r_mwk_ts`
@@ -361,7 +363,7 @@ knitr::kable(dcast(RawData[,.(values[week==99]/sum(values)*100),.(geo, year)],
 | 2018 |  NA |   NA | 2.73 |
 | 2019 |  NA |   NA | 2.95 |
 | 2020 |  NA |   NA | 2.67 |
-| 2021 |  NA |   NA | 2.94 |
+| 2021 |  NA |   NA | 2.92 |
 
 Éppen ezért – hogy ne kelljen emiatt országokat elhagynunk – egyszerűen
 szétosztjuk egyenletesen ezeket az eseteket a hetek között:
@@ -466,11 +468,12 @@ Az aktuális többlethalálozás (relatív mutató, népességszámra vetítve):
 ggplot(res, aes(x = date, y = excess/population*1e6, group = geo, label = geo)) +
   geom_line(aes(color = geo=="HU")) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(col = FALSE) +
-  labs(x = "", y = "Többlethalálozás [fő/1M fő]") + scale_x_date(date_breaks = "months", date_labels = "%b") +
+  labs(x = "", y = "Többlethalálozás [fő/1M fő]") +
+  scale_x_date(date_breaks = "months", date_labels = "%b") +
   theme_bw() + directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
-  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom", legend.title=element_blank()) +
-  labs(caption = paste0("Ferenci Tamás, https://github.com/tamas-ferenci/ExcessMortEUR/\nAdatok forrása: Eurostat és STMF, lekérdezés dátuma: ",
-                        format(Sys.Date(), "%Y. %m. %d.")))
+  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
+        legend.title = element_blank()) +
+  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
@@ -483,9 +486,9 @@ ggplot(res, aes(x = date, y = increase, group = geo, label = geo)) + geom_line(a
   labs(x = "", y = "Relatív többlethalálozás [%]") +
   scale_x_date(date_breaks = "months", date_labels = "%b") + theme_bw() +
   directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
-  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom", legend.title=element_blank()) +
-  labs(caption = paste0("Ferenci Tamás, https://github.com/tamas-ferenci/ExcessMortEUR/\nAdatok forrása: Eurostat és STMF, lekérdezés dátuma: ",
-                        format(Sys.Date(), "%Y. %m. %d.")))
+  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
+        legend.title = element_blank()) +
+  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
@@ -498,9 +501,9 @@ Kicsit direktebben is összevethetjük őket, ha országonként külön-külön
 ggplot(res, aes(x = increase, y = excess/population*1e6)) + geom_line() +
   labs(x = "Relatív többlethalálozás [%]", y = "Többlethalálozás [fő/1M fő]") +  theme_bw() +
   facet_wrap(~geo) + geom_abline(intercept = 0, slope =  2, alpha = 0.3) +
-  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom", legend.title=element_blank()) +
-  labs(caption = paste0("Ferenci Tamás, https://github.com/tamas-ferenci/ExcessMortEUR/\nAdatok forrása: Eurostat és STMF, lekérdezés dátuma: ",
-                        format(Sys.Date(), "%Y. %m. %d.")))
+  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
+        legend.title = element_blank()) +
+  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
@@ -525,9 +528,9 @@ ggplot(res, aes(x = date, y = cumexcess/cumpopulation*1e6, group = geo, label = 
   labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]") +
   scale_x_date(date_breaks = "months", date_labels = "%b") + theme_bw() +
   directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
-  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom", legend.title=element_blank()) +
-  labs(caption = paste0("Ferenci Tamás, https://github.com/tamas-ferenci/ExcessMortEUR/\nAdatok forrása: Eurostat és STMF, lekérdezés dátuma: ",
-                        format(Sys.Date(), "%Y. %m. %d.")))
+  theme(plot.caption = element_text(face = "bold", hjust = 0),
+        legend.position = "bottom", legend.title = element_blank()) +
+  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
@@ -541,9 +544,9 @@ ggplot(res, aes(x = date, y = increase, group = geo)) + geom_line() +
   labs(x = "", y = "Relatív többlethalálozás [%]") +
   scale_x_date(date_breaks = "2 months", labels = function(z) gsub("^0", "", strftime(z, "%m"))) +
   theme_bw() + facet_wrap(~geo) +
-  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom", legend.title=element_blank()) +
-  labs(caption = paste0("Ferenci Tamás, https://github.com/tamas-ferenci/ExcessMortEUR/\nAdatok forrása: Eurostat és STMF, lekérdezés dátuma: ",
-                        format(Sys.Date(), "%Y. %m. %d.")))
+  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
+        legend.title = element_blank()) +
+  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
@@ -578,13 +581,13 @@ Megnézhetjük Magyarország példáján a kétféle adatsort:
 
 ``` r
 ggplot(melt(res[geo=="HU", .(date, `Többlethalálozás` = excess/population*1e6,
-                             `Regisztrált koronavírus-halálozás` = new_deaths/population*1e6)], id.vars = "date"),
-       aes(x = date, y = value, group = variable, color = variable)) + geom_line() +
+                             `Regisztrált koronavírus-halálozás` = new_deaths/population*1e6)],
+            id.vars = "date"), aes(x = date, y = value, group = variable, color = variable)) + geom_line() +
   labs(x = "", y = "Halálozás [fő/M fő]") +
   scale_x_date(date_breaks = "months", date_labels = "%b") +
-  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom", legend.title=element_blank()) +
-  labs(caption = paste0("Ferenci Tamás, https://github.com/tamas-ferenci/ExcessMortEUR/\nAdatok forrása: Eurostat és OWID, lekérdezés dátuma: ",
-                        format(Sys.Date(), "%Y. %m. %d.")))
+  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
+        legend.title = element_blank()) +
+  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
@@ -597,9 +600,9 @@ ggplot(res, aes(x = date, y = cumexcess/cumnewdeaths, group = geo)) + geom_line(
   coord_cartesian(xlim = c(as.Date("2020-07-01"), NA), ylim = c(-1, 3)) + facet_wrap(~geo) +
   geom_hline(yintercept = 1, col = "red") + labs(x = "", y = "Többlethalálozás / jelentett halálozás") +
   scale_x_date(date_breaks = "2 months", labels = function(z) gsub("^0", "", strftime(z, "%m"))) +
-  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom", legend.title=element_blank()) +
-  labs(caption = paste0("Ferenci Tamás, https://github.com/tamas-ferenci/ExcessMortEUR/\nAdatok forrása: Eurostat és STMF, lekérdezés dátuma: ",
-                        format(Sys.Date(), "%Y. %m. %d.")))
+  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
+        legend.title = element_blank()) +
+  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
@@ -619,9 +622,9 @@ ggplot(res[,tail(.SD, 1), .(geo)], aes(x = cumexcess/population*1e6,
   geom_point(aes(col = geo=="HU")) + geom_abline() + geom_text(hjust = "left", nudge_x = 30) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(col = FALSE) +
   labs(x = "Összesített többlethalálozás [fő/1M fő]", y = "Összesített jelentett halálozás [fő/M fő]") +
-  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom", legend.title=element_blank()) +
-  labs(caption = paste0("Ferenci Tamás, https://github.com/tamas-ferenci/ExcessMortEUR/\nAdatok forrása: Eurostat és STMF, lekérdezés dátuma: ",
-                        format(Sys.Date(), "%Y. %m. %d.")))
+  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
+        legend.title = element_blank()) +
+  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
@@ -643,15 +646,36 @@ ggplot(res[,.SD[nrow(.SD)-4], .(geo)], aes(x = cumexcess/population*1e6,
   geom_point(aes(col = geo=="HU")) + geom_abline() + geom_text(hjust = "left", nudge_x = 30) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(col = FALSE) +
   labs(x = "Összesített többlethalálozás [fő/1M fő]", y = "Összesített jelentett halálozás [fő/M fő]") +
-  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom", legend.title=element_blank()) +
-  labs(caption = paste0("Ferenci Tamás, https://github.com/tamas-ferenci/ExcessMortEUR/\nAdatok forrása: Eurostat és STMF, lekérdezés dátuma: ",
-                        format(Sys.Date(), "%Y. %m. %d.")))
+  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
+        legend.title = element_blank()) +
+  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->
 
 Látszik, hogy az országok többségében a többlethalálozás meghaladja a
 jelentett (és ahol nem, ott is csak minimális a különbség).
+
+Zárásként nézzük meg az összesített magyar helyzetet mindkét mutatóval,
+és a konkrét számokat is feltüntetve (szándékosan 100-ra kerekítve, hogy
+elkerüljük a túlzott pontosság hamis érzetét), abszolút skálán:
+
+``` r
+ggplot(melt(res[geo=="HU", .(date, `Többlethalálozás` = cumexcess,
+                             `Regisztrált koronavírus-halálozás` = cumnewdeaths)],
+            id.vars = "date"), aes(x = date, y = value, group = variable, color = variable,
+                                   label = round(value, -2))) + geom_line() +
+  directlabels::geom_dl(data = melt(tail(res[geo=="HU",
+                                             .(date, `Többlethalálozás` = cumexcess,
+                                               `Regisztrált koronavírus-halálozás` = cumnewdeaths)], 1),
+                                    id.vars = "date"), method = list("last.points", cex = 0.6)) +
+  labs(x = "", y = "Halálozás [fő]") + scale_x_date(date_breaks = "months", date_labels = "%b") +
+  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
+        legend.title = element_blank()) +
+  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
+```
+
+![](README_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
 
 Továbbfejlesztési ötletek:
 
@@ -660,3 +684,5 @@ Továbbfejlesztési ötletek:
 -   [x] A jelentés teljességének a vizsgálata (mennyire nőnek még az
     utolsó adatok, és meddig?). Válasz: Eurostat metadata 13.1-es pont.
 -   [ ] Területi adatok használata.
+-   [ ] Egyszeri hatások kiküszöbölése (influenza!) kiegészítő
+    elemzésként
