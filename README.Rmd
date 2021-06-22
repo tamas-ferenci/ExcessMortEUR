@@ -109,7 +109,7 @@ Egy járvány helyzetének legdirektebb mutatója az új fertőzöttek napi szá
 
 A fertőzött-számnak minden előnye mellett van egy hatalmas problémája: függ a tesztelési aktivitástól. Ez kevésbé gond egy olyan betegségnél mint mondjuk a kanyaró, ahol szinte minden betegnek tünetei vannak, és ezek a tünetek szinte minden esetben elég látványosak és egyértelműek, de nagyon nagy baj a jelen helyzetben, ahol a fertőzöttek egy jelentős részének csak nagyon enyhe, aspecifikus, más betegséggel is könnyen összetéveszthető tünetei vannak, vagy egyáltalán nincsenek tünetei. Az előbbieket elsősorban, az utóbbiakat kizárólag teszttel lehet megtalálni, de innen kezdve az, hogy hány ilyet találunk meg, függeni fog attól, hogy milyen intenzíven tesztelünk: ahol sokat tesztelnek, ott több ilyet is megtalálnak, ahol kisebb a tesztelési aktivitás, ott kevesebbet fognak. Ennek egy praktikus következménye, hogy a fertőzött-számok országok közötti összevetése életveszélyes, hiszen tesztelési aktivitásban hatalmas különbségek lehetnek: egyáltalán nem biztos, hogy ahol több fertőzött van, ott rosszabb a helyzet, sőt, simán lehet, hogy pont fordítva, ott rendesebben tesztelnek, és így jobban tudják kezelni a járványt. Sajnos a helyzet ennél is rosszabb: valójában nem csak az országok közötti, de egy ország különböző időpontjai között összevetés is problémás lehet, azaz egyáltalán nem biztos, hogy ha most több fertőzöttet regisztrálunk mint múlt hónapban, akkor most rosszabb a helyzet. Mikor? Természetesen abban az esetben, ha menet közben megváltozik a tesztelési intenzitás! Lehet, hogy több fertőzöttet regisztrálunk, de közben a helyzet nem romlott, csak elkezdtünk rendesebben tesztelni (és ez esetben az kimondottan egy jó hír, hogy több fertőzött lett!), de sajnos elképzelhető a fordított eset is, hogy a regisztrált fertőzöttek száma stagnál, de közben a helyzet romlik (mert beleütköztünk a tesztelési kapacitások felső korlátjába). Lényegében annyi mondható, hogy a fertőzött-szám jó mutató akkor, *ha* a tesztelési intenzitás időben állandó. Lehet, hogy az abszolút számok ekkor is hibásak, mondjuk csak a fertőzöttek ötödét regisztráljuk, de ha ez az arány állandó, akkor legalább a relatív viszonyok jók lesznek: ha most több van mint egy hónapja, akkor most rosszabb a helyzet.
 
-Kitérő megjegyzésként érdemes itt beszúrni, hogy ezért érdekes mutató a tesztpozitivitás, tehát, hogy az elvégzett tesztek mekkora hányada pozitív: azt mutatja, hogy a tesztelési program mennyire tud lépést tartani a járvány terjedésével. Ha kellően alacsony (a nemzetközi ajánlás 5%-os maximumot tűz ki), akkor a tesztelési intenzitás megfelelő, de ha nagyobb, akkor nem elégséges a tesztelés. Fontos tehát hangsúlyozni, hogy a tesztpozitivitás ezt, tehát a tesztelési program elégségességét méri, *nem* a járvány helyzetét. De az elégségesség mérésére tényleg logikus tartalmú mutató, hiszen azt mondja: ha el is szabadul a járvány, ez akkor is behúzható az 5%-os küszöb alá. Hogyan? Ha kellően sokat tesztelünk! (Néhányan olyat is szoktak tenni, hogy ez alapján próbálják "korrigálni" a fertőzöttek számát. Ez nagyon ingoványos talaj, hiszen a valódi kép ennél bonyolultabb: a helyzet függ a tesztelési mintázattól is, tehát, hogy kiket, milyen kockázatú alanyokat tesztelünk. Nagyon nem mindegy, hogy gyanús tüneteket mutató alanyokat tesztelünk, kontaktus-személyeket tesztelünk, egy cég a munkavállalóit a "biztonság kedvéért" teszteli stb.) Természetesen fontos az elvégzett tesztek számán túl azok típusának -- PCR, antigén-gyorsteszt -- ismerete is, sajnos Magyarország erre vonatkozóan nem közöl nyilvánosan adatot. Magyarországon szintén nincs nyilvános adat a tesztkapacitásról, tehát, hogy heti hány tesztet tudunk maximálisan elvégezni.
+Kitérő megjegyzésként érdemes itt beszúrni, hogy ezért érdekes mutató a tesztpozitivitás, tehát, hogy az elvégzett tesztek mekkora hányada pozitív: azt mutatja, hogy a tesztelési program mennyire tud lépést tartani a járvány terjedésével. Ha kellően alacsony (a nemzetközi ajánlás 5%-os maximumot tűz ki), akkor a tesztelési intenzitás megfelelő, de ha nagyobb, akkor nem elégséges a tesztelés. Fontos tehát hangsúlyozni, hogy a tesztpozitivitás ezt, tehát a tesztelési program elégségességét méri, *nem* a járvány helyzetét. De az elégségesség mérésére tényleg logikus tartalmú mutató, hiszen azt mondja: ha el is szabadul a járvány, ez akkor is behúzható az 5%-os küszöb alá. Hogyan? Ha kellően sokat tesztelünk! (Néhányan olyat is szoktak tenni, hogy ez alapján próbálják „korrigálni" a fertőzöttek számát. Ez nagyon ingoványos talaj, hiszen a valódi kép ennél bonyolultabb: a helyzet függ a tesztelési mintázattól is, tehát, hogy kiket, milyen kockázatú alanyokat tesztelünk. Nagyon nem mindegy, hogy gyanús tüneteket mutató alanyokat tesztelünk, kontaktus-személyeket tesztelünk, egy cég a munkavállalóit a „biztonság kedvéért" teszteli stb.) Természetesen fontos az elvégzett tesztek számán túl azok típusának -- PCR, antigén-gyorsteszt -- ismerete is, sajnos Magyarország erre vonatkozóan nem közöl nyilvánosan adatot. Magyarországon szintén nincs nyilvános adat a tesztkapacitásról, tehát, hogy heti hány tesztet tudunk maximálisan elvégezni.
 
 Tekintve a fertőzött-szám nagy problémáját, eléggé kézenfekvően adja magát a következő mutató: a fertőzésben történő halálozások napi száma. Hiszen az függ a tesztelési aktivitástól, hogy észrevesszük-e valakiről, hogy fertőzött, de azt azért csak észrevesszük, hogy valaki él-e, teszteléstől függetlenül is...! Sajnos ez az okfejtés hibás: azt fejlett világban tényleg tudjuk, hogy valaki meghalt, csak most itt nem erre van szükség, hanem arra, hogy a fertőzés*ben* halt-e meg! Ennek ismerete viszont igenis függhet a tesztelési aktivitástól. Rosszabb esetben egy gyanús tüneteket mutató elhunytat sem tesztelnek, még poszt mortem sem, de teljesen jóhiszemű módon is előállhat ilyen: „hát igen, a nagymamának gyenge volt a szíve, erre sajnos fel kellett készülni" -- és senki nem végez tesztet, és soha ki nem derül, hogy azért a dolog nem volt teljesen véletlen, mert a háttérben volt egy infekció is. Az ilyen esetek előfordulása azonban igenis függ a tesztelési aktivitástól. Ezért valójában ez a mutató sem teljesen független a tesztelés intenzitisától, de azért tény, hogy jóval kevésbé függ tőle, mint a regisztrált fertőzöttek száma. Ilyen értelemben tehát racionális e mutató használata is. Milyen hátrányai vannak a halott-számnak? Az egyik, hogy ez egy jóval lassabb indikátor: a fertőzött-számnál felsorolt összes késleltetés megjelenik természetesen itt is, és még pluszban hozzájön a halálig eltelő idő, ez szintén több hét. Összességében véve a halálozás-számnak már simán lehet hónapon felül a késleltetése; és érvényes minden, amit erről korábban mondtunk: aki most hal meg, az 4 héttel, 5 héttel, lehet, hogy 6 héttel korábban kapta el a fertőzést, a halála az *akkori* fertőzési viszonyokat tükrözi! Avagy, még másképp megfogalmazva: ha bármit teszünk, annak a hatása halálozásokban 4-6 hét *múlva* fog csak jelentkezni. Mindezeket tökéletesen szemléleti a 2020 őszi cseh helyzet:
 
@@ -171,7 +171,7 @@ Remélem, a fentiekből is érzékelhető, hogy nincsenek univerzálisan „jobb
 
 Próbáljuk meg áttekinthetővé tenni a többlethalálozási mutatókat! Először is, ne év alapú mutatókat nézzük (semmilyen kitüntetett járványügyi jelentősége nincs a december 31-nek, hogy akkor vágjuk el az adatokat), hanem egyszerűen folytonosan kezeljük az időt. Másrészt, érdemesebb relatív mutató gyanánt a lélekszámmal osztani, így ugyanis egy olyan mutatót kapunk, ami analóg a regisztrált halálozások közlésével, hiszen azt is halál / millió főben szokták megadni. Ha a többletet is millió lakosra osztjuk rá, akkor a kettő egymással is jól összehasonlítható lesz.
 
-Én az Eurostat [adatai](https://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=demo_r\_mwk_ts&lang=en) alapján kiszámítottam a többlethalálozást, mégpedig heti alapon, egységesen az országokra, és valamennyi európai országra. Az elemzéshez és ábrázoláshoz használt programot -- a „nyílt tudomány" jegyében -- teljes egészében [nyilvánosságra hozom](https://github.com/tamas-ferenci/ExcessMortEUR), így bárki reprodukálhatja, ellenőrizheti és továbbfejlesztheti a számításaimat, illetve itt elolvashatóak a módszertani részletek is.
+Én az Eurostat [adatai](https://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=demo_r\_mwk_ts&lang=en) alapján kiszámítottam a többlethalálozást, mégpedig heti alapon, egységesen az országokra, és valamennyi európai országra. Az elemzéshez és ábrázoláshoz használt programot -- a „nyílt tudomány" jegyében -- teljes egészében [nyilvánosságra hozom](https://github.com/tamas-ferenci/ExcessMortEUR#eredmények-a-hazai-többlethalálozási-adatok-és-európai-viszonyításuk), így bárki reprodukálhatja, ellenőrizheti és továbbfejlesztheti a számításaimat, illetve itt elolvashatóak a módszertani részletek is.
 
 A többlethalálozás számítása az egyik legkorszerűbb eljárással, [Acosta és Irizzary módszerével](https://www.medrxiv.org/content/10.1101/2020.06.06.20120857v2) történt, mely kifinomult statisztikai eljárással igyekszik jól meghatározni a múltbeli adatokból a viszonyítási alapot. Kihagytam azokat az országokat, melyeknek 1 milliónál kevesebb lakosa van (a lakosságszámra való későbbi ráosztás miatt), illetve amelyik nem tagja az EU-nak vagy EFTA-nak.
 
@@ -215,9 +215,119 @@ Azzal tehetünk a magyar emberek egészségéért, ha feltesszük azt a kérdés
 
 Nem állítom, hogy ezek a kérdések könnyen megválaszolhatóak, és részben egyet is értek azzal, hogy a járványkezelés kiértékelése távlatot és rálátást igényel, de nem teljes mértékben: ha valamit rosszul csinálunk, azt jó minél hamarabb kideríteni, mielőtt túl sokáig csináljuk tovább rosszul.
 
+Nem értek egyet azzal a filozófiával sem, hogy azzal törődjünk, hogy nem igaz, hogy a legrosszabbak vagyunk: abból nem lehet tanulni, hogy van, aki még rosszabb. Abból lehet tanulni, ha azt nézzük, hogy mondjuk Dánia a járvány teljes időtartamát lehozta zéró többlethalálozással. Ez min múlt? Azon, hogy a 6 milliós Dánia 34 millió koronavírus-tesztet csinált, mi 5,5 milliót? Azon, hogy mi 3,5 liter tömény alkoholt iszunk meg évente, a dánok 1,6-ot? Azon, hogy náluk 1000 nővér jut százezer lakosra, nálunk kevesebb, mint 500? Félreértés ne essék, nem tudom biztosan én sem, hogy mi a magyarázat, de azt biztosan tudom, hogy az erről való diskurzus előre viszi az országot. Az, hogy a középmezőnyben vagyunk, úgyhogy akkor menjünk is tovább, nem viszi előbbre az országot.
+
+## Módszertani kérdések
+
+A számítás elvégzése néhány alapvető módszertani kérdés megválaszolását teszi szükségessé, melyeket érdemes külön is megtárgyalni.
+
+### A várt halálozások előrejelzése
+
+Mint láttuk, az egész többlethalálozási mutató kiindulópontja annak megmondása, hogy járvány nélküli mennyi halálozás lett *volna*, amit módszertanilag úgy oldunk meg, hogy a korábbi -- és emiatt járvány által nem befolyásolt -- adatokból készítünk egy statisztikai előrejelzést. Éppen ezért fontos alaposan megérteni, hogy milyen lehetséges módszerek vannak előrejelzések készítésére, ezeknek mik az előnyei és hátrányai.
+
+A továbbiak szemléltetéséhez tekintsünk egy példa országot, melynek a 2015 és 2019 között halálozási rátái a következő szerint alakultak (a függőleges tengelyen az ezer főre jutó halálozások száma van, az értéket megadó pont körüli tartomány az ún. 95%-os konfidenciaintervallum, mely az érték bizonytalanságát jelzi -- minél szélesebb az intervallum, annál kevésbé tudjuk az adott értéket pontosan meghatározni):
+
+```{r}
+SimData <- data.table(year = as.factor(as.character(2015:2019)),
+                      type = "fact", mort = c(134, 132, 131, 130, 129)*1e3,
+                      pop = c(9.9, 9.8, 9.8, 9.75, 9.7)*1e6)
+SimData <- cbind(SimData, t(sapply(1:nrow(SimData),
+                                   function(i) with(binom.test(SimData$mort[i], SimData$pop[i]),
+                                                    c(fit = unname(estimate), lwr = conf.int[1],
+                                                      upr = conf.int[2])))))
+ggplot(SimData, aes(x = year, y = fit*1000, ymin = lwr*1000, ymax = upr*1000, color = type)) +
+  geom_point() + geom_errorbar(width = 0.3) + labs(x = "Év", y = "Mortalitás") + guides(color = "none")
+```
+
+Az egyszerűség kedvéért tételezzük fel, hogy évi adatunk van, és a járvány pontosan 2020 elején kezdődött. Nézzük meg ezen képzeletbeli ország példáján a legtipikusabb megoldásokat a 2020-ra vonatkozó előrejelzés készítésében!
+
+Az első lehetőség, hogy a 2019-re vonatkozó adatokat egy az egyben átvesszük mint a 2020 becslése:
+
+```{r}
+SimData <- rbind(SimData, data.table(year = "2019 megis-\nmételve", type = "pred",
+                                     SimData[year=="2019", -c("year", "type")]))
+ggplot(SimData, aes(x = year, y = fit*1000, ymin = lwr*1000, ymax = upr*1000, color = type)) +
+  geom_point() + geom_errorbar(width = 0.3) + labs(x = "Év", y = "Mortalitás") + guides(color = "none")
+```
+
+Ennek a módszernek az előnye, hogy mivel a legközelebbi értéket veszi át, így nem érinti annyira érzékenyen, ha a mortalitásoknak hosszútávú trendje van -- márpedig általában van. (Bár azért érezhető, hogy még így sem tökéletes a helyzet, hiszen a példában azt érzi az ember, hogy valójában még ennél is lejjebb volt a várható, mivel egy folyamatos csökkenésben vagyunk.) A hátránya, hogy egyetlen év adatait használja, így nagyobb a bizonytalansága: a mortalitási adatokban lényeges évről-évre történő véletlen ingadozás van (mikor volt épp egy rosszabb influenza-szezon, mikor egy jobb stb.); emiatt egy év adata szükségképp nagyobb bizonytalanságot jelent.
+
+A második tipikus módszer, hogy a néhány -- például öt -- megelőző év átlagát veszik várt halálozásnak:
+
+```{r}
+SimData <- rbind(SimData, data.table(year = "2015-2019\nátlagolva", type = "pred",
+                                     mort = sum(SimData[type=="fact"]$mort),
+                                     pop = sum(SimData[type=="fact"]$pop),
+                                     with(binom.test(sum(SimData[type=="fact"]$mort),
+                                                     sum(SimData[type=="fact"]$pop)),
+                                          t(c(fit = unname(estimate), lwr = conf.int[1],
+                                              upr = conf.int[2])))))
+ggplot(SimData, aes(x = year, y = fit*1000, ymin = lwr*1000, ymax = upr*1000, color = type)) +
+  geom_point() + geom_errorbar(width = 0.3) + labs(x = "Év", y = "Mortalitás") + guides(color = "none")
+```
+
+Ez olyan szempontból jobb, hogy az eredmény biztosabb, mivel a több év átlagolása lecsökkenti a véletlen ingadozásokat. (Jól látszik, hogy a konfidenciaintervallum is szűkebb, jelezve, hogy pontosabban becsült értéket kaptunk.) A nagy problémája is látszik azonban az ábrán: ha hosszú távú trendje van a halálozásoknak, akkor az átlag nagyon félrevezető lehet; jelen esetben a korábbi nagy értékek miatt torz módon magas lesz.
+
+Így jutunk el a harmadik megoldási lehetőség ötletéhez: rakjunk egy vonalzót a megelőző 5 év adatára és hosszabbítsuk meg ezt az egyenest! Egyszerűen a halálozási rátákkal elvégezve ezt az alábbi eredményhez jutunk:
+
+```{r}
+SimData <- rbind(SimData, data.table(year = "2015-2019\nmeghosszabbítva", type = "pred", mort = NA, pop = NA,
+                                     predict(lm(fit ~ as.numeric(as.character(year)),
+                                                data = SimData[type=="fact"]),
+                                             data.frame(year = 2020), interval = "prediction")))
+ggplot(SimData, aes(x = year, y = fit*1000, ymin = lwr*1000, ymax = upr*1000, color = type)) +
+  geom_point() + geom_errorbar(width = 0.3) + labs(x = "Év", y = "Mortalitás") + guides(color = "none")
+```
+
+Ez megfelel a „szabad szemre" történő várakozásunknak arra, hogy hol lenne a következő évi eredmény, viszont cserében a bizonytalansága is a legnagyobb.
+
+A jelen esetben, mivel rengeteg adat áll rendelkezésre, így a fenti értelmű -- mintavételi -- bizonytalanság kevésbé fontos szempont, viszont az kritikus, hogy a torzítottságot igyekezzünk elkerülni. Emiatt a harmadik megoldás tűnik a legszerencsésebbnek.
+
+Természetesen a valóságban egy sor bonyolító tényezővel kell számolni. Egyrészt nem éves adataink vannak, hanem haviak, jobb esetben hetiek (legjobb esetben napiak), ilyenkor el kell számolni az éven belüli mintázattal. A mortalitásnak ugyanis van egy jellegzetes éven belüli alakulása, úgy szokták mondani, szezonalitása; az alábbi ábra ezt szemlélteti a járvány előtti magyar adatokkal (a kék görbe mutatja az összes adat simítását, a halvány fekete görbék az egyes évek adatait):
+
+```{r}
+ggplot(RawData[geo=="HU"&year<=2019], aes(x = week, y = outcome/population*1000*52, group = year)) +
+  geom_line(alpha = 0.2) +
+  geom_line(data = data.frame(week = 1:53,
+                              mort = predict(mgcv::gam(outcome ~ s(week, bs = "cc"),
+                                                       offset = log(population),
+                                                       data = RawData[geo=="HU"&year<=2019],
+                                                       family = poisson),
+                                             newdata = data.frame(week = 1:53), type = "response")*1000*52),
+            aes(x = week, y = mort), color = "blue", inherit.aes = FALSE) + labs(x = "Hét", y = "Mortalitás")
+```
+
+Heti adatok használatánál tehát ezzel a mintázattal el kell számolni. (Napi adatok használatánál még a héten belüli mintázattal is.)
+
+A második probléma, hogy a valóságban nem pontosan az évhatárnál van a járvány kezdete. A gyakorlatban ez általában azt jelenti, hogy a számítási algoritmusnak meg kell adni, hogy teljesen pontosan mely adatokat használja fel a várt halálozás becslésére. Semmiféle problémát nem jelent, ha ez nem az évhatár: ha 2020 márciusig használjuk fel az adatokat, akkor azokból becsüljük a hosszú távú trendet és a szezonalitást, nincs jelentősége, hogy ez nem évhatárra esik. (A becsléshez így minden információt kinyerünk, például még 2020 első két hónapját is a szezonális mintázat becsléséhez.) Adott esetben még az sem kötelező, hogy ez a fenti módon nézzen ki, tehát, hogy egy ideig használjuk az adatokat, utána meg nem, nyugodtan megadhatunk több tartományt is, amiket használunk a modell -- és ebből fakadóan a várt halálozás -- becsléséhez.
+
+És végezetül egy általános megjegyzés. A fentiekből is látható, hogy a többlethalálozás módszere nem alkalmazható akkor, ha nagyon hosszú időtartamú a járvány. Ekkor ugyanis nagyon messzire távolodunk a tényadatoktól és lehetetlen lesz értelmes előrejelzést tenni, amivel a várt halálozást felállíthatnánk. Ha -- persze csak elméleti példaként... -- 10 évig tart egy járvány, akkor a végén már nagyon megkérdőjelezhető lesz a többlethalálozási eredmény, hiszen a járvány nélküli adat becsléséhez 10 évvel korábbi adatokat fogunk felhasználni, ami alapján aligha lehet kijelenteni, hogy mi a várt érték, annyira odébbmászhattak a járványtól független mortalitási tényezők.
+
+### Acosta és Irizarry módszerének technikai részletei
+
+Az általam a számításokra használt eljárás a fenti harmadik módszer (görbeillesztés- és hosszabbítás) filozófiájának felel meg, csak azt jóval szofisztikáltabban vitelezi ki; Rolando J. Acosta (Harvard University) és Rafael A. Irizarry (Dana-Farber Cancer Institute) 2020-ban publikálta.
+
+Nagyon röviden és nagyon technikai szinten a következő történik. Először is kell egy valószínűségi modell, ez a következő lesz:
+\[
+	Y_t \mid \varepsilon_t \sim \text{Poi}\left(\mu_t\left[1+f\left(t\right)\right]\varepsilon_t\right),
+\]
+ahol $\varepsilon_t$ nem feltétlenül fehérzaj, lehet autokorrelált, az adatok autokorreláltságának elszámolására (a napi adat erősen az, a heti nem feltétlenül), legyen többváltozós normális AR($p$) szerinti kovarianciamátrixszal és
+\[
+	\mu_t = N_t \exp\left[\alpha\left(t\right)+s\left(t\right)+w\left(t\right)\right],
+\]
+ahol $\alpha\left(t\right)$ a hosszú távú -- lassan változó -- trend, $s\left(t\right)$ az éven belüli mintázat (szezonalitás), $w\left(t\right)$ pedig a hét napja hatás (ha napi adatunk van), és $N_t$ a háttérpopuláció.
+
+A modell felállítása logikus, hiszen a halálozások száma darabszám jellegű adat, erre csakugyan a Poisson a legszokványosabb választás. Látható, hogy $f\left(t\right)$ a keresett többlet (szorzóként lép be, hiszen log-link mellett multiplikatív az egész modell). Explicite nem ráta van benne, de lényegében igen, hiszen offszetként felhasználjuk a háttérpopuláció lélekszámát.
+
+A modell becslése cseles, alapvetően maximum likelihood, de elég komplex, mert óvatosan kell eljárni ($\varepsilon_t$ is elég általános, és $f\left(t\right)$ is nézhet ki furcsán, például lehet szakadása).
+
+A modellt most összesített adatokon futtatom (tehát nem pedig rétegzett, például életkor és nem szerint rétegzett adatokon). Szemben azzal, amit az ember első ránézésre gondolna, hogy ti. az életkori és nemi összetételek eltérése miatt itt hiba lehet, ez valójában nagy bajt nem okoz, különösen, ha a várthoz viszonyított relatív eltéréseket használjuk (lásd következő pont). Mégis lehet valamennyi értelme a rétegzésnek, egy kevésbé fontos ok miatt: ha a hosszú távú trend, vagy szezonalitás eltér az egyes rétegek között.
+
 ## Az európai többlethalálozási adatok elemzése
 
-A számítások aktualizálásának dátuma: `r Sys.Date()`. A többlethalálozást számító csomag (`excessmort`) verziószáma `r packageVersion("excessmort")`, az Eurostat-tól adatokat lekérő csomagé (`eurostat`) `r packageVersion("eurostat")`.
+Ebben a szakaszban közlöm a teljes elemzést, mindenhol megadva a számításokat végző kódot is, a nyílt -- és reprodukálható -- tudomány filozófiájának megfelelően. Én általában is ennek vagyok a híve, de a jelen esetben, egy népegészségügyileg kritikus helyzetben, azt gondolom, hogy ez kiemelten fontos. Három ok miatt vagyok a híve ennek a filozófiának: az első, hogy ez a fajta transzparencia növeli a bizalmat a kutatási eredmények iránt, hiszen azok így többé már nem felkent papoktól érkező kinyilatkoztatások, a második, hogy biztosabbá teszi az eredményeket, mert így, ha elrontottam valamit, azt az egész világ látni fogja, és így sokkal valószínűbb, hogy kiderül és hamar kiderül (igen, rosszul fogom magam érezni, ha kiderül, hogy hibáztam, de még sokkal rosszabbul érezném magam, ha *nem* derül ki, és mindenki elhiszi a rossz eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a többi kutatót és az érdeklődő laikusokat hasonló számítások elvégézésében, mivel itt látnak egy lehetséges példát.
+
+A számítások aktualizálásának dátuma: `r Sys.Date()`. A többlethalálozást számító csomag (`excessmort`) verziószáma `r packageVersion("excessmort")`, az Eurostat-tól adatokat lekérő csomagé (`eurostat`) pedig `r packageVersion("eurostat")`.
 
 Elsőként betöltjük a szükséges könyvtárakat:
 
@@ -463,7 +573,7 @@ ggplot(melt(res[geo=="HU", .(date, `Többlethalálozás` = cumexcess,
 ## Továbbfejlesztési ötletek
 
 - [ ] Életkori és nemi lebontás. (Hátha mások a mortalitási trendek!)
-- [ ] Életkorra és nemre standardizálás.
+- [ ] Életkorra és nemre standardizálás. (van bármi értelme??)
 - [x] A jelentés teljességének a vizsgálata (mennyire nőnek még az utolsó adatok, és meddig?). Válasz: Eurostat metadata 13.1-es pont.
 - [ ] Területi adatok használata.
 - [ ] Egyszeri hatások kiküszöbölése (influenza!) kiegészítő elemzésként.
