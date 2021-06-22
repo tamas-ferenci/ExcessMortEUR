@@ -22,6 +22,8 @@ Ferenci Tamás
         előrejelzése](#a-várt-halálozások-előrejelzése)
     -   [Acosta és Irizarry módszerének technikai
         részletei](#acosta-és-irizarry-módszerének-technikai-részletei)
+    -   [Relatív és abszolút
+        eredmények](#relatív-és-abszolút-eredmények)
 -   [Az európai többlethalálozási adatok
     elemzése](#az-európai-többlethalálozási-adatok-elemzése)
 -   [Továbbfejlesztési ötletek](#továbbfejlesztési-ötletek)
@@ -721,11 +723,47 @@ komplex, mert óvatosan kell eljárni (*ε*<sub>*t*</sub> is elég
 A modellt most összesített adatokon futtatom (tehát nem pedig rétegzett,
 például életkor és nem szerint rétegzett adatokon). Szemben azzal, amit
 az ember első ránézésre gondolna, hogy ti. az életkori és nemi
-összetételek eltérése miatt itt hiba lehet, ez valójában nagy bajt nem
+összetételek eltérése miatt ez hiba lehet, ez valójában nagy bajt nem
 okoz, különösen, ha a várthoz viszonyított relatív eltéréseket
 használjuk (lásd következő pont). Mégis lehet valamennyi értelme a
-rétegzésnek, egy kevésbé fontos ok miatt: ha a hosszú távú trend, vagy
-szezonalitás eltér az egyes rétegek között.
+rétegzésnek, de egy kevésbé fontos ok miatt: ha a hosszú távú trend,
+vagy szezonalitás eltér az egyes rétegek között.
+
+### Relatív és abszolút eredmények
+
+A többlethalálozást eddig úgy kezeltük mint a tényleges és a várt
+halálozás különbsége, tehát egy – főben mért – abszolút szám. Csakugyan
+ez az egyetlen, ami teljesen aggálytalanul kiszámítható, ám problémája,
+hogy nem vethető össze országok között, hiszen a nagyobb országokban
+nyilván nagyobb lesz a többlethalálozás, akkor is, ha valójában nem
+rosszabb a helyzet. Mit tehetünk?
+
+A természetes ötlet a relatív mutatóra való áttérés, ezen belül is a
+legtermészetesebb gondolat az ország lélekszámával való leosztás; számos
+más esetben is szinte automatikusan ezt tesszük. (Például a
+fertőzött-számok vagy a halálozási számok esetében is!) Itt azonban nem
+biztos, hogy ez a legszerencsésebb választás.
+
+A probléma az, hogy a lélekszám érzéketlen arra, hogy mennyi az
+alaphalandóság az adott országban. Tekintsünk két, 10 milliós országot,
+amelyek egyikében évi 100, a másikban évi 150 ezer ember hal meg
+(mondjuk mert az utóbbiban több a krónikus beteg, vagy akár csak azért,
+mert idősebbek a lakosok). Ez esetben ugyanannyi többlethalálozás
+relatívvá téve is ugyanolyan eredményre vezet, noha az ember azt érzi,
+hogy adott többlethalál jobban számít az első országnál, mint a
+másodiknál.
+
+Éppen ezért gyakran a többlethalálozások számát nem a lakosság számára,
+hanem a várt halálozás-számra osztják rá. Ez egyfelől ugyan bevisz a
+dologba egy plusz bizonytalanságot, hiszen egy becsült,
+bizonytalansággal terhelt értékkel osztunk, de cserében van egy hatalmas
+előnye. Ez pedig az, hogy mivel a várt érték már *eleve* tükrözi az
+ország alaphalandóságát, és így minden azt befolyásoló tényezőt (kezdve
+a korfával, de nyugodtan felsorolhatjuk a krónikus betegségeket, a
+környezeti tényezőket, szociális viszonyokat, egészségügyi
+ellátórendszert stb.), így a hányadossal kapott relatív érték nagyon jól
+összehasonlítható lesz országok között, még akkor is, ha ezek a tényezők
+eltérnek (mint ahogy nagyon is el fognak térni minden valós esetben).
 
 ## Az európai többlethalálozási adatok elemzése
 
@@ -745,7 +783,7 @@ eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a
 többi kutatót és az érdeklődő laikusokat hasonló számítások
 elvégézésében, mivel itt látnak egy lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2021-06-22. A többlethalálozást
+A számítások aktualizálásának dátuma: 2021-06-23. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.4.9, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) pedig 3.7.5.
 
