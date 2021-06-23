@@ -87,7 +87,6 @@ res <- rbindlist(setNames(lapply(unique(RawData$geo), function(cntry)
 res <- merge(res, RawData, by = c("geo", "date"))
 res <- res[order(geo, date)]
 res <- res[date>=as.Date("2020-03-01")]
-res <- res[geo%in%res[,.(tail(population,1)), .(geo)][V1>1e6]$geo]
 ```
 
 ```{r tobbletszamolas, echo = FALSE}
@@ -173,25 +172,9 @@ Próbáljuk meg áttekinthetővé tenni a többlethalálozási mutatókat! Elős
 
 Én az Eurostat [adatai](https://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=demo_r\_mwk_ts&lang=en) alapján kiszámítottam a többlethalálozást, mégpedig heti alapon, egységesen az országokra, és valamennyi európai országra. Az elemzéshez és ábrázoláshoz használt programot -- a „nyílt tudomány" jegyében -- teljes egészében [nyilvánosságra hozom](https://github.com/tamas-ferenci/ExcessMortEUR#eredmények-a-hazai-többlethalálozási-adatok-és-európai-viszonyításuk), így bárki reprodukálhatja, ellenőrizheti és továbbfejlesztheti a számításaimat, illetve itt elolvashatóak a módszertani részletek is.
 
-A többlethalálozás számítása az egyik legkorszerűbb eljárással, [Acosta és Irizzary módszerével](https://www.medrxiv.org/content/10.1101/2020.06.06.20120857v2) történt, mely kifinomult statisztikai eljárással igyekszik jól meghatározni a múltbeli adatokból a viszonyítási alapot. Kihagytam azokat az országokat, melyeknek 1 milliónál kevesebb lakosa van (a lakosságszámra való későbbi ráosztás miatt), illetve amelyik nem tagja az EU-nak vagy EFTA-nak.
+A többlethalálozás számítása az egyik legkorszerűbb eljárással, [Acosta és Irizzary módszerével](https://www.medrxiv.org/content/10.1101/2020.06.06.20120857v2) történt, mely kifinomult statisztikai eljárással igyekszik jól meghatározni a múltbeli adatokból a viszonyítási alapot. Kihagytam azokat az országokat amelyek nem tagjai az EU-nak vagy EFTA-nak.
 
-Kezdjük a járvány kezdete óta összesített adatokkal (piros görbe Magyarország, a szürke görbék a többi európai országot jelölik):
-
-```{r kumulaltlelekszam, echo = FALSE}
-ggplot(res, aes(x = date, y = cumexcess/cumpopulation*1e6, group = geo, label = geo)) +
-  geom_line(aes(color = geo=="HU")) +
-  scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
-  labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]") +
-  scale_x_date(date_breaks = "months", date_labels = "%b") + theme_bw() +
-  directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
-  theme(plot.caption = element_text(face = "bold", hjust = 0),
-        legend.position = "bottom", legend.title = element_blank()) +
-  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
-```
-
-Látható, hogy a legfrissebb adatok szerint -- persze ne felejtsük, ez egy hónappal ezelőtti állapotot jelent! -- nagyjából a legrosszabb harmad közepén/elején vagyunk.
-
-Mit tudunk mondani az aktuális helyzetről? Ezt mutatják a heti adatok:
+Mit tudunk mondani egy adott időpontban aktuális helyzetről? Ezt mutatják a heti adatok (piros görbe Magyarország, a szürke görbék a többi európai országot jelölik):
 
 ```{r aktualislelekszam, echo = FALSE}
 ggplot(res, aes(x = date, y = excess/population*1e6, group = geo, label = geo)) +
@@ -206,6 +189,30 @@ ggplot(res, aes(x = date, y = excess/population*1e6, group = geo, label = geo)) 
 ```
 
 Jól látszik, hogy az első hullám teljesen kimutathatatlan volt (legalábbis többlethalálozás tekintetében) Magyarországon, addig a második már súlyosan érintett minket, a harmadikban pedig gyakorlatilag egész Európában a legrosszabbak között volt az aktuális járványügyi helyzetünk.
+
+A járvány egészének értékeléséhez nézzük az összesített adatokat (piros görbe Magyarország, a szürke görbék a többi európai országot jelölik):
+
+```{r kumulaltlelekszam, echo = FALSE}
+ggplot(res, aes(x = date, y = cumexcess/cumpopulation*1e6, group = geo, label = geo)) +
+  geom_line(aes(color = geo=="HU")) +
+  scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
+  labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]") +
+  scale_x_date(date_breaks = "months", date_labels = "%b") + theme_bw() +
+  directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
+  theme(plot.caption = element_text(face = "bold", hjust = 0),
+        legend.position = "bottom", legend.title = element_blank()) +
+  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
+```
+
+Látható, hogy a legfrissebb adatok szerint -- persze ne felejtsük, ez egy hónappal ezelőtti állapotot jelent! -- nagyjából a legrosszabb harmad közepén vagyunk.
+
+Érdekes lehet jobban látható módon is kiemelni az utolsó időpontbeli adatokat, tehát a fenti ábra jobb szélét (minden ország az utolsó elérhető adatával szerepel):
+
+```{r}
+ggplot(res[, tail(.SD, 1), .(geo)][order(cumexcess/cumpopulation)],
+       aes(x = factor(geo, levels = geo), y = cumexcess/cumpopulation*1e6, fill = geo=="HU")) + geom_col() +
+  guides(fill = "none") + labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]")
+```
 
 ## Záró gondolatok
 
@@ -307,15 +314,7 @@ A második probléma, hogy a valóságban nem pontosan az évhatárnál van a j�
 
 Az általam a számításokra használt eljárás a fenti harmadik módszer (görbeillesztés- és hosszabbítás) filozófiájának felel meg, csak azt jóval szofisztikáltabban vitelezi ki; Rolando J. Acosta (Harvard University) és Rafael A. Irizarry (Dana-Farber Cancer Institute) 2020-ban publikálta.
 
-Nagyon röviden és nagyon technikai szinten a következő történik. Először is kell egy valószínűségi modell, ez a következő lesz:
-\[
-	Y_t \mid \varepsilon_t \sim \text{Poi}\left(\mu_t\left[1+f\left(t\right)\right]\varepsilon_t\right),
-\]
-ahol $\varepsilon_t$ nem feltétlenül fehérzaj, lehet autokorrelált, az adatok autokorreláltságának elszámolására (a napi adat erősen az, a heti nem feltétlenül), legyen többváltozós normális AR($p$) szerinti kovarianciamátrixszal és
-\[
-	\mu_t = N_t \exp\left[\alpha\left(t\right)+s\left(t\right)+w\left(t\right)\right],
-\]
-ahol $\alpha\left(t\right)$ a hosszú távú -- lassan változó -- trend, $s\left(t\right)$ az éven belüli mintázat (szezonalitás), $w\left(t\right)$ pedig a hét napja hatás (ha napi adatunk van), és $N_t$ a háttérpopuláció.
+Nagyon röviden és nagyon technikai szinten a következő történik. Először is kell egy valószínűségi modell, ez a következő lesz: $Y_t \mid \varepsilon_t \sim \text{Poi}\left(\mu_t\left[1+f\left(t\right)\right]\varepsilon_t\right)$, ahol $\varepsilon_t$ nem feltétlenül fehérzaj, lehet autokorrelált, az adatok autokorreláltságának elszámolására (a napi adat erősen az, a heti nem feltétlenül), legyen többváltozós normális AR($p$) szerinti kovarianciamátrixszal és $\mu_t = N_t \exp\left[\alpha\left(t\right)+s\left(t\right)+w\left(t\right)\right]$, ahol $\alpha\left(t\right)$ a hosszú távú -- lassan változó -- trend, $s\left(t\right)$ az éven belüli mintázat (szezonalitás), $w\left(t\right)$ pedig a hét napja hatás (ha napi adatunk van), és $N_t$ a háttérpopuláció.
 
 A modell felállítása logikus, hiszen a halálozások száma darabszám jellegű adat, erre csakugyan a Poisson a legszokványosabb választás. Látható, hogy $f\left(t\right)$ a keresett többlet (szorzóként lép be, hiszen log-link mellett multiplikatív az egész modell). Explicite nem ráta van benne, de lényegében igen, hiszen offszetként felhasználjuk a háttérpopuláció lélekszámát.
 
