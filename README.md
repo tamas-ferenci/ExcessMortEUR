@@ -474,7 +474,10 @@ elérhető adatával szerepel):
 ``` r
 ggplot(res[, tail(.SD, 1), .(geo)][order(cumexcess/cumpopulation)],
        aes(x = factor(geo, levels = geo), y = cumexcess/cumpopulation*1e6, fill = geo=="HU")) + geom_col() +
-  guides(fill = "none") + labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]")
+  guides(fill = "none") + labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]") +
+  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
+        legend.title = element_blank()) +
+  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
@@ -530,13 +533,18 @@ Nem értek egyet azzal a filozófiával sem, hogy azzal törődjünk, hogy nem
 igaz, hogy a legrosszabbak vagyunk: abból nem lehet tanulni, hogy van,
 aki még rosszabb. Abból lehet tanulni, ha azt nézzük, hogy mondjuk Dánia
 a járvány teljes időtartamát lehozta zéró többlethalálozással. Ez min
-múlt? Azon, hogy a 6 milliós Dánia 34 millió koronavírus-tesztet
-csinált, mi 5,5 milliót? Azon, hogy mi 3,5 liter tömény alkoholt iszunk
-meg évente, a dánok 1,6-ot? Azon, hogy náluk 1000 nővér jut százezer
-lakosra, nálunk kevesebb, mint 500? Félreértés ne essék, nem tudom
-biztosan én sem, hogy mi a magyarázat, de azt biztosan tudom, hogy az
-erről való diskurzus előre viszi az országot. Az, hogy a középmezőnyben
-vagyunk, úgyhogy akkor menjünk is tovább, nem viszi előbbre az országot.
+múlt?
+[Azon](https://ourworldindata.org/explorers/coronavirus-data-explorer?zoomToSelection=true&pickerSort=asc&pickerMetric=location&Metric=Tests&Interval=Cumulative&Relative+to+Population=false&Align+outbreaks=false&country=HUN~DNK),
+hogy a 6 milliós Dánia 34 millió koronavírus-tesztet csinált, mi 5,5
+milliót?
+[Azon](https://gateway.euro.who.int/en/indicators/hfa_427-3051-spirits-consumed-in-pure-alcohol-litres-per-capita-age-15plus/),
+hogy mi 3,5 liter tömény alkoholt iszunk meg évente, a dánok 1,6-ot?
+[Azon](https://ec.europa.eu/eurostat/databrowser/view/hlth_rs_prsns/),
+hogy náluk 1000 nővér jut százezer lakosra, nálunk kevesebb, mint 500?
+Félreértés ne essék, nem tudom biztosan én sem, hogy mi a magyarázat, de
+azt biztosan tudom, hogy az erről való diskurzus előre viszi az
+országot. Az, hogy a középmezőnyben vagyunk, úgyhogy akkor menjünk is
+tovább, nem viszi előbbre az országot.
 
 ## Módszertani kérdések
 
@@ -805,6 +813,7 @@ Elsőként betöltjük a szükséges könyvtárakat:
 library(data.table)
 library(excessmort)
 library(ggplot2)
+theme_set(theme_bw())
 captionlab <- paste0("Ferenci Tamás, https://github.com/tamas-ferenci/ExcessMortEUR/\nAdatok forrása: ",
                      "Eurostat és STMF, lekérdezés dátuma: ")
 ```
@@ -1033,7 +1042,7 @@ ggplot(res, aes(x = date, y = excess/population*1e6, group = geo, label = geo)) 
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
   labs(x = "", y = "Többlethalálozás [fő/1M fő]") +
   scale_x_date(date_breaks = "months", date_labels = "%b") +
-  theme_bw() + directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
+  directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank()) +
   labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
@@ -1047,7 +1056,7 @@ Az aktuális többlethalálozás (relatív mutató, korábbi adatokra vetítve):
 ggplot(res, aes(x = date, y = increase, group = geo, label = geo)) + geom_line(aes(color = geo=="HU")) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
   labs(x = "", y = "Relatív többlethalálozás [%]") +
-  scale_x_date(date_breaks = "months", date_labels = "%b") + theme_bw() +
+  scale_x_date(date_breaks = "months", date_labels = "%b") +
   directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank()) +
@@ -1062,7 +1071,7 @@ Kicsit direktebben is összevethetjük őket, ha országonként külön-külön
 
 ``` r
 ggplot(res, aes(x = increase, y = excess/population*1e6)) + geom_line() +
-  labs(x = "Relatív többlethalálozás [%]", y = "Többlethalálozás [fő/1M fő]") +  theme_bw() +
+  labs(x = "Relatív többlethalálozás [%]", y = "Többlethalálozás [fő/1M fő]") +
   facet_wrap(~geo) + geom_abline(intercept = 0, slope =  2, alpha = 0.3) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank()) +
@@ -1089,7 +1098,7 @@ ggplot(res, aes(x = date, y = cumexcess/cumpopulation*1e6, group = geo, label = 
   geom_line(aes(color = geo=="HU")) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
   labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]") +
-  scale_x_date(date_breaks = "months", date_labels = "%b") + theme_bw() +
+  scale_x_date(date_breaks = "months", date_labels = "%b") +
   directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
   theme(plot.caption = element_text(face = "bold", hjust = 0),
         legend.position = "bottom", legend.title = element_blank()) +
@@ -1106,9 +1115,8 @@ teljesítettek a járvány kezelésében, mik a jó és a rossz példák:
 ggplot(res, aes(x = date, y = increase, group = geo)) + geom_line() +
   labs(x = "", y = "Relatív többlethalálozás [%]") +
   scale_x_date(date_breaks = "2 months", labels = function(z) gsub("^0", "", strftime(z, "%m"))) +
-  theme_bw() + facet_wrap(~geo) +
-  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
-        legend.title = element_blank()) +
+  facet_wrap(~geo) + theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
+                           legend.title = element_blank()) +
   labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
