@@ -33,6 +33,8 @@ Ferenci Tamás
     -   [Összevetés a jelentett
         halálozással](#összevetés-a-jelentett-halálozással)
     -   [Érzékenységvizsgálat](#érzékenységvizsgálat)
+    -   [A direkt hatás elkülönítése: egy kísérlet az influenza-járvány
+        kezelésére](#a-direkt-hatás-elkülönítése-egy-kísérlet-az-influenza-járvány-kezelésére)
 -   [Továbbfejlesztési ötletek](#továbbfejlesztési-ötletek)
 -   [Irodalmi hivatkozások](#irodalmi-hivatkozások)
 
@@ -153,18 +155,20 @@ teljesen véletlen, mert a háttérben volt egy infekció is. Az ilyen
 esetek előfordulása azonban igenis függ a tesztelési aktivitástól. Ezért
 valójában ez a mutató sem teljesen független a tesztelés intenzitisától,
 de azért tény, hogy jóval kevésbé függ tőle, mint a regisztrált
-fertőzöttek száma. Ilyen értelemben tehát racionális e mutató használata
-is. Milyen hátrányai vannak a halott-számnak? Az egyik, hogy ez egy
-jóval lassabb indikátor: a fertőzött-számnál felsorolt összes
-késleltetés megjelenik természetesen itt is, és még pluszban hozzájön a
-halálig eltelő idő, ez szintén több hét. Összességében véve a
-halálozás-számnak már simán lehet hónapon felül a késleltetése; és
-érvényes minden, amit erről korábban mondtunk: aki most hal meg, az 4
-héttel, 5 héttel, lehet, hogy 6 héttel korábban kapta el a fertőzést, a
-halála az *akkori* fertőzési viszonyokat tükrözi! Avagy, még másképp
-megfogalmazva: ha bármit teszünk, annak a hatása halálozásokban 4-6 hét
-*múlva* fog csak jelentkezni. Mindezeket tökéletesen szemléleti a 2020
-őszi cseh helyzet:
+fertőzöttek száma, hiszen a végül elhalálozó fertőzöttek általában
+súlyosabb állapotban vannak, így valószínűbb, hogy tesztelik őket. Ilyen
+értelemben tehát racionális e mutató használata is.
+
+Milyen hátrányai vannak a halott-számnak? Az egyik, hogy ez egy jóval
+lassabb indikátor: a fertőzött-számnál felsorolt összes késleltetés
+megjelenik természetesen itt is, és még pluszban hozzájön a halálig
+eltelő idő, ez szintén több hét. Összességében véve a halálozás-számnak
+már simán lehet hónapon felül a késleltetése; és érvényes minden, amit
+erről korábban mondtunk: aki most hal meg, az 4 héttel, 5 héttel, lehet,
+hogy 6 héttel korábban kapta el a fertőzést, a halála az *akkori*
+fertőzési viszonyokat tükrözi! Avagy, még másképp megfogalmazva: ha
+bármit teszünk, annak a hatása halálozásokban 4-6 hét *múlva* fog csak
+jelentkezni. Mindezeket tökéletesen szemléleti a 2020 őszi cseh helyzet:
 
 ![Cseh járványügyi mutatók 2020 őszén](CsehAdatok2.png)
 
@@ -1429,6 +1433,130 @@ azonban jelen helyzetben nem feltétlenül értelmes ötlet, hiszen az
 értékét nem tudjuk biztosan jól megválasztani; arra nem illik
 érzékenységvizsgálatot csinálni, amiről tudjuk, hogy nem jó választás
 (pl. az elmúlt néhány év átlagát használni).
+
+### A direkt hatás elkülönítése: egy kísérlet az influenza-járvány kezelésére
+
+Láthattuk, hogy a többlethalálozási mutató legnagyobb baja, hogy
+igazából *nem* a járvány direkt hatását méri. Szintén megbeszéltük, hogy
+két nagy baja van: hogy függ a várt érték előrejelzésétől, és hogy
+beleméri az eredménybe a járvány és kezelésének indirekt hatásait is.
+Mindezeket összegezve úgy fogalmazhatnánk, hogy többlethalálozás =
+direkt hatás + indirekt hatások + előrejelzés tévedése a járványtól
+független halandóságról. A probléma épp az, hogy nekünk az elsőre lenne
+szükségünk, de csak az összeget látjuk. Így nézve egy meglehetősen
+kézenfekvő ötlet, hogy próbáljuk a másik két tényezőt számszerűsíteni,
+mert ha azokat sikerülne meghatározni, akkor egyszerűen kivonva őket a
+többlethalálozásból megkapjuk a keresett direkt hatást!
+
+Jelen pont erre fog egy példát mutatni: a cél az lesz, hogy az
+influenza-járvány hatását próbáljuk meg figyelembe venni, és ezzel
+korrigálni a kapott becslést; más tényezővel nem foglalkozunk.
+Előrebocsátom, hogy a terület egy aknamező, így ez hangsúlyozottan csak
+kiegészítő elemzés. Első ránézésre meglepő lehet ez az állítás: miért
+problémás ha valamivel korrigálunk? Persze, rendben, van még egy sor
+másik tényező is, de így legalább eggyel beljebb vagyunk! – mondhatja
+valaki. A probléma azonban épp ez: ha egyszer belekezdünk abba, hogy
+elkezdünk korrigálgatni bizonyos tényezőkre, akkor nagyon ingoványos
+talajra kerülünk: miért pont azokra korrigálunk? A többire miért nem?
+Hol húzzuk meg a határt, hogy mire próbálunk korrigálni és mire nem?
+Igen, lehet mondani, hogy így egy dologtól megtisztítottuk, míg az
+eredeti attól az egytől sincs tisztítva, de így legalább az eredetinek
+világos, egyértelmű, pontosan definiált a tartalma! Mindenki tudja, hogy
+többlethalálozás, hogy az mit jelent, mit tartalmaz. A „részben
+tisztított" mutató már egyáltalán nem egyértelmű, hogy mit jelent,
+hogyan hasonlítható össze nemzetközileg stb.
+
+Az, hogy mennyire erősek az ellenérvek a fentiekkel szemben, függ attól
+is, hogy mennyire határozottan különíthető el az egyéb
+mortalitás-befolyásoló ok, amit le akarunk választani a
+többlethalálozásból. Egy elég meglepő, de valós kérdés: kivonjuk-e
+Azerbajdzsán és Örményország többlethalálozásából a 2020 végi
+hegyi-karabahi háború áldozatainak a számát…? Ez talán még a legjobban
+védhető helyzet, hiszen ez teljesen egyértelműen az „előrejelzés
+tévedése a járványtól független halandóságról" kategóriában van, mivel
+ez nyilván nem volt előrejelezhető a múltbeli halálozási adatokból,
+semmilyen módszerrel, másrészt elég jól meghatározható számú halálozást
+jelentett. (És ugye ezek jelenleg növelik a koronavírusos halálozást, ha
+a többlethalálozást használjuk!) De még így is óvatos lennék, még ezzel
+is, épp a fenti okok miatt.
+
+Hangsúlyozva tehát még egyszer az ezzel kapcsolatos fenntartásokat, egy
+konkrét példát nézzünk meg: az influenza-járvány kezelését. Azért ezt,
+mert magyar viszonyok között talán ez jelenti a legmarkánsabb olyan
+forrását a mortalitásnak, ami évről-évre lényegesen változik, és
+ráadásul indirekt hatásként is megjelenhet (a védekező intézkedések
+természetesen minden légúti kórokozó ellen jót tesznek). A jelentősége
+azonnal látható is, ha az ember ránéz az aktuális többlethalálozást és a
+regisztrált halálozást egyszerre feltüntető ábrára: hogyan lehet, hogy
+február elején szó szerint nulla volt a többlethalálozás, miközben
+regisztrált halálozás volt, annyira nem is kevés…? Bizonyosan
+természetesen nem lehet megválaszolni, pont a többlethalálozás fenti
+nehézségei miatt, de nagyon erős lehet a gyanúnk, hogy az influenza a
+magyarázat: 2020/21-ben az influenza-szezon praktikusan elmaradt, és ha
+ennek valóban a védekezés az oka, akkor ez lényegében egy pozitív
+indirekt hatás. Mivel azonban ez a többlethalálozásban benne van, így
+valójában a járvány okozta halálozás *még több*, mint amit kimutattunk –
+csak épp abból levonódik az influenza-járvány megúszása! (Úgy is
+fogalmazhatnánk, hogy a koronavírus lecserélte az influenzát: igen,
+nulla volt többlethalálozás, de a helyes megfogalmazás, hogy *annak
+ellenére* is *csak* nulla volt a többlethalálozás, hogy kiesett az
+influenza!)
+
+Hogy tudnánk ezt valahogy kezelni, korrigálni? Az egyik lehetőség, hogy
+megnézzük a múltbeli influenza-járványok halálozásaira vonatkozó
+adatokat és azt egész egyszerűen hozzáadjuk a mostani
+többlethalálozáshoz (mondván, hogy ennyit vontunk le szükségtelenül).
+Eljárhatunk azonban jóval elegánsabban is. Mint már volt róla szó, a
+várt halálozást előrejelző modellnek meg kell adni, hogy melyik adatok
+vannak kizárva a modell becsléséből; ez jelenleg a 2020. március 1.
+utáni dátumokat jelenti, hogy maga a vizsgált járvány ne legyen benne,
+értelemszerűen. Igen ám, de megtehetjük, hogy ezeket a kizárt dátumokat
+kibővítjük: szintén kivesszük az influenza-szezonokat, azaz a stratégia
+az, hogy ilyen módon megbecslünk egy „influenza nélküli" alapvonalat, és
+ezt vonjuk ki mint várt halálozást! Ezzel lényegében automatikusan
+korrigálunk az influenza-járványra.
+
+A dolog azonban ennél egy kicsit bonyolultabb: azt sem tehetjük meg,
+hogy az összes influenza-szezont kivesszük, hiszen akkor meg nem lesz
+miből megbecsülni ezen hetekre a szezonális mintázatot. A megoldást csak
+az jelentheti, ha *kézzel* megnézzük a múltbeli adatokat, és ahol más
+forrásból tudjuk, hogy nem, vagy nagyon enyhe influenza-szezon volt, azt
+*mégis* visszatesszük, hogy a modell ebből meg tudja ezekre a hetekre is
+becsülni a szezonális mintát. Magyarország esetében szerencsés a
+helyzet, mert a 2019/2020 pont jó példa erre.
+
+(Valójában ez nem teljesen igaz. Mivel Acosta és Irizarry eljárása egy
+meghatározott formájú – szép hullámosan ingadozó – függvényt illeszt a
+szezonális mintázatra, így akkor is működni fog, ha egy adott
+időintervallumra egyáltalán semelyik évben nincs megfigyelésünk, mert ha
+a többiből meg tudja ezen függvényforma paramétereit becsülni, akkor az
+kiad valamilyen lefutást erre az intervallumra is. Mindazonáltal
+biztosabb a becslés, ha mindenhol és minél több adatunk van.)
+
+Az egyszerűség kedvéért mondjuk, hogy Magyarországon a
+január-február-március az influenza-szezon, ezt a három hónapot zárjuk
+ki minden évben (kivéve tehát 2020-at). Hogy látható legyen ennek a
+hatása, érdemes megnézni, hogy mi a várt halálozás becsült görbéje a két
+módon
+
+![](README_files/figure-gfm/unnamed-chunk-42-1.png)<!-- -->
+
+Szépen látszik, hogy az influenza-szezonok nélkül becsültetett modell
+kevésbé fut fel magas értékekre – hiszen nem kell ráilleszkednie az
+akkori magasabb halálozásokra.
+
+És itt már látszik az ötlet működése: ha ehhez a – 2021 elején is
+alacsonyabban lévő – értékhez viszonyítunk, akkor nem fogja
+lecsökkenteni a többlethalálozást az, hogy a viszonyítási alapérték
+tartalmazza az – abban az évben be sem következett – influenza-szezont.
+Nézzük az eredményeket:
+
+![](README_files/figure-gfm/unnamed-chunk-43-1.png)<!-- -->
+
+Látszik, hogy így számolva a többlethalálozás 22 ezerről 27 ezer főre
+emelkedik, amiben az a nagyon szép, hogy bár teljesen máshogy
+dolgoztunk, de tökéletesen visszajött az influenza-szezon 4-5 ezer fős –
+teljesen reális értékű – halálozása.
 
 ## Továbbfejlesztési ötletek
 
