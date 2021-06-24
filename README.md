@@ -696,7 +696,7 @@ ggplot(RawData[geo=="HU"&year<=2019], aes(x = week, y = outcome/population*1000*
                               mort = predict(mgcv::gam(outcome ~ s(week, bs = "cc"),
                                                        offset = log(population),
                                                        data = RawData[geo=="HU"&year<=2019],
-                                                       family = poisson),
+                                                       family = quasipoisson),
                                              newdata = data.frame(week = 1:53), type = "response")*1000*52),
             aes(x = week, y = mort), color = "blue", inherit.aes = FALSE) + labs(x = "Hét", y = "Mortalitás")
 ```
@@ -1331,45 +1331,59 @@ használunk a modell felállításához. Az Eurostat adatbázisban
 Magyarország adatai 2000-ig visszamenőleg érhetőek el; az fenti
 elemzések mind úgy készültek, hogy az összes adatot használták. De mi
 történik akkor, ha ezt leszűkítjük? A következő ábra azt mutatja, hogy
-mennyi a járvány teljes időtartama alatt becsült (abszolút)
-többlethalálozás, ha csak egy adott évig visszamenőleg használjuk fel az
-adatokat a várt halálozás előrejelző modell becsléséhez:
+mennyi a járvány teljes időtartamára kapott (abszolút) többlethalálozás,
+ha csak egy adott évig visszamenőleg használjuk fel az adatokat a várt
+halálozást előrejelző modell becsléséhez:
 
 ![](README_files/figure-gfm/unnamed-chunk-36-1.png)<!-- -->
 
 Látható, hogy a teljes (2000-ben kezdődő) adatsort felhasználva kb. 22
-ezer fő a becsült többlethalálozás, de ha 2015-től becsültetjük csak a
-várt halálozás előrejelző modellt, akkor máris több mint 26 ezer! Ekkora
-különbséget okozhat az a – elsőre talán nem túl nagynak tűnő –
-különbség, hogy felhasználunk 5 évnél is régebbi adatokat.
+ezer fő a becsült többlethalálozás, ezt eddig is tudtuk, de ha 2015-től
+becsültetjük csak a várt halálozás előrejelző modellt, akkor máris több
+mint 26 ezer! Ekkora különbséget okozhat az a – elsőre talán nem túl
+nagynak tűnő – különbség, hogy felhasználunk 5 évnél is régebbi
+adatokat.
 
 Mi ennek az oka? Azonnal megértjük, ha megnézzük a mortalitás alakulását
-Magyarországon. Az egyszerűség kedvéért számoljuk ki simán az éves
-értékeket, így szabadulva meg a szezonalitástól:
+Magyarországon. Az illusztráció kedvéért először számoljuk ki az éves
+adatokat (nyers mortalitásokat):
 
 ``` r
 ggplot(RawData[geo=="HU"&year<=2019, .(mort = sum(outcome)/sum(population)*1000*52), .(year)],
-       aes(x = year, y = mort)) + geom_line()
+       aes(x = year, y = mort)) + geom_line() + geom_point() +
+  labs(x = "Év", y = "Nyers mortalitás [/1000 fő/év]")
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-37-1.png)<!-- -->
 
-Ha erre az adatbázisra illesztünk hosszú távú görbét, akkor a végén
-töretlenül növekvő trendet fogunk látni:
+Ha erre az egész, 2000-ben kezdődő adatbázisra illesztünk hosszú távú
+görbét, akkor a legvégén egy gyorsan növekvő trendet fogunk látni:
 
 ![](README_files/figure-gfm/unnamed-chunk-38-1.png)<!-- -->
 
 Ezt meghosszabbítva 2020-ra, 2021-re, pláne magasan levő alapvonalat
-fogunk kapni, amihez viszonyítunk, így a különbözet is kisebb lesz.
+fogunk kapni, amihez viszonyítunk – így a különbözet is kisebb lesz.
 
-Más azonban a helyzet, ha csak 2010-től nézzük a képet:
+Más azonban a helyzet, ha csak 2015-től nézzük a képet:
 
 ![](README_files/figure-gfm/unnamed-chunk-39-1.png)<!-- -->
 
-Ebben az esetben a végén csak egy sokkal-sokkal kisebb, talán nem is
-létező növekedés fog látszódni, így azt meghosszabbítva egy
-alacsonyabban lévő várt halálozást kapunk – amihez képest ugyanaz a
-tényleges halálozás természetesen nagyobb többletet fog jelenti.
+Ebben az esetben a végén csak egy sokkal-sokkal kisebb növekedés fog
+látszódni, így azt meghosszabbítva egy alacsonyabban lévő várt
+halálozást kapunk – amihez képest ugyanaz a tényleges halálozás
+természetesen nagyobb többletet fog jelenti.
+
+Még látványosabb, ha egy ábrán jelenítjük meg a kettőt:
+
+``` r
+ggplot(RawData[geo=="HU"&year<=2019, .(mort = sum(outcome)/sum(population)*1000*52), .(year)],
+       aes(x = year, y = mort)) + geom_line() + geom_point() +
+  labs(x = "Év", y = "Nyers mortalitás [/1000 fő/év]") +
+  geom_line(data = predgrid1[,.(mort = sum(pred)*1000),.(year)], color = "blue") +
+  geom_line(data = predgrid2[,.(mort = sum(pred)*1000),.(year)], color = "red")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-40-1.png)<!-- -->
 
 A dolognak van egy nagyon fontos általános tanulsága: kritikus, hogy az
 ember érezze, hogy a többlethalálozási eredmények nem kőbevésettek. A
@@ -1382,6 +1396,39 @@ példában, hogy milyen kezdőévtől használjuk az adatokat, de mindez
 felhívja a figyelmet arra, hogy túl nagy pontossággal nem érdemes
 megadni az eredményeket. (És persze arra is, hogy igenis van jelentősége
 a “technikai részletkérdéseknek” is!)
+
+Az “érzékenységvizsgálat” kifejezés alatt tipikusan azt szokták érteni,
+hogy a végeredmény hogyan függ a felhasznált paraméterek értékétől.
+Természetesen nem csak a becsléshez használt adatbázis időtartama az
+egyetlen ilyen paraméter: az Acosta-Irizarry eljárás egy sor további
+paramétert is használ. Ugyanúgy megnézhetjük, hogy ezek változtatása
+hogyan hat az eredményre, például, hogy milyen típusú modellt
+választunk:
+
+![](README_files/figure-gfm/unnamed-chunk-41-1.png)<!-- -->
+
+Ezt az eredményt úgy lehet leolvasni, hogy a kezdőévre érzékeny a
+végeredmény, de a modell típusára gyakorlatilag nem. És persze az is
+látszik, hogy mi a tartománya az eredményeknek: 22 ezer és 26 ezer fő
+között van a többlethalálozás, és immár mondhatjuk, hogy minden
+kezdőév-választás, és minden modelltípus-választás mellett.
+
+Ez a fajta érzékenységvizsgálat volt a legáltalánosabb, mert a
+paramétereket úgymond kombinatorikusan használtuk fel, tehát minden
+lehetséges kombinációjukra kiszámítottuk a végeredményt. Ez ugyan
+tényleg teljesen általános, viszont cserében nagyon gyorsan elszáll a
+kombinációk száma, így néhány paraméternél többre már nem használható
+(részint mert hatalmas lesz a számítási idő, részint mert nagyon nehezen
+értelmezhető lesz a végeredmény).
+
+Természetesen az sem kötelező, hogy csak az Acosta-Irizarry eljárás
+paramétereit vizsgáljuk, elvileg mellé lehetne rakni a korábban
+felvázolt egyéb modelleket is, ez is egyfajta érzékenységvizsgálat. Ez
+azonban jelen helyzetben nem feltétlenül értelmes ötlet, hiszen az
+érzékenységvizsgálatot olyan paraméterekre kell elvégezni, amelyek
+értékét nem tudjuk biztosan jól megválasztani; arra nem illik
+érzékenységvizsgálatot csinálni, amiről tudjuk, hogy nem jó választás
+(pl. az elmúlt néhány év átlagát használni).
 
 ## Továbbfejlesztési ötletek
 
