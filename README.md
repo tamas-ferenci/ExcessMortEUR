@@ -14,6 +14,8 @@ Ferenci Tamás
         logikája](#a-többlethalálozási-mutató-definíciója-és-logikája)
     -   [A többlethalálozási mutató előnyei és
         hátrányai](#a-többlethalálozási-mutató-előnyei-és-hátrányai)
+    -   [A halálozás mint mutató használatának általános
+        problémái](#a-halálozás-mint-mutató-használatának-általános-problémái)
 -   [Eredmények: A hazai többlethalálozási adatok, és európai
     viszonyításuk](#eredmények-a-hazai-többlethalálozási-adatok-és-európai-viszonyításuk)
 -   [Záró gondolatok](#záró-gondolatok)
@@ -379,8 +381,19 @@ központi összesítését. Ezért ezek az adatok legjobb esetben is csak a
 bekövetkezés után egy hónappal válnak elérhetővé (és persze ne feledjük,
 hogy az egy hónappal ezelőtti halálozások meg az *az előtt* egy-másfél
 hónappal korábbi fertőződési viszonyokat tükrözik!), de általában pár
-hétig még ez után is történnek korrekciók a késve beérkező jelentések
-miatt.
+hétig még ez után is történnek korrekciók, jellemzően felfelé, a késve
+beérkező jelentések miatt. Ezen korrekciók mértéke ráadásul nem is
+igazán mondható meg biztosan, függ attól, hogy a rendszer túlterhelődése
+mekkora, akár helyileg is. Az Eurostat-hoz [leadott
+adatok](https://ec.europa.eu/eurostat/cache/metadata/en/demomwk_esms.htm#accuracy1612863315336)
+szerint a magyar jelentés teljeskörűsége 96% a legfrissebb közzétett
+adatra nézve és ez 5 hét alatt éri el a 100%-ot. (Mindazonáltal egy
+hangyányit gyanús, hogy míg más országok olyan számok adtak le a
+hetenkénti teljeskörűségre mint 93,20%, 95,97%, 97,02%, nálunk ez úgy
+néz ki, hogy 96,00%, 97,00%, 98,00%… úgyhogy valószínűleg inkább hasból
+közöltünk számokat és nem a tényleges korrekciókat néztük meg
+empirikusan, emiatt talán jobb, ha a magyar adatokat inkább irányadónak
+vesszük.)
 
 A többlethalálozásnak azonban ezen túl is van két nagyon komoly
 problémája. Az egyik, hogy a többlethalálozás – definíció szerint – a
@@ -401,12 +414,12 @@ halálozás lett-e volna, ha nincs a járvány.
 A másik probléma sokkal jelentősebb: a többlethalálozás egy nettó
 jellegű mutató, ami egybeméri a járvány direkt hatásaival (belehalnak
 emberek) annak indirekt hatásait is. Hogy még rosszabb legyen a helyzet,
-ezek a hatások egyaránt lehetnek pozitívak és negatívak. Pozitív
-indirekt hatás, hogy a védelmi intézkedések más légúti fertőzések ellen
-is jót tesznek, de kicsit elengedve a fantáziánkat, az is pozitív
-indirekt hatás, hogy kevesebb autóbaleset történik. Negatív indirekt
-hatás, hogy más betegség ellátása nehezedik meg, de itt is lehet
-távlatibb kérdésekre gondolni, például mi van, ha megnő az
+ezek az indirekt hatások egyaránt lehetnek pozitívak és negatívak.
+Pozitív indirekt hatás, hogy a védelmi intézkedések más légúti
+fertőzések ellen is jót tesznek, de kicsit elengedve a fantáziánkat, az
+is pozitív indirekt hatás lehet, hogy kevesebb autóbaleset történik.
+Negatív indirekt hatás, hogy más betegség ellátása nehezedik meg, de itt
+is lehet távlatibb kérdésekre gondolni, például mi van, ha megnő az
 öngyilkosságok száma a szociális elszigetelődés miatt, vagy emelkedik az
 – egészségügyi állapotot közismerten rontó – munkanélküliség a gazdaság
 visszaesése miatt. Ezek feltárása véleményem szerint rendkívül fontos
@@ -427,6 +440,65 @@ hasznosíthatóságát.
 Remélem, a fentiekből is érzékelhető, hogy nincsenek univerzálisan
 „jobb" és „rosszabb" mutatók, az ilyen indikátorokat mindig egészében
 kell vizsgálni, és az átfogó kép alapján értékelni.
+
+### A halálozás mint mutató használatának általános problémái
+
+Függetlenül attól, hogy pontosan hogyan mérjük le, a halálozásnak, mint
+a járvány terhének mutatója, van egy sor hátránya is, általában, pusztán
+amiatt, hogy a halálozáson alapul. A probléma többrétű:
+
+-   A „járvány terhe" egy többdimenziós fogalom, ami nem szűkíthető le a
+    elhunytakra (noha kétségtelen, hogy sok tekintetben ez a legdrámaibb
+    teher). Azonban az is teher, ha emberek szenvednek (még ha a végén
+    fel is épülnek), más szempontból de az is teher, ha az egészségügyi
+    ellátórendszer kapacitásait igénybe veszik, megint más szempontból,
+    de az is teher, hogy kiesnek a munkából. A halálozás mindezekről nem
+    ad számot. Mindazonáltal a halálozás használatát mégiscsak védi –
+    túl azon, hogy a legrelevánsabb megjelenése a tehernek – az, hogy
+    általában jól korrelált az összes többi szemponttal is: ha többen
+    halnak meg, akkor tipikusan többen is szenvednek, többen is veszik
+    igénybe az ellátórendszert, többen is esnek ki a munkából.
+-   Ha egyszerűen a halálozásokat számoljuk, akkor figyelmen kívül
+    hagyjuk az elhunyt minden jellemzőjét: ugyanakkora teher egy
+    makkegészséges 30 évest elveszteni, mint egy egyébként is
+    végstádiumú 85 éves tumoros beteget? A halálozás szempontjából igen,
+    sokan azonban inkább azt érzik, hogy az előző valójában nagyobb
+    teher. Ezt legkézenfekvőbben az elvesztett életévek koncepciója
+    ragadja meg, azaz, hogy az alany hány évet élet *volna*, ha nem
+    viszi el a járvány. Az így kapott életév-veszteség kifejezi azt,
+    amit a halálozás nem: hogy a példánkban szerepelő első alany halála
+    nagyobb teher, hiszen – mind az életkora, mind az egészségi állapota
+    miatt – ő jóval többet élt volna még ha nincs a járvány.
+    (Természetesen itt *népegészségügyi* teherről beszélünk, nem arról,
+    hogy például a családnak mekkora tragédia egy halál, legyen az akár
+    egy 85 éves tumoros beteg halála.) Ezek számítása nem könnyű, hiszen
+    egy fiktív helyzetet kell vizsgálni – ugyan ki mondja meg, hogy
+    valaki mennyit élt *volna*, ha nem kapta *volna* el a fertőzést?
+    Erre természetesen csak becslést lehet adni, a jó hír viszont, hogy
+    a becslés adására vannak bevált demográfiai, statisztikai módszerek.
+    (Ezeket magyar viszonyokra nézve én is [kiszámoltam és
+    közöltem](https://link.springer.com/article/10.1007/s10654-021-00774-0).)
+    Bizonyos értelemben azonban minden ilyen módszer ingoványos talajt
+    jelent, mert bármennyire is kézenfekvő, ezek a számítások
+    végeredményben mégis azt jelentik, hogy súlyozzuk a különböző
+    halálokat, ami messzire vezető morális kérdéseket vet fel.
+-   Még ha az életév-veszteséget is használjuk, akkor is figyelmen kívül
+    marad egy fontos szempont: az életminőség kérdése. (Talán pontosabb
+    lenne úgy fogalmazni, hogy az egészségi állapottal összefüggő
+    életminőség.) Ez két, egymással ellentétes irányban hat. Egyfelől
+    ennél a mostani betegségnél sajnos előfordul, hogy a túlélők
+    maradványtünetekkel gyógyulnak, ami rontja az életminőséget, ezért
+    ha életév helyett minőséggel korrigált életévet használunk, akkor
+    még a felgyógyulóknál is van veszteség, nem csak a végül
+    meghalóknál. A másik, ezzel ellentétes szempont, hogy az idős, több
+    krónikus betegségben szenvedő elhunytaknak, ami a mostani járványnál
+    a többséget jelenti, tipikusan már a fertőzés *előtt* sem volt
+    tökéletes az életminőségük, ezért az ő esetükben a minőséggel
+    korrigált életév használata kisebb veszteséget mutatna ki, mint ha
+    ezt figyelmen kívül hagyjuk.
+
+Ezekre a szempontokra tekintettel kell lenni *bármilyen* halálozáson
+alapuló mutató használatakor.
 
 ## Eredmények: A hazai többlethalálozási adatok, és európai viszonyításuk
 
@@ -527,12 +599,17 @@ megfertőződtek (de ők már ugyanolyan valószínűséggel haltak meg, mint
 más országokban) vagy azért, mert bár ugyanannyian fertőződtek meg, de a
 magyar fertőzöttek nagyobb valószínűséggel haltak meg? Esetleg mindkettő
 egyszerre, és ha igen, milyen arányban? Ha az előbbire gyanakszunk,
-akkor például az intézkedéseket (a szigorúságukat és az időbeliségüket
-is), azok betartásának fegyelmét kell vizsgálni, a tesztelési és
-kontaktuskövetési stratégiát kell vizsgálni. Ha az utóbbit elemezzük,
-akkor kétfelé ágaznak a lehetőségek. Vagy az emberek olyan jellemzőjében
-van eltérés, ami befolyásolja a kórlefolyást, és könnyen eszünkbe is
-juthatnak magyarázatok: mind kockázati tényezőkben (elhízás, dohányzás,
+akkor az járványvédelmi intézkedéseket (a szigorúságukat és az
+időbeliségüket is), azok betartásának fegyelmét kell vizsgálni, a
+tesztelési és kontaktuskövetési stratégiát, a járványügyi szervek
+hatákonyságát és szervezettségét kell vizsgálni. De itt számíthatnak
+olyan tényezők is, mint a népsűrűség, a városi lakosság aránya, a
+lakásviszonyok és a lakások zsúfoltsága, vagy akár olyan szempontok is,
+mint hogy az adott országban mik a kulturális szokások a
+távolságtartásra. Ha az utóbbit elemezzük, akkor kétfelé ágaznak a
+lehetőségek. Vagy az emberek olyan jellemzőjében van eltérés, ami
+befolyásolja a kórlefolyást, és könnyen eszünkbe is juthatnak
+magyarázatok: mind kockázati tényezőkben (elhízás, dohányzás,
 alkoholfogyasztás), mind krónikus betegségek terén jól ismert a magyar
 lakosság kirívóan rossz állapota. A másik – nem feltétlenül kizáró –
 lehetőség, hogy az egészségügyi ellátásban kell keresni a magyarázatot.
@@ -831,7 +908,7 @@ eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a
 többi kutatót és az érdeklődő laikusokat hasonló számítások
 elvégézésében, mivel itt látnak egy lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2021-06-24. A többlethalálozást
+A számítások aktualizálásának dátuma: 2021-06-29. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.4.9, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) pedig 3.7.5.
 
@@ -1234,8 +1311,42 @@ ggplot(melt(res[geo=="HU", .(date, `Többlethalálozás` = excess/population*1e6
 
 ![](README_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
 
-Vagy a kettő viszonyát (pontosabban annak alakulását időben) az összes
-országra:
+Érdekes, hogy a két görbének mind a csúcsa, mind az időbeli felfutása
+eltér egymástól, ráadásul az eltérés nem is egységes a különböző
+hullámokban. Ennek pontosabb vizsgálata fontos kérdés lenne, itt most
+
+-   A többlethalálozás két előnye közül a haláloki besorolás nem
+    valószínű, hogy egy országon belül lényegesen változott volna
+    időben, de a tesztelési intenzitás már megváltozhat időben.
+-   A járvány és annak kezelésének indirekt hatásai szintén nem biztos,
+    hogy időben állandóak.
+-   A múltbeli adatokból becsült várt halálozási adatoknál szintén
+    változhat időben a becslés jósága. Ennek legkézenfekvőbb oka az
+    influenza-szezon (mely a legvalószínűbb magyarázat például arra,
+    hogy február elején hogyan lehet, hogy nulla a többlethalálozás,
+    miközben nagyon is van koronavírusos halálozás). Erre a kérdésre még
+    egy külön pontban, jóval részletesebben visszatérek később.
+-   Végezetül fontos hangsúlyozni (sajnos a magyar adatközlés ezt nem
+    teszi túl egyértelművé, így sokan félreértik), hogy a regisztrált
+    magyar halálozásoknál a közlés dátuma az a halál *jelentésének* a
+    dátuma, nem a *bekövetkezésének* a dátuma. Márpedig a kettő között
+    akár tetemes különbség is lehet, pláne, ha épp a sok halálozás miatt
+    elmarad az adminisztráció és torlódnak az adatok. Fontos lenne a
+    kérdés számszerű vizsgálata is, tehát, hogy mikor mekkora különbség
+    volt a kettő között és hogy nézne ki a halálozások görbéje a
+    bekövetkezésük dátuma alapján megrajzolva; sajnos a magyar
+    adatközlés ezt nem teszi lehetővé, ugyanis semmilyen adatot nem
+    közöl nyilvánosan a bekövetkezés dátumáról. Megjegyzem, hogy ugyanez
+    a kérdés a többlethalálozásnál is felmerül, szerencsére az [Eurostat
+    adatainál](https://ec.europa.eu/eurostat/cache/metadata/en/demomwk_esms.htm#coher_compar1612863315336)
+    mindegyik általunk használt ország esetében, így Magyarországnál is,
+    a bekövetkezés dátuma alapján gyűjt és közöl adatokat. Az egyedüli
+    kivétel Anglia, ahol nem az Eurostat, hanem az STMF adatai
+    szerepelnek, és azok Anglia esetében a jelentés dátuma szerint
+    mennek (és az Eurostathoz leadott régi adataik is ilyenek voltak).
+
+Vagy a kétféle adat viszonyát, pontosabban annak alakulását időben az
+összes országra:
 
 ``` r
 ggplot(res, aes(x = date, y = cumexcess/cumnewdeaths, group = geo)) + geom_line() +
@@ -1254,33 +1365,12 @@ piros vonal jelzi a kettő egyenlőségét, tehát a fölötte lévő érték
 jelenti azt, hogy a többlet meghaladja a jelentett halálozást, az alatta
 lévő azt, hogy kisebb a többlet, mint a jelentett.
 
-Érdekes lehet összevetni a kétféle mutatót az aktuális helyzet szerint
-(a fekete vonal az egyenlőség vonala, ahol a többlethalálozás egyezne a
+Érdekes lehet összevetni a kétféle mutatót az aktuális helyzet szerint.
+Amint korábban volt is róla szó, a többlethalálozás utolsó adatai nem
+véglegesek, ezért korrektebb egy régebbi állapotot nézni; vegyük az egy
+hónappal megelőzőt, amikor a regisztráltság már szinte tökéletes (a
+fekete vonal az egyenlőség vonala, ahol a többlethalálozás egyezne a
 jelentett halálozással):
-
-``` r
-ggplot(res[,tail(.SD, 1), .(geo)], aes(x = cumexcess/population*1e6,
-                                       y = cumnewdeaths/population*1e6, label = geo)) +
-  geom_point(aes(col = geo=="HU")) + geom_abline() + geom_text(hjust = "left", nudge_x = 30) +
-  scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
-  labs(x = "Összesített többlethalálozás [fő/1M fő]", y = "Összesített jelentett halálozás [fő/M fő]") +
-  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
-        legend.title = element_blank()) +
-  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
-```
-
-![](README_files/figure-gfm/unnamed-chunk-33-1.png)<!-- -->
-
-(Ennél az ábránál és a következőnél nem ugyanaz az időpont van az egyes
-országoknál, hiszen mindegyiknél a saját legrégebbi közölt adata az
-alap.)
-
-Mivel a többlethalálozás utolsó adatai nem véglegesek, ezért korrektebb
-egy régebbi állapotot nézni, vegyük az egy hónappal megelőzőt (az
-Eurostat
-[adatai](https://ec.europa.eu/eurostat/cache/metadata/en/demomwk_esms.htm#accuracy1612863315336)
-szerint ilyenkor már 90% vagy a fölötti a regisztráltság minden
-országban):
 
 ``` r
 ggplot(res[,.SD[nrow(.SD)-4], .(geo)], aes(x = cumexcess/population*1e6,
@@ -1293,7 +1383,10 @@ ggplot(res[,.SD[nrow(.SD)-4], .(geo)], aes(x = cumexcess/population*1e6,
   labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-34-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-33-1.png)<!-- -->
+
+(Itt nem ugyanaz az időpont van az egyes országoknál, hiszen
+mindegyiknél a saját legrégebbi közölt adata az alap.)
 
 Látszik, hogy az országok többségében a többlethalálozás meghaladja a
 jelentett (és ahol nem, ott is csak minimális a különbség). Ellenkező
@@ -1319,7 +1412,7 @@ ggplot(melt(res[geo=="HU", .(date, `Többlethalálozás` = cumexcess,
   labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-35-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-34-1.png)<!-- -->
 
 ### Érzékenységvizsgálat
 
@@ -1339,7 +1432,7 @@ mennyi a járvány teljes időtartamára kapott (abszolút) többlethalálozás,
 ha csak egy adott évig visszamenőleg használjuk fel az adatokat a várt
 halálozást előrejelző modell becsléséhez:
 
-![](README_files/figure-gfm/unnamed-chunk-36-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-35-1.png)<!-- -->
 
 Látható, hogy a teljes (2000-ben kezdődő) adatsort felhasználva kb. 22
 ezer fő a becsült többlethalálozás, ezt eddig is tudtuk, de ha 2015-től
@@ -1358,19 +1451,19 @@ ggplot(RawData[geo=="HU"&year<=2019, .(mort = sum(outcome)/sum(population)*1000*
   labs(x = "Év", y = "Nyers mortalitás [/1000 fő/év]")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-37-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-36-1.png)<!-- -->
 
 Ha erre az egész, 2000-ben kezdődő adatbázisra illesztünk hosszú távú
 görbét, akkor a legvégén egy gyorsan növekvő trendet fogunk látni:
 
-![](README_files/figure-gfm/unnamed-chunk-38-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-37-1.png)<!-- -->
 
 Ezt meghosszabbítva 2020-ra, 2021-re, pláne magasan levő alapvonalat
 fogunk kapni, amihez viszonyítunk – így a különbözet is kisebb lesz.
 
 Más azonban a helyzet, ha csak 2015-től nézzük a képet:
 
-![](README_files/figure-gfm/unnamed-chunk-39-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-38-1.png)<!-- -->
 
 Ebben az esetben a végén csak egy sokkal-sokkal kisebb növekedés fog
 látszódni, így azt meghosszabbítva egy alacsonyabban lévő várt
@@ -1387,7 +1480,7 @@ ggplot(RawData[geo=="HU"&year<=2019, .(mort = sum(outcome)/sum(population)*1000*
   geom_line(data = predgrid2[,.(mort = sum(pred)*1000),.(year)], color = "red")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-40-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-39-1.png)<!-- -->
 
 A dolognak van egy nagyon fontos általános tanulsága: kritikus, hogy az
 ember érezze, hogy a többlethalálozási eredmények nem kőbevésettek. A
@@ -1409,7 +1502,7 @@ paramétert is használ. Ugyanúgy megnézhetjük, hogy ezek változtatása
 hogyan hat az eredményre, például, hogy milyen típusú modellt
 választunk:
 
-![](README_files/figure-gfm/unnamed-chunk-41-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-40-1.png)<!-- -->
 
 Ezt az eredményt úgy lehet leolvasni, hogy a kezdőévre érzékeny a
 végeredmény, de a modell típusára gyakorlatilag nem. És persze az is
@@ -1539,7 +1632,7 @@ ki minden évben (kivéve tehát 2020-at). Hogy látható legyen ennek a
 hatása, érdemes megnézni, hogy mi a várt halálozás becsült görbéje a két
 módon
 
-![](README_files/figure-gfm/unnamed-chunk-42-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-41-1.png)<!-- -->
 
 Szépen látszik, hogy az influenza-szezonok nélkül becsültetett modell
 kevésbé fut fel magas értékekre – hiszen nem kell ráilleszkednie az
@@ -1551,7 +1644,7 @@ lecsökkenteni a többlethalálozást az, hogy a viszonyítási alapérték
 tartalmazza az – abban az évben be sem következett – influenza-szezont.
 Nézzük az eredményeket:
 
-![](README_files/figure-gfm/unnamed-chunk-43-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-42-1.png)<!-- -->
 
 Látszik, hogy így számolva a többlethalálozás 22 ezerről 27 ezer főre
 emelkedik, amiben az a nagyon szép, hogy bár teljesen máshogy
@@ -1565,7 +1658,7 @@ teljesen reális értékű – halálozása.
 -   [x] A jelentés teljességének a vizsgálata (mennyire nőnek még az
     utolsó adatok, és meddig?). Válasz: Eurostat metadata 13.1-es pont.
 -   [ ] Területi adatok használata.
--   [ ] Egyszeri hatások kiküszöbölése (influenza!) kiegészítő
+-   [x] Egyszeri hatások kiküszöbölése (influenza!) kiegészítő
     elemzésként.
 
 ## Irodalmi hivatkozások
