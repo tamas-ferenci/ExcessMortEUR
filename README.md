@@ -908,7 +908,7 @@ eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a
 többi kutatót és az érdeklődő laikusokat hasonló számítások
 elvégézésében, mivel itt látnak egy lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2021-06-29. A többlethalálozást
+A számítások aktualizálásának dátuma: 2021-07-12. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.4.9, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) pedig 3.7.5.
 
@@ -1036,7 +1036,7 @@ knitr::kable(dcast(RawData[,.(values[week==99]/sum(values)*100),.(geo, year)],
 | 2018 |  NA |   NA | 2.73 |
 | 2019 |  NA |   NA | 2.95 |
 | 2020 |  NA |   NA | 2.67 |
-| 2021 |  NA |   NA | 2.95 |
+| 2021 |  NA |   NA | 2.99 |
 
 Éppen ezért – hogy ne kelljen emiatt országokat elhagynunk – egyszerűen
 szétosztjuk egyenletesen ezeket az eseteket a hetek között:
@@ -1314,6 +1314,8 @@ ggplot(melt(res[geo=="HU", .(date, `Többlethalálozás` = excess/population*1e6
 Érdekes, hogy a két görbének mind a csúcsa, mind az időbeli felfutása
 eltér egymástól, ráadásul az eltérés nem is egységes a különböző
 hullámokban. Ennek pontosabb vizsgálata fontos kérdés lenne, itt most
+csak néhány – vélhetően – fontos szerepet játszó szempontra hívnám fel a
+figyelmet:
 
 -   A többlethalálozás két előnye közül a haláloki besorolás nem
     valószínű, hogy egy országon belül lényegesen változott volna

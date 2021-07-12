@@ -564,7 +564,7 @@ ggplot(melt(res[geo=="HU", .(date, `Többlethalálozás` = excess/population*1e6
   labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
-Érdekes, hogy a két görbének mind a csúcsa, mind az időbeli felfutása eltér egymástól, ráadásul az eltérés nem is egységes a különböző hullámokban. Ennek pontosabb vizsgálata fontos kérdés lenne, itt most 
+Érdekes, hogy a két görbének mind a csúcsa, mind az időbeli felfutása eltér egymástól, ráadásul az eltérés nem is egységes a különböző hullámokban. Ennek pontosabb vizsgálata fontos kérdés lenne, itt most csak néhány -- vélhetően -- fontos szerepet játszó szempontra hívnám fel a figyelmet:
 
 - A többlethalálozás két előnye közül a haláloki besorolás nem valószínű, hogy egy országon belül lényegesen változott volna időben, de a tesztelési intenzitás már megváltozhat időben.
 - A járvány és annak kezelésének indirekt hatásai szintén nem biztos, hogy időben állandóak.
