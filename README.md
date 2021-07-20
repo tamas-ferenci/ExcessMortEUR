@@ -908,8 +908,8 @@ eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a
 többi kutatót és az érdeklődő laikusokat hasonló számítások
 elvégézésében, mivel itt látnak egy lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2021-07-12. A többlethalálozást
-számító csomag (`excessmort`) verziószáma 0.4.9, az Eurostat-tól
+A számítások aktualizálásának dátuma: 2021-07-20. A többlethalálozást
+számító csomag (`excessmort`) verziószáma 0.5.0, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) pedig 3.7.5.
 
 ### Adatok előkészítése
@@ -947,6 +947,7 @@ RawDataUK <- RawDataUK[Year>=2015&CountryCode%in%c("GBRTENW", "GBR_NIR", "GBR_SC
     ,.(sex = "T", unit = "NR", geo = "UK", time, values)][order(time)]
 RawDataUK <- RawDataUK[1:(nrow(RawDataUK)-1)]
 RawData <- rbind(RawData, RawDataUK)
+RawData <- RawData[!is.na(RawData$values)]
 RawData <- RawData[geo%in%(RawData[,.N,.(geo)][N>250]$geo)]
 ```
 
@@ -1036,7 +1037,7 @@ knitr::kable(dcast(RawData[,.(values[week==99]/sum(values)*100),.(geo, year)],
 | 2018 |  NA |   NA | 2.73 |
 | 2019 |  NA |   NA | 2.95 |
 | 2020 |  NA |   NA | 2.67 |
-| 2021 |  NA |   NA | 2.99 |
+| 2021 |  NA |   NA | 2.80 |
 
 Éppen ezért – hogy ne kelljen emiatt országokat elhagynunk – egyszerűen
 szétosztjuk egyenletesen ezeket az eseteket a hetek között:

@@ -31,6 +31,7 @@ RawDataUK <- RawDataUK[Year>=2015&CountryCode%in%c("GBRTENW", "GBR_NIR", "GBR_SC
     ,.(sex = "T", unit = "NR", geo = "UK", time, values)][order(time)]
 RawDataUK <- RawDataUK[1:(nrow(RawDataUK)-1)]
 RawData <- rbind(RawData, RawDataUK)
+RawData <- RawData[!is.na(RawData$values)]
 RawData <- RawData[geo%in%(RawData[,.N,.(geo)][N>250]$geo)]
 ```
 
