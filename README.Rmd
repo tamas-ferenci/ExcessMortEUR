@@ -40,17 +40,22 @@ RawData$year <- as.numeric(substring(RawData$time, 1, 4))
 RawData$week <- as.numeric(substring(RawData$time, 6, 7))
 ```
 
-```{r hetszetosztas, echo = FALSE}
-RawData[ , values := round(values*sum(values)/sum(values[week!=99])), .(geo, year)]
-RawData <- RawData[week!=99]
+```{r atnevezes, echo = FALSE}
+names(RawData)[names(RawData)=="values"] <- "outcome"
 ```
+
+<!-- # ```{r het99statisztika, echo = FALSE} -->
+<!-- # knitr::kable(dcast(RawData[,.(outcome[week==99]/sum(outcome)*100),.(geo, year)], -->
+<!-- #                   year ~ geo, value.var = "V1"), digits = 2) -->
+<!-- # ``` -->
+<!-- #  -->
+<!-- # ```{r hetszetosztas, echo = FALSE} -->
+<!-- # RawData[ , outcome := round(outcome*sum(outcome)/sum(outcome[week!=99])), .(geo, year)] -->
+<!-- # RawData <- RawData[week!=99] -->
+<!-- # ``` -->
 
 ```{r datum, echo = FALSE}
 RawData$date <- ISOweek::ISOweek2date(paste0(RawData$year, "-W", sprintf("%02d", RawData$week), "-1"))
-```
-
-```{r atnevezes, echo = FALSE}
-names(RawData)[names(RawData)=="values"] <- "outcome"
 ```
 
 ```{r hatterpopulacio, message = FALSE, echo = FALSE}
@@ -397,32 +402,31 @@ Kikódoljuk az évet és a hónapot:
 ```{r}
 <<evhonap>>
 ```
-  
-A 99-es hét jelenti azokat a halálokat, amiket a kérdéses ország nem héthez rendelten jelentett. Ilyen csak kevés országnál fordul elő, és ott sem sok halálesettel (a táblázat százalékban adja meg, hogy az összes adott évi haláleset mekkora hányada volt 99-es, azaz héthez nem rendelt az adott országban):
+
+Csinálunk egy átnevezést, hogy később egyszerűbb legyen az illesztés:
   
 ```{r}
-knitr::kable(dcast(RawData[,.(values[week==99]/sum(values)*100),.(geo, year)],
-                   year ~ geo, value.var = "V1"), digits = 2)
+<<atnevezes>>
 ```
 
-Éppen ezért -- hogy ne kelljen emiatt országokat elhagynunk -- egyszerűen szétosztjuk egyenletesen ezeket az eseteket a hetek között:
+(Frissítés, 2021. június 27. Korábban az Eurostat 99-es hét alatt hozta a héthez nem rendelt halálozásokat. (Ilyen csak kevés országnál fordul elő, és ott sem sok halálesettel). Ez azonban június végén megszűnt, a [leírás alapján](https://ec.europa.eu/eurostat/cache/metadata/en/demomwk_esms.htm#coher_compar1626942947368) ezek az adatok, ha kellenének is valamire, külön táblában vannak, így a főtáblában 99-es hét már nem fordulhat elő. Emiatt ezek kezelésére sincs többé szükség.)
 
-```{r}
-<<hetszetosztas>>
-```
+<!-- ```{r} -->
+<!-- <<het99statisztika>> -->
+<!-- ``` -->
+
+<!-- Éppen ezért -- hogy ne kelljen emiatt országokat elhagynunk -- egyszerűen szétosztjuk egyenletesen ezeket az eseteket a hetek között: -->
+
+<!-- ```{r} -->
+<!-- <<hetszetosztas>> -->
+<!-- ``` -->
   
 Dátumként az adott hét első napját használjuk; fontos, hogy az ISO 8601 szerinti hétbesorolást használja az Eurostat, amit az `ISOweek` csomag kezel:
   
 ```{r}
 <<datum>>
 ```
-  
-Csinálunk egy átnevezést, hogy később egyszerűbb legyen az illesztés:
-  
-```{r}
-<<atnevezes>>
-```
-  
+
 A háttérpopuláció létszám adatait szintén az Eurostat-tól kérjük le (`demo_pjan` adatbázis); szintén összes nemre és életkorra együtt:
   
 ```{r, message = FALSE}

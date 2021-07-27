@@ -40,6 +40,16 @@ Ferenci Tamás
 -   [Továbbfejlesztési ötletek](#továbbfejlesztési-ötletek)
 -   [Irodalmi hivatkozások](#irodalmi-hivatkozások)
 
+<!-- # ```{r het99statisztika, echo = FALSE} -->
+<!-- # knitr::kable(dcast(RawData[,.(outcome[week==99]/sum(outcome)*100),.(geo, year)], -->
+<!-- #                   year ~ geo, value.var = "V1"), digits = 2) -->
+<!-- # ``` -->
+<!-- #  -->
+<!-- # ```{r hetszetosztas, echo = FALSE} -->
+<!-- # RawData[ , outcome := round(outcome*sum(outcome)/sum(outcome[week!=99])), .(geo, year)] -->
+<!-- # RawData <- RawData[week!=99] -->
+<!-- # ``` -->
+
 ## A többlethalálozási mutatóról általában
 
 Jelen írásomban megpróbálom a többlethalálozási mutató hátterét és
@@ -908,7 +918,7 @@ eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a
 többi kutatót és az érdeklődő laikusokat hasonló számítások
 elvégézésében, mivel itt látnak egy lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2021-07-20. A többlethalálozást
+A számítások aktualizálásának dátuma: 2021-07-27. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.5.0, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) pedig 3.7.5.
 
@@ -1003,49 +1013,28 @@ RawData$year <- as.numeric(substring(RawData$time, 1, 4))
 RawData$week <- as.numeric(substring(RawData$time, 6, 7))
 ```
 
-A 99-es hét jelenti azokat a halálokat, amiket a kérdéses ország nem
-héthez rendelten jelentett. Ilyen csak kevés országnál fordul elő, és
-ott sem sok halálesettel (a táblázat százalékban adja meg, hogy az
-összes adott évi haláleset mekkora hányada volt 99-es, azaz héthez nem
-rendelt az adott országban):
+Csinálunk egy átnevezést, hogy később egyszerűbb legyen az illesztés:
 
 ``` r
-knitr::kable(dcast(RawData[,.(values[week==99]/sum(values)*100),.(geo, year)],
-                   year ~ geo, value.var = "V1"), digits = 2)
+names(RawData)[names(RawData)=="values"] <- "outcome"
 ```
 
-| year |  HU |   LV |   SE |
-|-----:|----:|-----:|-----:|
-| 2000 |   0 | 0.28 | 1.61 |
-| 2001 |   0 | 0.22 | 1.64 |
-| 2002 |  NA | 0.19 | 1.61 |
-| 2003 |  NA | 0.13 | 1.55 |
-| 2004 |  NA | 0.06 | 1.24 |
-| 2005 |  NA | 0.10 | 0.90 |
-| 2006 |  NA | 0.09 | 0.82 |
-| 2007 |  NA | 0.10 | 0.71 |
-| 2008 |  NA | 0.11 | 0.57 |
-| 2009 |  NA | 0.06 | 0.59 |
-| 2010 |  NA | 0.07 | 0.45 |
-| 2011 |  NA | 0.05 | 0.48 |
-| 2012 |  NA | 0.06 | 0.48 |
-| 2013 |  NA |   NA | 0.51 |
-| 2014 |  NA |   NA | 0.55 |
-| 2015 |  NA |   NA | 1.04 |
-| 2016 |  NA |   NA | 2.17 |
-| 2017 |  NA |   NA | 2.43 |
-| 2018 |  NA |   NA | 2.73 |
-| 2019 |  NA |   NA | 2.95 |
-| 2020 |  NA |   NA | 2.67 |
-| 2021 |  NA |   NA | 2.80 |
+(Frissítés, 2021. június 27. Korábban az Eurostat 99-es hét alatt hozta
+a héthez nem rendelt halálozásokat. (Ilyen csak kevés országnál fordul
+elő, és ott sem sok halálesettel). Ez azonban június végén megszűnt, a
+[leírás
+alapján](https://ec.europa.eu/eurostat/cache/metadata/en/demomwk_esms.htm#coher_compar1626942947368)
+ezek az adatok, ha kellenének is valamire, külön táblában vannak, így a
+főtáblában 99-es hét már nem fordulhat elő. Emiatt ezek kezelésére sincs
+többé szükség.)
 
-Éppen ezért – hogy ne kelljen emiatt országokat elhagynunk – egyszerűen
-szétosztjuk egyenletesen ezeket az eseteket a hetek között:
-
-``` r
-RawData[ , values := round(values*sum(values)/sum(values[week!=99])), .(geo, year)]
-RawData <- RawData[week!=99]
-```
+<!-- ```{r} -->
+<!-- <<het99statisztika>> -->
+<!-- ``` -->
+<!-- Éppen ezért -- hogy ne kelljen emiatt országokat elhagynunk -- egyszerűen szétosztjuk egyenletesen ezeket az eseteket a hetek között: -->
+<!-- ```{r} -->
+<!-- <<hetszetosztas>> -->
+<!-- ``` -->
 
 Dátumként az adott hét első napját használjuk; fontos, hogy az ISO 8601
 szerinti hétbesorolást használja az Eurostat, amit az `ISOweek` csomag
@@ -1053,12 +1042,6 @@ kezel:
 
 ``` r
 RawData$date <- ISOweek::ISOweek2date(paste0(RawData$year, "-W", sprintf("%02d", RawData$week), "-1"))
-```
-
-Csinálunk egy átnevezést, hogy később egyszerűbb legyen az illesztés:
-
-``` r
-names(RawData)[names(RawData)=="values"] <- "outcome"
 ```
 
 A háttérpopuláció létszám adatait szintén az Eurostat-tól kérjük le
@@ -1168,7 +1151,7 @@ ggplot(res, aes(x = date, y = excess/population*1e6, group = geo, label = geo)) 
   labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
 
 Ugyanez akkor, ha a várt halálozásra vetítünk:
 
@@ -1183,7 +1166,7 @@ ggplot(res, aes(x = date, y = increase, group = geo, label = geo)) + geom_line(a
   labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
 
 Látszik, hogy a kétféle relatív mutató között nincs nagy különbség.
 Kicsit direktebben is összevethetjük őket, ha országonként külön-külön
@@ -1198,7 +1181,7 @@ ggplot(res, aes(x = increase, y = excess/population*1e6)) + geom_line() +
   labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
 
 Az ábra az origón átmenő, 2 meredekségű egyenest tünteti fel a
 viszonyítást segítendő. (Miért pont erre illeszkednek jól? E szerint a
@@ -1230,7 +1213,7 @@ ggplot(res, aes(x = date, y = cumexcess/meanpopulation*1e6, group = geo, label =
   labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
 
 Kérdés, hogy mi a helyzet a várt értékre vetített mutatóval. A probléma
 a kumulálás, hiszen a százalékok természetesen nem adhatóak egyszerűen
@@ -1249,7 +1232,7 @@ ggplot(res, aes(x = date, y = cumexcess/cumexpected, group = geo, label = geo)) 
     labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-27-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->
 
 A kép természetesen itt is hasonló, de azért érdemes megnézni a
 különbségeket, mert szépen illusztrálják az elméleti mondanivalót.
@@ -1310,7 +1293,7 @@ ggplot(melt(res[geo=="HU", .(date, `Többlethalálozás` = excess/population*1e6
   labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
 
 Érdekes, hogy a két görbének mind a csúcsa, mind az időbeli felfutása
 eltér egymástól, ráadásul az eltérés nem is egységes a különböző
@@ -1361,7 +1344,7 @@ ggplot(res, aes(x = date, y = cumexcess/cumnewdeaths, group = geo)) + geom_line(
   labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-32-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-30-1.png)<!-- -->
 
 Ezen az ábrán a többlet és a jelentett halálozás hányadosa látható, a
 piros vonal jelzi a kettő egyenlőségét, tehát a fölötte lévő érték
@@ -1386,7 +1369,7 @@ ggplot(res[,.SD[nrow(.SD)-4], .(geo)], aes(x = cumexcess/population*1e6,
   labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-33-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
 
 (Itt nem ugyanaz az időpont van az egyes országoknál, hiszen
 mindegyiknél a saját legrégebbi közölt adata az alap.)
@@ -1415,7 +1398,7 @@ ggplot(melt(res[geo=="HU", .(date, `Többlethalálozás` = cumexcess,
   labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-34-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-32-1.png)<!-- -->
 
 ### Érzékenységvizsgálat
 
@@ -1435,7 +1418,7 @@ mennyi a járvány teljes időtartamára kapott (abszolút) többlethalálozás,
 ha csak egy adott évig visszamenőleg használjuk fel az adatokat a várt
 halálozást előrejelző modell becsléséhez:
 
-![](README_files/figure-gfm/unnamed-chunk-35-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-33-1.png)<!-- -->
 
 Látható, hogy a teljes (2000-ben kezdődő) adatsort felhasználva kb. 22
 ezer fő a becsült többlethalálozás, ezt eddig is tudtuk, de ha 2015-től
@@ -1454,19 +1437,19 @@ ggplot(RawData[geo=="HU"&year<=2019, .(mort = sum(outcome)/sum(population)*1000*
   labs(x = "Év", y = "Nyers mortalitás [/1000 fő/év]")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-36-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-34-1.png)<!-- -->
 
 Ha erre az egész, 2000-ben kezdődő adatbázisra illesztünk hosszú távú
 görbét, akkor a legvégén egy gyorsan növekvő trendet fogunk látni:
 
-![](README_files/figure-gfm/unnamed-chunk-37-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-35-1.png)<!-- -->
 
 Ezt meghosszabbítva 2020-ra, 2021-re, pláne magasan levő alapvonalat
 fogunk kapni, amihez viszonyítunk – így a különbözet is kisebb lesz.
 
 Más azonban a helyzet, ha csak 2015-től nézzük a képet:
 
-![](README_files/figure-gfm/unnamed-chunk-38-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-36-1.png)<!-- -->
 
 Ebben az esetben a végén csak egy sokkal-sokkal kisebb növekedés fog
 látszódni, így azt meghosszabbítva egy alacsonyabban lévő várt
@@ -1483,7 +1466,7 @@ ggplot(RawData[geo=="HU"&year<=2019, .(mort = sum(outcome)/sum(population)*1000*
   geom_line(data = predgrid2[,.(mort = sum(pred)*1000),.(year)], color = "red")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-39-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-37-1.png)<!-- -->
 
 A dolognak van egy nagyon fontos általános tanulsága: kritikus, hogy az
 ember érezze, hogy a többlethalálozási eredmények nem kőbevésettek. A
@@ -1505,7 +1488,7 @@ paramétert is használ. Ugyanúgy megnézhetjük, hogy ezek változtatása
 hogyan hat az eredményre, például, hogy milyen típusú modellt
 választunk:
 
-![](README_files/figure-gfm/unnamed-chunk-40-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-38-1.png)<!-- -->
 
 Ezt az eredményt úgy lehet leolvasni, hogy a kezdőévre érzékeny a
 végeredmény, de a modell típusára gyakorlatilag nem. És persze az is
@@ -1635,7 +1618,7 @@ ki minden évben (kivéve tehát 2020-at). Hogy látható legyen ennek a
 hatása, érdemes megnézni, hogy mi a várt halálozás becsült görbéje a két
 módon
 
-![](README_files/figure-gfm/unnamed-chunk-41-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-39-1.png)<!-- -->
 
 Szépen látszik, hogy az influenza-szezonok nélkül becsültetett modell
 kevésbé fut fel magas értékekre – hiszen nem kell ráilleszkednie az
@@ -1647,7 +1630,7 @@ lecsökkenteni a többlethalálozást az, hogy a viszonyítási alapérték
 tartalmazza az – abban az évben be sem következett – influenza-szezont.
 Nézzük az eredményeket:
 
-![](README_files/figure-gfm/unnamed-chunk-42-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-40-1.png)<!-- -->
 
 Látszik, hogy így számolva a többlethalálozás 22 ezerről 27 ezer főre
 emelkedik, amiben az a nagyon szép, hogy bár teljesen máshogy
