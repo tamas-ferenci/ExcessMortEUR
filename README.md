@@ -104,29 +104,30 @@ részének csak nagyon enyhe, aspecifikus, más betegséggel is könnyen
 összetéveszthető tünetei vannak, vagy egyáltalán nincsenek tünetei. Az
 előbbieket elsősorban, az utóbbiakat kizárólag teszttel lehet
 megtalálni, de innen kezdve az, hogy hány ilyet találunk meg, függeni
-fog attól, hogy milyen intenzíven tesztelünk: ahol sokat tesztelnek, ott
-több ilyet is megtalálnak, ahol kisebb a tesztelési aktivitás, ott
-kevesebbet fognak. Ennek egy praktikus következménye, hogy a
-fertőzött-számok országok közötti összevetése életveszélyes, hiszen
-tesztelési aktivitásban hatalmas különbségek lehetnek: egyáltalán nem
-biztos, hogy ahol több fertőzött van, ott rosszabb a helyzet, sőt, simán
-lehet, hogy pont fordítva, ott rendesebben tesztelnek, és így jobban
-tudják kezelni a járványt. Sajnos a helyzet ennél is rosszabb: valójában
-nem csak az országok közötti, de egy ország különböző időpontjai között
-összevetés is problémás lehet, azaz egyáltalán nem biztos, hogy ha most
-több fertőzöttet regisztrálunk mint múlt hónapban, akkor most rosszabb a
-helyzet. Mikor? Természetesen abban az esetben, ha menet közben
-megváltozik a tesztelési intenzitás! Lehet, hogy több fertőzöttet
-regisztrálunk, de közben a helyzet nem romlott, csak elkezdtünk
-rendesebben tesztelni (és ez esetben az kimondottan egy jó hír, hogy
-több fertőzött lett!), de sajnos elképzelhető a fordított eset is, hogy
-a regisztrált fertőzöttek száma stagnál, de közben a helyzet romlik
-(mert beleütköztünk a tesztelési kapacitások felső korlátjába).
-Lényegében annyi mondható, hogy a fertőzött-szám jó mutató akkor, *ha* a
-tesztelési intenzitás időben állandó. Lehet, hogy az abszolút számok
-ekkor is hibásak, mondjuk csak a fertőzöttek ötödét regisztráljuk, de ha
-ez az arány állandó, akkor legalább a relatív viszonyok jók lesznek: ha
-most több van mint egy hónapja, akkor most rosszabb a helyzet.
+fog attól, hogy milyen intenzíven tesztelünk: ahol/amikor sokat
+tesztelnek, ott/akkor több ilyet is megtalálnak, ahol/amikor kisebb a
+tesztelési aktivitás, ott/akkor kevesebbet fognak. Ennek egy praktikus
+következménye, hogy a fertőzött-számok országok közötti összevetése
+életveszélyes, hiszen tesztelési aktivitásban hatalmas különbségek
+lehetnek: egyáltalán nem biztos, hogy ahol több fertőzött van, ott
+rosszabb a helyzet, sőt, simán lehet, hogy pont fordítva, ott
+rendesebben tesztelnek, és így jobban tudják kezelni a járványt. Sajnos
+a helyzet ennél is rosszabb: valójában nem csak az országok közötti, de
+egy ország különböző időpontjai között összevetés is problémás lehet,
+azaz egyáltalán nem biztos, hogy ha most több fertőzöttet regisztrálunk
+mint múlt hónapban, akkor most rosszabb a helyzet. Mikor? Természetesen
+abban az esetben, ha menet közben megváltozik a tesztelési intenzitás!
+Lehet, hogy több fertőzöttet regisztrálunk, de közben a helyzet nem
+romlott, csak elkezdtünk rendesebben tesztelni (és ez esetben az
+kimondottan egy jó hír, hogy több fertőzött lett!), de sajnos
+elképzelhető a fordított eset is, hogy a regisztrált fertőzöttek száma
+stagnál, de közben a helyzet romlik (mert beleütköztünk a tesztelési
+kapacitások felső korlátjába). Lényegében annyi mondható, hogy a
+fertőzött-szám jó mutató akkor, *ha* a tesztelési intenzitás időben
+állandó. Lehet, hogy az abszolút számok ekkor is hibásak, mondjuk csak a
+fertőzöttek ötödét regisztráljuk, de ha ez az arány állandó, akkor
+legalább a relatív viszonyok jók lesznek: ha most több van mint egy
+hónapja, akkor most rosszabb a helyzet.
 
 Kitérő megjegyzésként érdemes itt beszúrni, hogy ezért érdekes mutató a
 tesztpozitivitás, tehát, hogy az elvégzett tesztek mekkora hányada
@@ -164,8 +165,12 @@ de teljesen jóhiszemű módon is előállhat ilyen: „hát igen, a nagymamána
 gyenge volt a szíve, erre sajnos fel kellett készülni" – és senki nem
 végez tesztet, és soha ki nem derül, hogy azért a dolog nem volt
 teljesen véletlen, mert a háttérben volt egy infekció is. Az ilyen
-esetek előfordulása azonban igenis függ a tesztelési aktivitástól. Ezért
-valójában ez a mutató sem teljesen független a tesztelés intenzitisától,
+esetek előfordulása azonban igenis függ a tesztelési aktivitástól. Éppen
+ezért igaz rá minden, amit erről korábban mondtunk: eltérhet, akár
+drasztikusan is, országok között, de sajnos még egy országon belül is
+könnyen megváltozhat időben.
+
+Tehát bár ez a mutató sem teljesen független a tesztelés intenzitisától,
 de azért tény, hogy jóval kevésbé függ tőle, mint a regisztrált
 fertőzöttek száma, hiszen a végül elhalálozó fertőzöttek általában
 súlyosabb állapotban vannak, így valószínűbb, hogy tesztelik őket. Ilyen
@@ -270,7 +275,8 @@ Mindaddig, amíg a halált egyetlen okhoz rendeljük, ez egy megoldhatatlan
 probléma.
 
 Itt tehát nagyon komoly definíciós kérdések vannak, ebből fakadóan pedig
-sajnos nagy tere van az országok közötti adatszolgáltatási eltéréseknek.
+sajnos nagy tere van az országok közötti adatszolgáltatási eltéréseknek
+(vagy akár egy országon belül is megváltozhat időben).
 
 ### A magyar haláloki statisztikák adatszolgáltatási folyamata
 
@@ -910,7 +916,7 @@ eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a
 többi kutatót és az érdeklődő laikusokat hasonló számítások
 elvégézésében, mivel itt látnak egy lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2021-09-12. A többlethalálozást
+A számítások aktualizálásának dátuma: 2021-09-13. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.5.0, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) pedig 3.7.5.
 
