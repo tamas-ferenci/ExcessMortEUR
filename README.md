@@ -910,7 +910,7 @@ eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a
 többi kutatót és az érdeklődő laikusokat hasonló számítások
 elvégézésében, mivel itt látnak egy lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2021-09-01. A többlethalálozást
+A számítások aktualizálásának dátuma: 2021-09-12. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.5.0, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) pedig 3.7.5.
 
