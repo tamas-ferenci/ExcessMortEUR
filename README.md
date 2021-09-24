@@ -916,7 +916,7 @@ eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a
 többi kutatót és az érdeklődő laikusokat hasonló számítások
 elvégézésében, mivel itt látnak egy lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2021-09-20. A többlethalálozást
+A számítások aktualizálásának dátuma: 2021-09-24. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.5.0, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) pedig 3.7.5.
 
@@ -1142,7 +1142,7 @@ ggplot(res, aes(x = date, y = excess/population*1e6, group = geo, label = geo)) 
   geom_line(aes(color = geo=="HU")) +
   scale_color_manual(values = c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
   labs(x = "", y = "Aktuális többlethalálozás [fő/1M fő]") +
-  scale_x_date(date_breaks = "months", date_labels = "%b") +
+  scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank()) +
@@ -1157,7 +1157,7 @@ Ugyanez akkor, ha a várt halálozásra vetítünk:
 ggplot(res, aes(x = date, y = increase, group = geo, label = geo)) + geom_line(aes(color = geo=="HU")) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
   labs(x = "", y = "Aktuális többlethalálozás [%]") +
-  scale_x_date(date_breaks = "months", date_labels = "%b") +
+  scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank()) +
@@ -1204,7 +1204,7 @@ ggplot(res, aes(x = date, y = cumexcess/meanpopulation*1e6, group = geo, label =
   geom_line(aes(color = geo=="HU")) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
   labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]") +
-  scale_x_date(date_breaks = "months", date_labels = "%b") +
+  scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
   theme(plot.caption = element_text(face = "bold", hjust = 0),
         legend.position = "bottom", legend.title = element_blank()) +
@@ -1223,7 +1223,7 @@ ggplot(res, aes(x = date, y = cumexcess/cumexpected, group = geo, label = geo)) 
     geom_line(aes(color = geo=="HU")) +
     scale_color_manual(values = c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
     labs(x = "", y = "Összesített többlethalálozás [%]") +
-    scale_x_date(date_breaks = "months", date_labels = "%b") +
+    scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
     directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
     theme(plot.caption = element_text(face = "bold", hjust = 0),
           legend.position = "bottom", legend.title = element_blank()) +
@@ -1285,7 +1285,7 @@ ggplot(melt(res[geo=="HU", .(date, `Többlethalálozás` = excess/population*1e6
                              `Regisztrált koronavírus-halálozás` = new_deaths/population*1e6)],
             id.vars = "date"), aes(x = date, y = value, group = variable, color = variable)) + geom_line() +
   labs(x = "", y = "Halálozás [fő/M fő]") +
-  scale_x_date(date_breaks = "months", date_labels = "%b") +
+  scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank()) +
   labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
@@ -1390,7 +1390,7 @@ ggplot(melt(res[geo=="HU", .(date, `Többlethalálozás` = cumexcess,
                                              .(date, `Többlethalálozás` = cumexcess,
                                                `Regisztrált koronavírus-halálozás` = cumnewdeaths)], 1),
                                     id.vars = "date"), method = list("last.points", cex = 0.6)) +
-  labs(x = "", y = "Halálozás [fő]") + scale_x_date(date_breaks = "months", date_labels = "%b") +
+  labs(x = "", y = "Halálozás [fő]") + scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank()) +
   labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
