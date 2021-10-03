@@ -209,7 +209,7 @@ Mit tudunk mondani egy adott időpontban aktuális helyzetről? Ezt mutatják a 
 
 ```{r aktualislelekszam, echo = FALSE}
 ggplot(res, aes(x = date, y = excess/population*1e6, group = geo, label = geo)) +
-  geom_line(aes(color = geo=="HU")) +
+  geom_line(aes(color = geo=="HU")) + geom_abline(slope = 0, intercept = 0, colour = "blue") +
   scale_color_manual(values = c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
   labs(x = "", y = "Aktuális többlethalálozás [fő/1M fő]") +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +

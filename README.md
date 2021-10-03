@@ -916,7 +916,7 @@ eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a
 többi kutatót és az érdeklődő laikusokat hasonló számítások
 elvégézésében, mivel itt látnak egy lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2021-10-03. A többlethalálozást
+A számítások aktualizálásának dátuma: 2021-10-04. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.5.0, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) pedig 3.7.5.
 
@@ -1139,7 +1139,7 @@ relatív mutatóként:
 
 ``` r
 ggplot(res, aes(x = date, y = excess/population*1e6, group = geo, label = geo)) +
-  geom_line(aes(color = geo=="HU")) +
+  geom_line(aes(color = geo=="HU")) + geom_abline(slope = 0, intercept = 0, colour = "blue") +
   scale_color_manual(values = c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
   labs(x = "", y = "Aktuális többlethalálozás [fő/1M fő]") +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
