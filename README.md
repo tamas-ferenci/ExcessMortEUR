@@ -140,12 +140,12 @@ elégségességét méri, *nem* a járvány helyzetét. De az elégségesség
 mérésére tényleg logikus tartalmú mutató, hiszen azt mondja: ha el is
 szabadul a járvány, ez akkor is behúzható az 5%-os küszöb alá. Hogyan?
 Ha kellően sokat tesztelünk! (Néhányan olyat is szoktak tenni, hogy ez
-alapján próbálják „korrigálni" a fertőzöttek számát. Ez nagyon
+alapján próbálják „korrigálni” a fertőzöttek számát. Ez nagyon
 ingoványos talaj, hiszen a valódi kép ennél bonyolultabb: a helyzet függ
 a tesztelési mintázattól is, tehát, hogy kiket, milyen kockázatú
 alanyokat tesztelünk. Nagyon nem mindegy, hogy gyanús tüneteket mutató
 alanyokat tesztelünk, kontaktus-személyeket tesztelünk, egy cég a
-munkavállalóit a „biztonság kedvéért" teszteli stb.) Természetesen
+munkavállalóit a „biztonság kedvéért” teszteli stb.) Természetesen
 fontos az elvégzett tesztek számán túl azok típusának – PCR,
 antigén-gyorsteszt – ismerete is, sajnos Magyarország erre vonatkozóan
 nem közöl nyilvánosan adatot. Magyarországon szintén nincs nyilvános
@@ -162,7 +162,7 @@ szükség, hanem arra, hogy a fertőzés*ben* halt-e meg! Ennek ismerete
 viszont igenis függhet a tesztelési aktivitástól. Rosszabb esetben egy
 gyanús tüneteket mutató elhunytat sem tesztelnek, még poszt mortem sem,
 de teljesen jóhiszemű módon is előállhat ilyen: „hát igen, a nagymamának
-gyenge volt a szíve, erre sajnos fel kellett készülni" – és senki nem
+gyenge volt a szíve, erre sajnos fel kellett készülni” – és senki nem
 végez tesztet, és soha ki nem derül, hogy azért a dolog nem volt
 teljesen véletlen, mert a háttérben volt egy infekció is. Az ilyen
 esetek előfordulása azonban igenis függ a tesztelési aktivitástól. Éppen
@@ -286,7 +286,7 @@ információt a mostani koronavírus-járvány halálozási adatairól.
 Az egyik az az eljárás, amely bármely haláleset bekövetkezésekor
 megtörténik: törvényben pontosan meghatározott rend szerint a
 halottvizsgálatot végző orvos kitölt egy Halottvizsgálati Bizonyítványt
-(röviden HVB, orvosi köznyelvben elterjedt nevén a „hatpéldányos"),
+(röviden HVB, orvosi köznyelvben elterjedt nevén a „hatpéldányos”),
 melyben rögzíti a halálozással kapcsolatos fontos tényeket,
 standardizált formátumban. (Apróbb kivételek vannak, például magzati
 halálozás esetén, bizonyos folyamatok elektronizáltak, de ez most
@@ -313,7 +313,7 @@ hogy elhangzott ezzel kapcsolatban egy nyilvánvaló nyelvbotlás,
 miszerint „valamennyi olyan elhunytat, akinél a betegség időtartama
 alatt, vagy előtte bármikor \[!\] pozitív személynek regisztráltak,
 tehát készült nála laboratóriumi vizsgálat, ami pozitivitást mutatott,
-mindenkit beszámolunk az elhunytak közé". Ez természetesen – szerencsére
+mindenkit beszámolunk az elhunytak közé”. Ez természetesen – szerencsére
 – nem igaz, hiszen ha szó szerint vennénk, akkor valakit, aki tavaly
 áprilisban megbetegedett majd meggyógyult, majd ma elüti egy autó, azt
 elvileg koronavírusos halottként kellene elszámolni. (Most olyan
@@ -454,7 +454,7 @@ vannak). Ez szükségszerűen korlátozza a többlethalálozás gyakorlati
 hasznosíthatóságát.
 
 Remélem, a fentiekből is érzékelhető, hogy nincsenek univerzálisan
-„jobb" és „rosszabb" mutatók, az ilyen indikátorokat mindig egészében
+„jobb” és „rosszabb” mutatók, az ilyen indikátorokat mindig egészében
 kell vizsgálni, és az átfogó kép alapján értékelni.
 
 ### A halálozás mint mutató használatának általános problémái
@@ -463,7 +463,7 @@ Függetlenül attól, hogy pontosan hogyan mérjük le, a halálozásnak, mint
 a járvány terhének mutatója, van egy sor hátránya is, általában, pusztán
 amiatt, hogy a halálozáson alapul. A probléma többrétű:
 
--   A „járvány terhe" egy többdimenziós fogalom, ami nem szűkíthető le a
+-   A „járvány terhe” egy többdimenziós fogalom, ami nem szűkíthető le a
     elhunytakra (noha kétségtelen, hogy sok tekintetben ez a legdrámaibb
     teher). Azonban az is teher, ha emberek szenvednek (még ha a végén
     fel is épülnek), más szempontból de az is teher, ha az egészségügyi
@@ -532,7 +532,7 @@ többletet is millió lakosra osztjuk rá, akkor a kettő egymással is jól
 [adatai](https://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=demo_r_mwk_ts&lang=en)
 alapján kiszámítottam a többlethalálozást, mégpedig heti alapon,
 egységesen az országokra, és valamennyi európai országra. Az elemzéshez
-és ábrázoláshoz használt programot – a „nyílt tudomány" jegyében –
+és ábrázoláshoz használt programot – a „nyílt tudomány” jegyében –
 teljes egészében [nyilvánosságra
 hozom](https://github.com/tamas-ferenci/ExcessMortEUR#eredmények-a-hazai-többlethalálozási-adatok-és-európai-viszonyításuk),
 így bárki reprodukálhatja, ellenőrizheti és továbbfejlesztheti a
@@ -593,7 +593,7 @@ stb.):
 Teljes mértékben egyetértek azzal, hogy most nem személyi felelőst kell
 keresni, ujjal mutogatni, hogy ki mit rontott el, ám messzemenőkig nem
 értek egyet azzal, hogy a kérdést elintézzük olyan mondatokkal, mint
-hogy ez az időszak „a gyászról és a megfeszített küzdelemről" szól. Nem,
+hogy ez az időszak „a gyászról és a megfeszített küzdelemről” szól. Nem,
 itt nem lehet befejezni egy elemzést, ugyanis *épp* a gyászolóknak és
 megfeszítve küzdőknek tartozunk azzal, hogy feltárjuk a hibák okait,
 *pont azért*, hogy a jövőben minél kevesebben gyászoljanak, és legyenek
@@ -761,7 +761,7 @@ ggplot(SimData, aes(x = year, y = fit*1000, ymin = lwr*1000, ymax = upr*1000, co
 
 ![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
-Ez megfelel a „szabad szemre" történő várakozásunknak arra, hogy hol
+Ez megfelel a „szabad szemre” történő várakozásunknak arra, hogy hol
 lenne a következő évi eredmény, viszont cserében a bizonytalansága is a
 legnagyobb.
 
@@ -916,8 +916,8 @@ eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a
 többi kutatót és az érdeklődő laikusokat hasonló számítások
 elvégézésében, mivel itt látnak egy lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2021-10-04. A többlethalálozást
-számító csomag (`excessmort`) verziószáma 0.5.0, az Eurostat-tól
+A számítások aktualizálásának dátuma: 2021-10-11. A többlethalálozást
+számító csomag (`excessmort`) verziószáma 0.6.1, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) pedig 3.7.5.
 
 ### Adatok előkészítése
@@ -1540,7 +1540,7 @@ Igen, lehet mondani, hogy így egy dologtól megtisztítottuk, míg az
 eredeti attól az egytől sincs tisztítva, de így legalább az eredetinek
 világos, egyértelmű, pontosan definiált a tartalma! Mindenki tudja, hogy
 többlethalálozás, hogy az mit jelent, mit tartalmaz. A „részben
-tisztított" mutató már egyáltalán nem egyértelmű, hogy mit jelent,
+tisztított” mutató már egyáltalán nem egyértelmű, hogy mit jelent,
 hogyan hasonlítható össze nemzetközileg stb.
 
 Az, hogy mennyire erősek az ellenérvek a fentiekkel szemben, függ attól
@@ -1550,7 +1550,7 @@ többlethalálozásból. Egy elég meglepő, de valós kérdés: kivonjuk-e
 Azerbajdzsán és Örményország többlethalálozásából a 2020 végi
 hegyi-karabahi háború áldozatainak a számát…? Ez talán még a legjobban
 védhető helyzet, hiszen ez teljesen egyértelműen az „előrejelzés
-tévedése a járványtól független halandóságról" kategóriában van, mivel
+tévedése a járványtól független halandóságról” kategóriában van, mivel
 ez nyilván nem volt előrejelezhető a múltbeli halálozási adatokból,
 semmilyen módszerrel, másrészt elég jól meghatározható számú halálozást
 jelentett. (És ugye ezek jelenleg növelik a koronavírusos halálozást, ha
@@ -1589,7 +1589,7 @@ vannak kizárva a modell becsléséből; ez jelenleg a 2020. március 1.
 utáni dátumokat jelenti, hogy maga a vizsgált járvány ne legyen benne,
 értelemszerűen. Igen ám, de megtehetjük, hogy ezeket a kizárt dátumokat
 kibővítjük: szintén kivesszük az influenza-szezonokat, azaz a stratégia
-az, hogy ilyen módon megbecslünk egy „influenza nélküli" alapvonalat, és
+az, hogy ilyen módon megbecslünk egy „influenza nélküli” alapvonalat, és
 ezt vonjuk ki mint várt halálozást! Ezzel lényegében automatikusan
 korrigálunk az influenza-járványra.
 
