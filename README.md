@@ -916,7 +916,7 @@ eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a
 többi kutatót és az érdeklődő laikusokat hasonló számítások
 elvégézésében, mivel itt látnak egy lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2021-10-14. A többlethalálozást
+A számítások aktualizálásának dátuma: 2021-10-15. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.6.1, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) pedig 3.7.5.
 
@@ -1284,7 +1284,7 @@ Megnézhetjük Magyarország példáján a kétféle adatsort:
 ggplot(melt(res[geo=="HU", .(date, `Többlethalálozás` = excess/population*1e6,
                              `Regisztrált koronavírus-halálozás` = new_deaths/population*1e6)],
             id.vars = "date"), aes(x = date, y = value, group = variable, color = variable)) + geom_line() +
-  labs(x = "", y = "Halálozás [fő/M fő]") +
+  labs(x = "", y = "Heti halálozás [fő/M fő]") +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank()) +
@@ -1382,21 +1382,41 @@ elkerüljük a túlzott pontosság hamis érzetét), most kivételesen abszolút
 skálán:
 
 ``` r
-ggplot(melt(res[geo=="HU", .(date, `Többlethalálozás` = cumexcess,
-                             `Regisztrált koronavírus-halálozás` = cumnewdeaths)],
-            id.vars = "date"), aes(x = date, y = value, group = variable, color = variable,
-                                   label = round(value, -2))) + geom_line() +
+p <- ggplot(melt(res[geo=="HU", .(date, `Többlethalálozás` = cumexcess,
+                                  `Regisztrált koronavírus-halálozás` = cumnewdeaths)],
+                 id.vars = "date"), aes(x = date, y = value, group = variable, color = variable,
+                                        label = round(value, -2))) + geom_line() +
   directlabels::geom_dl(data = melt(tail(res[geo=="HU",
                                              .(date, `Többlethalálozás` = cumexcess,
                                                `Regisztrált koronavírus-halálozás` = cumnewdeaths)], 1),
                                     id.vars = "date"), method = list("last.points", cex = 0.6)) +
-  labs(x = "", y = "Halálozás [fő]") + scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
+  labs(x = "", y = "Halálozás [fő]") + scale_x_date(date_breaks = "months",
+                                                             labels = scales::label_date_short()) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank()) +
   labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
+p
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-33-1.png)<!-- -->
+
+A korábban már felvázolt „lassú” adatszolgáltatási folyamatnak, tehát a
+HVB-k alapján történő, az Egészségügyi Világszervezet protokollját
+követő besorolásnak egy eredménye van meg: a 2020 évi összesített adat.
+Érdemes – egy ponttal – ezt is megjelölni az ábrán:
+
+``` r
+p + geom_point(data = data.frame(x = as.Date("2020-12-31"), y = 9667),
+               inherit.aes = FALSE, aes(x = x, y = y))
+```
+
+![](README_files/figure-gfm/unnamed-chunk-34-1.png)<!-- -->
+
+Mint látszik, itt még nagy különbség nincsen, de azért az eredmény
+szépen egybecseng a másik két adatsorral. Igazán érdekes azonban a
+későbbi értéke lesz, sajnos, mint volt is róla szó, ezt legközelebb csak
+2021 egész évre fogjuk megtudni, azt is csak 2022-ben (és nem az
+elején).
 
 ### Érzékenységvizsgálat
 
@@ -1416,7 +1436,19 @@ mennyi a járvány teljes időtartamára kapott (abszolút) többlethalálozás,
 ha csak egy adott évig visszamenőleg használjuk fel az adatokat a várt
 halálozást előrejelző modell becsléséhez:
 
-![](README_files/figure-gfm/unnamed-chunk-34-1.png)<!-- -->
+``` r
+SensDat <- data.table(year = 2000:2015)
+SensDat$excess <- sapply(SensDat$year, function(y)
+  tail(excess_cumulative(excess_model(RawData[geo=="HU"&year>=y], start = min(RawData[geo=="HU"]$date),
+                                      end = max(RawData[geo=="HU"]$date), exclude = exclude_dates,
+                                      frequency = nrow(RawData[geo=="HU"&year>=y])/
+                                        (as.numeric(diff(range(RawData[geo=="HU"&year>=y]$date)))/365.25)),
+                         min(exclude_dates), max(exclude_dates)), 1)[["fitted"]])
+ggplot(SensDat, aes(x = year, y = excess)) + geom_line() + geom_point() +
+  labs(x = "Kezdőév", y = "Összesített teljes többlethalálozás [fő]")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-35-1.png)<!-- -->
 
 Látható, hogy a teljes (2000-ben kezdődő) adatsort felhasználva kb. 22
 ezer fő a becsült többlethalálozás, ezt eddig is tudtuk, de ha 2015-től
@@ -1435,19 +1467,43 @@ ggplot(RawData[geo=="HU"&year<=2019, .(mort = sum(outcome)/sum(population)*1000*
   labs(x = "Év", y = "Nyers mortalitás [/1000 fő/év]")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-35-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-36-1.png)<!-- -->
 
 Ha erre az egész, 2000-ben kezdődő adatbázisra illesztünk hosszú távú
 görbét, akkor a legvégén egy gyorsan növekvő trendet fogunk látni:
 
-![](README_files/figure-gfm/unnamed-chunk-36-1.png)<!-- -->
+``` r
+fitSens <- mgcv::gam(outcome ~ s(year) + s(week, bs = "cc"), offset = log(population), family = quasipoisson,
+                     data = RawData[geo=="HU"&year<=2019])
+predgrid1 <- CJ(year = 2000:2019, week = 1:52)
+predgrid1$pred <- predict(fitSens, newdata = predgrid1, type = "response")
+
+ggplot(RawData[geo=="HU"&year<=2019, .(mort = sum(outcome)/sum(population)*1000*52), .(year)],
+       aes(x = year, y = mort)) + geom_line() + geom_point() +
+  labs(x = "Év", y = "Nyers mortalitás [/1000 fő/év]") +
+  geom_line(data = predgrid1[,.(mort = sum(pred)*1000),.(year)], color = "blue")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-37-1.png)<!-- -->
 
 Ezt meghosszabbítva 2020-ra, 2021-re, pláne magasan levő alapvonalat
 fogunk kapni, amihez viszonyítunk – így a különbözet is kisebb lesz.
 
 Más azonban a helyzet, ha csak 2015-től nézzük a képet:
 
-![](README_files/figure-gfm/unnamed-chunk-37-1.png)<!-- -->
+``` r
+fitSens <- mgcv::gam(outcome ~ s(year, k = 3) + s(week, bs = "cc"), offset = log(population),
+                     family = quasipoisson, data = RawData[geo=="HU"&year<=2019&year>=2015])
+predgrid2 <- CJ(year = 2015:2019, week = 1:52)
+predgrid2$pred <- predict(fitSens, newdata = predgrid2, type = "response")
+
+ggplot(RawData[geo=="HU"&year<=2019&year>=2015, .(mort = sum(outcome)/sum(population)*1000*52), .(year)],
+       aes(x = year, y = mort)) + geom_line() + geom_point() +
+  labs(x = "Év", y = "Nyers mortalitás [/1000 fő/év]") +
+  geom_line(data = predgrid2[,.(mort = sum(pred)*1000),.(year)], color = "blue")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-38-1.png)<!-- -->
 
 Ebben az esetben a végén csak egy sokkal-sokkal kisebb növekedés fog
 látszódni, így azt meghosszabbítva egy alacsonyabban lévő várt
@@ -1464,7 +1520,7 @@ ggplot(RawData[geo=="HU"&year<=2019, .(mort = sum(outcome)/sum(population)*1000*
   geom_line(data = predgrid2[,.(mort = sum(pred)*1000),.(year)], color = "red")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-38-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-39-1.png)<!-- -->
 
 A dolognak van egy nagyon fontos általános tanulsága: kritikus, hogy az
 ember érezze, hogy a többlethalálozási eredmények nem kőbevésettek. A
@@ -1486,7 +1542,26 @@ paramétert is használ. Ugyanúgy megnézhetjük, hogy ezek változtatása
 hogyan hat az eredményre, például, hogy milyen típusú modellt
 választunk:
 
-![](README_files/figure-gfm/unnamed-chunk-39-1.png)<!-- -->
+``` r
+SensDat <- CJ(year = 2000:2015, model = c("quasipoisson", "correlated"))
+SensDat$excess <- sapply(1:nrow(SensDat), function(i)
+  tail(excess_cumulative(excess_model(RawData[geo=="HU"&year>=SensDat$year[i]],
+                                      start = min(RawData[geo=="HU"]$date),
+                                      end = max(RawData[geo=="HU"]$date), exclude = exclude_dates,
+                                      control.dates = as.Date(setdiff(seq(min(RawData[geo=="HU"]$date),
+                                                                          max(RawData[geo=="HU"]$date),
+                                                                          by = "day"), exclude_dates),
+                                                              origin = "1970-01-01"),
+                                      model = SensDat$model[i], max.control = 10000,
+                                      frequency = nrow(RawData[geo=="HU"&year>=SensDat$year[i]])/
+                                        (as.numeric(diff(range(RawData[geo=="HU"&year>=
+                                                                         SensDat$year[i]]$date)))/365.25)),
+                         min(exclude_dates), max(exclude_dates)), 1)[["fitted"]])
+ggplot(SensDat, aes(x = year, y = excess, color = model)) + geom_line() +
+  labs(x = "Kezdőév", y = "Összesített teljes többlethalálozás [fő]", color = "Modell típusa")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-40-1.png)<!-- -->
 
 Ezt az eredményt úgy lehet leolvasni, hogy a kezdőévre érzékeny a
 végeredmény, de a modell típusára gyakorlatilag nem. És persze az is
@@ -1616,7 +1691,27 @@ ki minden évben (kivéve tehát 2020-at). Hogy látható legyen ennek a
 hatása, érdemes megnézni, hogy mi a várt halálozás becsült görbéje a két
 módon
 
-![](README_files/figure-gfm/unnamed-chunk-40-1.png)<!-- -->
+``` r
+exclude_dates_flu <- c(do.call(c, sapply(2000:2019, function(i) seq(as.Date(paste0(i, "-01-01")),
+                                                                    as.Date(paste0(i, "-03-31")),
+                                                                    by = "day"))),
+                       seq(as.Date("2020-03-01"), max(RawData$date), by = "day"))
+
+exp_orig <- with(compute_expected(RawData[geo=="HU"], exclude = exclude_dates,
+                             frequency = nrow(RawData[geo=="HU"])/
+                               (as.numeric(diff(range(RawData[geo=="HU"]$date)))/365.25)),
+                 data.table(type = "Eredeti többlethalálozás", date, expected))
+exp_flu <- with(compute_expected(RawData[geo=="HU"], exclude = exclude_dates_flu,
+                             frequency = nrow(RawData[geo=="HU"])/
+                               (as.numeric(diff(range(RawData[geo=="HU"]$date)))/365.25)),
+                data.table(type = "Többlethalálozás az influenza-szezonok kizárásával", date, expected))
+
+ggplot(rbind(exp_orig, exp_flu), aes(x = date, y = expected, color = type)) + geom_line() +
+  labs(x = "Év", y = "Várt heti halálozás [fő/hét]", color = "") +
+  theme(legend.position = "bottom")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-41-1.png)<!-- -->
 
 Szépen látszik, hogy az influenza-szezonok nélkül becsültetett modell
 kevésbé fut fel magas értékekre – hiszen nem kell ráilleszkednie az
@@ -1628,12 +1723,69 @@ lecsökkenteni a többlethalálozást az, hogy a viszonyítási alapérték
 tartalmazza az – abban az évben be sem következett – influenza-szezont.
 Nézzük az eredményeket:
 
-![](README_files/figure-gfm/unnamed-chunk-41-1.png)<!-- -->
+``` r
+res_flu <- rbindlist(lapply(list(`Eredeti többlethalálozás` = exclude_dates,
+                                 `Többlethalálozás az influenza-szezonok kizárásával` = exclude_dates_flu),
+                            function(ed)
+                              with(excess_model(RawData[geo=="HU"], start = min(RawData[geo=="HU"]$date),
+                                                end = max(RawData[geo=="HU"]$date), exclude = ed,
+                                                frequency = nrow(RawData[geo=="HU"])/
+                                                  (as.numeric(diff(range(RawData[geo=="HU"]$date)))/365.25)),
+                                   data.table(date = date, observed = observed, expected = expected,
+                                              y = 100 * (observed - expected)/expected,
+                                              increase = 100 * fitted,
+                                              excess = expected * fitted,
+                                              se = sapply(1:length(date), function(i) {
+                                                mu <- matrix(expected[i], nr = 1)
+                                                x <- matrix(x[i,], nr = 1)
+                                                sqrt(mu %*% x %*% betacov %*% t(x) %*% t(mu))
+                                              })))), idcol = TRUE)
+res_flu <- res_flu[date>=as.Date("2020-03-01")]
+res_flu[, cumexcess := cumsum(excess), .(.id)]
+
+ggplot(res_flu, aes(x = date, y = cumexcess, group = .id, color = .id, label = round(cumexcess, -2))) +
+  geom_line() +
+  directlabels::geom_dl(data = res_flu[,tail(.SD, 1), .(.id)], method = list("last.points", cex = 0.6)) +
+  labs(x = "", y = "Halálozás [fő]") + scale_x_date(date_breaks = "months",
+                                                    labels = scales::label_date_short()) +
+  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
+        legend.title = element_blank()) +
+  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  geom_point(data = data.frame(x = as.Date("2020-12-31"), y = 9667), inherit.aes = FALSE, aes(x = x, y = y))
+```
+
+![](README_files/figure-gfm/unnamed-chunk-42-1.png)<!-- -->
 
 Látszik, hogy így számolva a többlethalálozás 22 ezerről 27 ezer főre
 emelkedik, amiben az a nagyon szép, hogy bár teljesen máshogy
 dolgoztunk, de tökéletesen visszajött az influenza-szezon 4-5 ezer fős –
 teljesen reális értékű – halálozása.
+
+Érdemes ezt egybevetni a jelentett halálozással is:
+
+``` r
+res_flu <- rbind(res_flu[, .(.id, date, cum = cumexcess)],
+                 res[geo=="HU", .(.id = "Regisztrált koronavírus-halálozás", date, cum = cumnewdeaths)])
+
+ggplot(res_flu, aes(x = date, y = cum, group = .id, color = .id, label = round(cum, -2))) + geom_line() +
+  directlabels::geom_dl(data = res_flu[,tail(.SD, 1), .(.id)], method = list("last.points", cex = 0.6)) +
+  labs(x = "", y = "Halálozás [fő]") + scale_x_date(date_breaks = "months",
+                                                             labels = scales::label_date_short()) +
+  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
+        legend.title = element_blank()) +
+  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  geom_point(data = data.frame(x = as.Date("2020-12-31"), y = 9667), inherit.aes = FALSE, aes(x = x, y = y))
+```
+
+![](README_files/figure-gfm/unnamed-chunk-43-1.png)<!-- -->
+
+Az ábra erősen azt sugallja, hogy így már „rendben vagyunk” (azaz, hogy
+ezután a korrekció után már a jelentett és a többlethalálozás
+gyakorlatilag egybeesik, ezáltal kölcsönösen megerősítve egymást),
+azonban nem lehet elégszer hangsúlyozni, hogy ezzel nagyon óvatosnak
+kell lenni: most csak egyetlen tényezőt korrigáltunk, miközben rengeteg
+további elképzelhető, amik ráadásul lehetnek pozitívak vagy negatívak
+is.
 
 ## Továbbfejlesztési ötletek
 
@@ -1649,9 +1801,8 @@ teljesen reális értékű – halálozása.
 
 -   Ariel Karlinsky, Dmitry Kobak. “The World Mortality Dataset:
     Tracking excess mortality across countries during the COVID-19
-    pandemic.” medRxiv. 2021 Jan 29;2021.01.27.21250604. DOI:
-    10.1101/2021.01.27.21250604. Preprint.
-    [Link](https://www.medrxiv.org/content/10.1101/2021.01.27.21250604v3).
+    pandemic.” Elife. 2021 Jun 30;10:e69336. DOI: 10.7554/eLife.69336.
+    [Link](https://elifesciences.org/articles/69336).
 -   Nazrul Islam, et al. “Excess deaths associated with covid-19
     pandemic in 2020: age and sex disaggregated time series analysis in
     29 high income countries.” BMJ. 2021 May 19;373:n1137. DOI:
