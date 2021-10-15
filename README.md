@@ -1402,11 +1402,14 @@ p
 
 A korábban már felvázolt „lassú” adatszolgáltatási folyamatnak, tehát a
 HVB-k alapján történő, az Egészségügyi Világszervezet protokollját
-követő besorolásnak egy eredménye van meg: a 2020 évi összesített adat.
-Érdemes – egy ponttal – ezt is megjelölni az ábrán:
+követő besorolásnak [egy eredménye van
+meg](https://www.ksh.hu/stadat_files/nep/hu/nep0009.html): a 2020 évi
+összesített adat, e szerint 8981 halálesetet soroltak a mostani
+koronavírus miatt bekövetkezettnek. Érdemes – egy ponttal – ezt is
+megjelölni az ábrán:
 
 ``` r
-p + geom_point(data = data.frame(x = as.Date("2020-12-31"), y = 9667),
+p + geom_point(data = data.frame(x = as.Date("2020-12-31"), y = 8981),
                inherit.aes = FALSE, aes(x = x, y = y))
 ```
 
@@ -1751,7 +1754,7 @@ ggplot(res_flu, aes(x = date, y = cumexcess, group = .id, color = .id, label = r
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank()) +
   labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
-  geom_point(data = data.frame(x = as.Date("2020-12-31"), y = 9667), inherit.aes = FALSE, aes(x = x, y = y))
+  geom_point(data = data.frame(x = as.Date("2020-12-31"), y = 8981), inherit.aes = FALSE, aes(x = x, y = y))
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-42-1.png)<!-- -->
@@ -1774,7 +1777,7 @@ ggplot(res_flu, aes(x = date, y = cum, group = .id, color = .id, label = round(c
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank()) +
   labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
-  geom_point(data = data.frame(x = as.Date("2020-12-31"), y = 9667), inherit.aes = FALSE, aes(x = x, y = y))
+  geom_point(data = data.frame(x = as.Date("2020-12-31"), y = 8981), inherit.aes = FALSE, aes(x = x, y = y))
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-43-1.png)<!-- -->
