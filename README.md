@@ -1760,6 +1760,7 @@ ggplot(res_flu, aes(x = date, y = cumexcess, group = .id, color = .id, label = r
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank()) +
   labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  coord_cartesian(ylim = ggplot_build(p)$layout$panel_scales_y[[1]]$range$range) +
   geom_point(data = data.frame(x = as.Date("2020-12-31"), y = 8981), inherit.aes = FALSE, aes(x = x, y = y))
 ```
 
@@ -1783,6 +1784,7 @@ ggplot(res_flu, aes(x = date, y = cum, group = .id, color = .id, label = round(c
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank()) +
   labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  coord_cartesian(ylim = ggplot_build(p)$layout$panel_scales_y[[1]]$range$range) +
   geom_point(data = data.frame(x = as.Date("2020-12-31"), y = 8981), inherit.aes = FALSE, aes(x = x, y = y))
 ```
 
