@@ -646,16 +646,16 @@ aki még rosszabb. Abból lehet tanulni, ha azt nézzük, hogy mondjuk Dánia
 a járvány teljes időtartamát lehozta zéró többlethalálozással. Ez min
 múlt?
 [Azon](https://ourworldindata.org/explorers/coronavirus-data-explorer?zoomToSelection=true&pickerSort=asc&pickerMetric=location&Metric=Tests&Interval=Cumulative&Relative+to+Population=false&Align+outbreaks=false&country=HUN~DNK),
-hogy a 6 milliós Dánia 34 millió koronavírus-tesztet csinált, mi 5,5
-milliót?
+hogy 2021 októberig mi 6,5 millió koronavírus-tesztet csináltunk, a 6
+milliónál is kevesebb lakosú Dánia 41 milliót?
 [Azon](https://gateway.euro.who.int/en/indicators/hfa_427-3051-spirits-consumed-in-pure-alcohol-litres-per-capita-age-15plus/),
 hogy mi 3,5 liter tömény alkoholt iszunk meg évente, a dánok 1,6-ot?
 [Azon](https://ec.europa.eu/eurostat/databrowser/view/hlth_rs_prsns/),
-hogy náluk 1000 nővér jut százezer lakosra, nálunk kevesebb, mint 500?
-Félreértés ne essék, nem tudom biztosan én sem, hogy mi a magyarázat, de
-azt biztosan tudom, hogy az erről való diskurzus előre viszi az
-országot. Az, hogy a középmezőnyben vagyunk, úgyhogy akkor menjünk is
-tovább, nem viszi előbbre az országot.
+hogy Dániában 2700 nővér, ápoló, egészségügyi szakdolgozó jut százezer
+lakosra, nálunk kevesebb, mint 1000? Félreértés ne essék, nem tudom
+biztosan én sem, hogy mi a magyarázat, de azt biztosan tudom, hogy az
+erről való diskurzus előre viszi az országot. Az, hogy a középmezőnyben
+vagyunk, úgyhogy akkor menjünk is tovább, nem viszi előbbre az országot.
 
 ## Módszertani kérdések
 
@@ -1146,12 +1146,12 @@ relatív mutatóként:
 ggplot(res, aes(x = date, y = excess/population*1e6, group = geo, label = geo)) +
   geom_line(aes(color = geo=="HU")) + geom_abline(slope = 0, intercept = 0, colour = "blue") +
   scale_color_manual(values = c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
-  labs(x = "", y = "Aktuális többlethalálozás [fő/1M fő]") +
+  labs(x = "", y = "Aktuális többlethalálozás [fő/1M fő]",
+       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
-        legend.title = element_blank()) +
-  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
+        legend.title = element_blank())
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
@@ -1161,13 +1161,13 @@ Ugyanez akkor, ha a várt halálozásra vetítünk:
 ``` r
 ggplot(res, aes(x = date, y = increase, group = geo, label = geo)) + geom_line(aes(color = geo=="HU")) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
-  labs(x = "", y = "Aktuális többlethalálozás [%]") +
+  labs(x = "", y = "Aktuális többlethalálozás [%]",
+       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   geom_abline(slope = 0, intercept = 0, colour = "blue") +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
-        legend.title = element_blank()) +
-  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
+        legend.title = element_blank())
 ```
 
 ![](README_files/figure-gfm/aktualisvart-1.png)<!-- -->
@@ -1178,11 +1178,11 @@ Kicsit direktebben is összevethetjük őket, ha országonként külön-külön
 
 ``` r
 ggplot(res, aes(x = increase, y = excess/population*1e6)) + geom_line() +
-  labs(x = "Aktuális többlethalálozás [%]", y = "Aktuális többlethalálozás [fő/1M fő]") +
+  labs(x = "Aktuális többlethalálozás [%]", y = "Aktuális többlethalálozás [fő/1M fő]",
+       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   facet_wrap(~geo) + geom_abline(intercept = 0, slope =  2, alpha = 0.3) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
-        legend.title = element_blank()) +
-  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
+        legend.title = element_blank())
 ```
 
 ![](README_files/figure-gfm/lelekszamvsvart-1.png)<!-- -->
@@ -1209,12 +1209,12 @@ népességszámra vetített ábra:
 ggplot(res, aes(x = date, y = cumexcess/meanpopulation*1e6, group = geo, label = geo)) +
   geom_line(aes(color = geo=="HU")) + geom_abline(slope = 0, intercept = 0, colour = "blue") +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
-  labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]") +
+  labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]",
+       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
   theme(plot.caption = element_text(face = "bold", hjust = 0),
-        legend.position = "bottom", legend.title = element_blank()) +
-  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
+        legend.position = "bottom", legend.title = element_blank())
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
@@ -1228,12 +1228,12 @@ többletet és a várt értéket, majd ezeket osztjuk el egymással:
 ggplot(res, aes(x = date, y = cumexcess/cumexpected, group = geo, label = geo)) +
     geom_line(aes(color = geo=="HU")) + geom_abline(slope = 0, intercept = 0, colour = "blue") +
     scale_color_manual(values = c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
-    labs(x = "", y = "Összesített többlethalálozás [%]") +
+    labs(x = "", y = "Összesített többlethalálozás [%]",
+         caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
     scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
     directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
     theme(plot.caption = element_text(face = "bold", hjust = 0),
-          legend.position = "bottom", legend.title = element_blank()) +
-    labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
+          legend.position = "bottom", legend.title = element_blank())
 ```
 
 ![](README_files/figure-gfm/kumulaltvart-1.png)<!-- -->
@@ -1290,11 +1290,12 @@ Megnézhetjük Magyarország példáján a kétféle adatsort:
 ggplot(melt(res[geo=="HU", .(date, `Többlethalálozás` = excess/population*1e6,
                              `Regisztrált koronavírus-halálozás` = new_deaths/population*1e6)],
             id.vars = "date"), aes(x = date, y = value, group = variable, color = variable)) + geom_line() +
-  labs(x = "", y = "Heti halálozás [fő/M fő]") + scale_color_manual(values = scalval, limits = force) +
+  labs(x = "", y = "Heti halálozás [fő/M fő]",
+       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  scale_color_manual(values = scalval, limits = force) +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
-        legend.title = element_blank()) +
-  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
+        legend.title = element_blank())
 ```
 
 ![](README_files/figure-gfm/magyartobbletesjelentett-1.png)<!-- -->
@@ -1341,11 +1342,12 @@ Vagy a kétféle adat viszonyát, pontosabban annak alakulását időben az
 ``` r
 ggplot(res, aes(x = date, y = cumexcess/cumnewdeaths, group = geo)) + geom_line() +
   coord_cartesian(xlim = c(as.Date("2020-07-01"), NA), ylim = c(-1, 3)) + facet_wrap(~geo) +
-  geom_hline(yintercept = 1, col = "red") + labs(x = "", y = "Többlethalálozás / jelentett halálozás") +
+  geom_hline(yintercept = 1, col = "red") +
+  labs(x = "", y = "Többlethalálozás / jelentett halálozás",
+       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   scale_x_date(date_breaks = "2 months", labels = function(z) gsub("^0", "", strftime(z, "%m"))) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
-        legend.title = element_blank()) +
-  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
+        legend.title = element_blank())
 ```
 
 ![](README_files/figure-gfm/tobbletperjelentettorszagonkent-1.png)<!-- -->
@@ -1367,10 +1369,10 @@ ggplot(res[,.SD[nrow(.SD)-4], .(geo)], aes(x = cumexcess/population*1e6,
                                            y = cumnewdeaths/population*1e6, label = geo)) +
   geom_point(aes(col = geo=="HU")) + geom_abline() + geom_text(hjust = "left", nudge_x = 30) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
-  labs(x = "Összesített többlethalálozás [fő/1M fő]", y = "Összesített jelentett halálozás [fő/M fő]") +
+  labs(x = "Összesített többlethalálozás [fő/1M fő]", y = "Összesített jelentett halálozás [fő/M fő]",
+       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
-        legend.title = element_blank()) +
-  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
+        legend.title = element_blank())
 ```
 
 ![](README_files/figure-gfm/utolsotobbletperjelentett-1.png)<!-- -->
@@ -1396,11 +1398,11 @@ p <- ggplot(melt(res[geo=="HU", .(date, `Többlethalálozás` = cumexcess,
                                              .(date, `Többlethalálozás` = cumexcess,
                                                `Regisztrált koronavírus-halálozás` = cumnewdeaths)], 1),
                                     id.vars = "date"), method = list("last.points", cex = 0.6)) +
-  labs(x = "", y = "Halálozás [fő]") + scale_color_manual(values = scalval, limits = force) +
+  labs(x = "", y = "Halálozás [fő]", caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  scale_color_manual(values = scalval, limits = force) +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
-        legend.title = element_blank()) +
-  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
+        legend.title = element_blank())
 p
 ```
 
@@ -1416,16 +1418,18 @@ megjelölni az ábrán:
 
 ``` r
 p + geom_point(data = data.frame(x = as.Date("2020-12-31"), y = 8981),
-               inherit.aes = FALSE, aes(x = x, y = y))
+               inherit.aes = FALSE, aes(x = x, y = y, fill = "HVB-k szerinti koronavírus-halálozás"))
 ```
 
 ![](README_files/figure-gfm/magyarkumulalttobbletesjelentetteshvb-1.png)<!-- -->
 
-Mint látszik, itt még nagy különbség nincsen, de azért az eredmény
-szépen egybecseng a másik két adatsorral. Igazán érdekes azonban a
-későbbi értéke lesz, sajnos, mint volt is róla szó, ezt legközelebb csak
-2021 egész évre fogjuk megtudni, azt is csak 2022-ben (és nem az
-elején).
+Mint látszik, nagy különbség nincsen, az eredmény szépen egybecseng a
+másik két adatsorral. Ez fontos abból a szempontból, hogy cáfolja azt a
+vélekedést, miszerint a gyors regisztrálás „boldog-boldogtalant”
+koronavírusos halottnak sorol, szemben a precíz besorolással; igazán
+érdekes azonban a későbbi értéke lesz. Sajnos, mint volt is róla szó,
+ezt legközelebb csak 2021 egész évre fogjuk megtudni, azt is csak
+2022-ben (és nem az elején).
 
 ### Érzékenységvizsgálat
 
@@ -1543,7 +1547,7 @@ felhívja a figyelmet arra, hogy túl nagy pontossággal nem érdemes
 megadni az eredményeket. (És persze arra is, hogy igenis van jelentősége
 a “technikai részletkérdéseknek” is!)
 
-Az “érzékenységvizsgálat” kifejezés alatt tipikusan azt szokták érteni,
+Az „érzékenységvizsgálat” kifejezés alatt tipikusan azt szokták érteni,
 hogy a végeredmény hogyan függ a felhasznált paraméterek értékétől.
 Természetesen nem csak a becsléshez használt adatbázis időtartama az
 egyetlen ilyen paraméter: az Acosta-Irizarry eljárás egy sor további
@@ -1755,13 +1759,14 @@ res_flu[, cumexcess := cumsum(excess), .(.id)]
 ggplot(res_flu, aes(x = date, y = cumexcess, group = .id, color = .id, label = round(cumexcess, -2))) +
   geom_line() +
   directlabels::geom_dl(data = res_flu[,tail(.SD, 1), .(.id)], method = list("last.points", cex = 0.6)) +
-  labs(x = "", y = "Halálozás [fő]") + scale_color_manual(values = scalval, limits = force) +
+  labs(x = "", y = "Halálozás [fő]", caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  scale_color_manual(values = scalval, limits = force) +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank()) +
-  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   coord_cartesian(ylim = ggplot_build(p)$layout$panel_scales_y[[1]]$range$range) +
-  geom_point(data = data.frame(x = as.Date("2020-12-31"), y = 8981), inherit.aes = FALSE, aes(x = x, y = y))
+  geom_point(data = data.frame(x = as.Date("2020-12-31"), y = 8981),
+             inherit.aes = FALSE, aes(x = x, y = y, fill = "HVB-k szerinti koronavírus-halálozás"))
 ```
 
 ![](README_files/figure-gfm/tobbletesinfluenzanelkul-1.png)<!-- -->
@@ -1779,13 +1784,14 @@ res_flu <- rbind(res_flu[, .(.id, date, cum = cumexcess)],
 
 ggplot(res_flu, aes(x = date, y = cum, group = .id, color = .id, label = round(cum, -2))) + geom_line() +
   directlabels::geom_dl(data = res_flu[,tail(.SD, 1), .(.id)], method = list("last.points", cex = 0.6)) +
-  labs(x = "", y = "Halálozás [fő]") + scale_color_manual(values = scalval, limits = force) +
+  labs(x = "", y = "Halálozás [fő]", caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  scale_color_manual(values = scalval, limits = force) +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank()) +
-  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   coord_cartesian(ylim = ggplot_build(p)$layout$panel_scales_y[[1]]$range$range) +
-  geom_point(data = data.frame(x = as.Date("2020-12-31"), y = 8981), inherit.aes = FALSE, aes(x = x, y = y))
+  geom_point(data = data.frame(x = as.Date("2020-12-31"), y = 8981),
+             inherit.aes = FALSE, aes(x = x, y = y, fill = "HVB-k szerinti koronavírus-halálozás"))
 ```
 
 ![](README_files/figure-gfm/tobbletesinfluenzanelkulesjelentett-1.png)<!-- -->

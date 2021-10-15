@@ -215,12 +215,12 @@ Mit tudunk mondani egy adott időpontban aktuális helyzetről? Ezt mutatják a 
 ggplot(res, aes(x = date, y = excess/population*1e6, group = geo, label = geo)) +
   geom_line(aes(color = geo=="HU")) + geom_abline(slope = 0, intercept = 0, colour = "blue") +
   scale_color_manual(values = c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
-  labs(x = "", y = "Aktuális többlethalálozás [fő/1M fő]") +
+  labs(x = "", y = "Aktuális többlethalálozás [fő/1M fő]",
+       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
-        legend.title = element_blank()) +
-  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
+        legend.title = element_blank())
 ```
 
 Jól látszik, hogy az első hullám teljesen kimutathatatlan volt (legalábbis többlethalálozás tekintetében) Magyarországon, addig a második már súlyosan érintett minket, a harmadikban pedig gyakorlatilag egész Európában a legrosszabbak között volt az aktuális járványügyi helyzetünk.
@@ -229,11 +229,11 @@ Jól látszik, hogy az első hullám teljesen kimutathatatlan volt (legalábbis 
   
 ```{r aktualislelekszamorszagonkent, echo = FALSE}
 ggplot(res, aes(x = date, y = excess/population*1e6, group = geo)) + geom_line() +
-  labs(x = "", y = "Aktuális többlethalálozás [fő/1M fő]") +
+  labs(x = "", y = "Aktuális többlethalálozás [fő/1M fő]",
+       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   scale_x_date(date_breaks = "2 months", labels = function(z) gsub("^0", "", strftime(z, "%m"))) +
   facet_wrap(~geo) + theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
-                           legend.title = element_blank()) +
-  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
+                           legend.title = element_blank())
 ```
 
 A járvány egészének értékeléséhez nézzük az összesített adatokat (piros görbe Magyarország, a szürke görbék a többi európai országot jelölik):
@@ -242,12 +242,12 @@ A járvány egészének értékeléséhez nézzük az összesített adatokat (pi
 ggplot(res, aes(x = date, y = cumexcess/meanpopulation*1e6, group = geo, label = geo)) +
   geom_line(aes(color = geo=="HU")) + geom_abline(slope = 0, intercept = 0, colour = "blue") +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
-  labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]") +
+  labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]",
+       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
   theme(plot.caption = element_text(face = "bold", hjust = 0),
-        legend.position = "bottom", legend.title = element_blank()) +
-  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
+        legend.position = "bottom", legend.title = element_blank())
 ```
 
 Látható, hogy a legfrissebb adatok szerint -- persze ne felejtsük, ez egy hónappal ezelőtti állapotot jelent! -- nagyjából a legrosszabb harmad közepén vagyunk.
@@ -257,20 +257,20 @@ Látható, hogy a legfrissebb adatok szerint -- persze ne felejtsük, ez egy hó
 ```{r utolsoallapotoszlopdiagram, echo = FALSE}
 ggplot(res[, tail(.SD, 1), .(geo)][order(cumexcess/meanpopulation)],
        aes(x = factor(geo, levels = geo), y = cumexcess/meanpopulation*1e6, fill = geo=="HU")) + geom_col() +
-  guides(fill = "none") + labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]") +
+  guides(fill = "none") + labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]",
+                               caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
-        legend.title = element_blank()) +
-  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
+        legend.title = element_blank())
 ```
 
 Látványos lehet ugyanezeket az adatokat térképen is ábrázolni. Itt ugyan az értékeket nehezebb leolvasni, illetve összehasonlítani, hiszen egy színskála rosszabbul ítélhető meg mint egy oszlop magassága, viszont cserében térbeli információt is ad, ami meg sok szempontból jobban érzékelhető, egyetlen pillantással is (jobban társítani tudjuk az országokhoz az egyéb jellemzőiket, látszanak a térbeli csoportosulások stb.):
 
 ```{r utolsoallapotterkep, echo = FALSE}
 ggplot(geodata, aes(fill = y)) + geom_sf() + coord_sf(xlim = c(-25, 50), ylim = c(33, 73)) +
-  labs(fill = "Összesített többlet-\nhalálozás [fő/1M fő]") +
+  labs(fill = "Összesített többlet-\nhalálozás [fő/1M fő]",
+       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   scale_fill_gradient(low = "green", high = "red") +
-  theme(plot.caption = element_text(face = "bold", hjust = 0)) +
-  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
+  theme(plot.caption = element_text(face = "bold", hjust = 0))
 ```
 
 ## Záró gondolatok
@@ -281,7 +281,7 @@ Azzal tehetünk a magyar emberek egészségéért, ha feltesszük azt a kérdés
 
 Nem állítom, hogy ezek a kérdések könnyen megválaszolhatóak, és részben egyet is értek azzal, hogy a járványkezelés kiértékelése távlatot és rálátást igényel, de nem teljes mértékben: ha valamit rosszul csinálunk, azt jó minél hamarabb kideríteni, mielőtt túl sokáig csináljuk tovább rosszul.
 
-Nem értek egyet azzal a filozófiával sem, hogy azzal törődjünk, hogy nem igaz, hogy a legrosszabbak vagyunk: abból nem lehet tanulni, hogy van, aki még rosszabb. Abból lehet tanulni, ha azt nézzük, hogy mondjuk Dánia a járvány teljes időtartamát lehozta zéró többlethalálozással. Ez min múlt? [Azon](https://ourworldindata.org/explorers/coronavirus-data-explorer?zoomToSelection=true&pickerSort=asc&pickerMetric=location&Metric=Tests&Interval=Cumulative&Relative+to+Population=false&Align+outbreaks=false&country=HUN~DNK), hogy a 6 milliós Dánia 34 millió koronavírus-tesztet csinált, mi 5,5 milliót? [Azon](https://gateway.euro.who.int/en/indicators/hfa_427-3051-spirits-consumed-in-pure-alcohol-litres-per-capita-age-15plus/), hogy mi 3,5 liter tömény alkoholt iszunk meg évente, a dánok 1,6-ot? [Azon](https://ec.europa.eu/eurostat/databrowser/view/hlth_rs_prsns/), hogy náluk 1000 nővér jut százezer lakosra, nálunk kevesebb, mint 500? Félreértés ne essék, nem tudom biztosan én sem, hogy mi a magyarázat, de azt biztosan tudom, hogy az erről való diskurzus előre viszi az országot. Az, hogy a középmezőnyben vagyunk, úgyhogy akkor menjünk is tovább, nem viszi előbbre az országot.
+Nem értek egyet azzal a filozófiával sem, hogy azzal törődjünk, hogy nem igaz, hogy a legrosszabbak vagyunk: abból nem lehet tanulni, hogy van, aki még rosszabb. Abból lehet tanulni, ha azt nézzük, hogy mondjuk Dánia a járvány teljes időtartamát lehozta zéró többlethalálozással. Ez min múlt? [Azon](https://ourworldindata.org/explorers/coronavirus-data-explorer?zoomToSelection=true&pickerSort=asc&pickerMetric=location&Metric=Tests&Interval=Cumulative&Relative+to+Population=false&Align+outbreaks=false&country=HUN~DNK), hogy 2021 októberig mi 6,5 millió koronavírus-tesztet csináltunk, a 6 milliónál is kevesebb lakosú Dánia 41 milliót? [Azon](https://gateway.euro.who.int/en/indicators/hfa_427-3051-spirits-consumed-in-pure-alcohol-litres-per-capita-age-15plus/), hogy mi 3,5 liter tömény alkoholt iszunk meg évente, a dánok 1,6-ot? [Azon](https://ec.europa.eu/eurostat/databrowser/view/hlth_rs_prsns/), hogy Dániában 2700 nővér, ápoló, egészségügyi szakdolgozó jut százezer lakosra, nálunk kevesebb, mint 1000? Félreértés ne essék, nem tudom biztosan én sem, hogy mi a magyarázat, de azt biztosan tudom, hogy az erről való diskurzus előre viszi az országot. Az, hogy a középmezőnyben vagyunk, úgyhogy akkor menjünk is tovább, nem viszi előbbre az országot.
 
 ## Módszertani kérdések
 
@@ -509,24 +509,24 @@ Ugyanez akkor, ha a várt halálozásra vetítünk:
 ```{r aktualisvart}
 ggplot(res, aes(x = date, y = increase, group = geo, label = geo)) + geom_line(aes(color = geo=="HU")) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
-  labs(x = "", y = "Aktuális többlethalálozás [%]") +
+  labs(x = "", y = "Aktuális többlethalálozás [%]",
+       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   geom_abline(slope = 0, intercept = 0, colour = "blue") +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
-        legend.title = element_blank()) +
-  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
+        legend.title = element_blank())
 ```
 
 Látszik, hogy a kétféle relatív mutató között nincs nagy különbség. Kicsit direktebben is összevethetjük őket, ha országonként külön-külön ábrázoljuk, egymással szemben:
 
 ```{r lelekszamvsvart}
 ggplot(res, aes(x = increase, y = excess/population*1e6)) + geom_line() +
-  labs(x = "Aktuális többlethalálozás [%]", y = "Aktuális többlethalálozás [fő/1M fő]") +
+  labs(x = "Aktuális többlethalálozás [%]", y = "Aktuális többlethalálozás [fő/1M fő]",
+       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   facet_wrap(~geo) + geom_abline(intercept = 0, slope =  2, alpha = 0.3) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
-        legend.title = element_blank()) +
-  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
+        legend.title = element_blank())
 ```
 
 Az ábra az origón átmenő, 2 meredekségű egyenest tünteti fel a viszonyítást segítendő. (Miért pont erre illeszkednek jól? E szerint a 100% többlet -- azaz épp a halálozás -- 200 fő/M főnek felel meg. De vigyázat, ez heti adat, így az éves az $52 \cdot 200 = 10 400$, ami ezer főre vetítve 10,4, és csakugyan ennyi nagyjából az európai országok nyers halálozási rátája.) Ez egyúttal arra a korábban is tárgyalt jelenségre is rámutat, hogy mi a lélekszámra vetítés jellegzetessége: függ a nyers halandóságtól. Ilyen szempontból a várt halálozásra való vetítés jobb, de mint láthatjuk, a különbség európai viszonyokon belül nem nagy. A várt értékre való vetítés hátránya, azon a már említett szemponton túl, hogy egy eleve becsült értékkel oszt, egyrészt az, hogy nem vethető közvetlenül össze a jelentett halálozással (hiszen más a mértékegységük is), másrészt pedig az, hogy nem nyilvánvaló a kumulálása (de azért megoldható, lásd következő pont).
@@ -543,12 +543,12 @@ Kérdés, hogy mi a helyzet a várt értékre vetített mutatóval. A probléma 
 ggplot(res, aes(x = date, y = cumexcess/cumexpected, group = geo, label = geo)) +
     geom_line(aes(color = geo=="HU")) + geom_abline(slope = 0, intercept = 0, colour = "blue") +
     scale_color_manual(values = c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
-    labs(x = "", y = "Összesített többlethalálozás [%]") +
+    labs(x = "", y = "Összesített többlethalálozás [%]",
+         caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
     scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
     directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
     theme(plot.caption = element_text(face = "bold", hjust = 0),
-          legend.position = "bottom", legend.title = element_blank()) +
-    labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
+          legend.position = "bottom", legend.title = element_blank())
 ```
 
 A kép természetesen itt is hasonló, de azért érdemes megnézni a különbségeket, mert szépen illusztrálják az elméleti mondanivalót. Vegyük például Olaszországot: a lélekszámra vetített ábrán jobb helyzetben van mint mi, itt viszont rosszabban. A magyarázat pontosan az, hogy más a nyers halandóság; az egész adatbázist tekintve Olaszországban `r round(RawData[geo=="IT", .(sum(outcome)/sum(population))]*1000*52, 1)` /1000 fő/év, míg Magyaroszágon ugyanez `r round(RawData[geo=="HU", .(sum(outcome)/sum(population))]*1000*52, 1)` /1000 fő/év. Azaz Olaszországban kevesebben halnak meg lakosságarányosan, így a várt halálozás is kisebb lakosságarányosan, és ez a magyarázat: ha kisebb számmal osztunk, akkor nagyobb értéket kapunk, és ezért kerülnek rosszabb helyzetbe mint mi.
@@ -586,11 +586,12 @@ Megnézhetjük Magyarország példáján a kétféle adatsort:
 ggplot(melt(res[geo=="HU", .(date, `Többlethalálozás` = excess/population*1e6,
                              `Regisztrált koronavírus-halálozás` = new_deaths/population*1e6)],
             id.vars = "date"), aes(x = date, y = value, group = variable, color = variable)) + geom_line() +
-  labs(x = "", y = "Heti halálozás [fő/M fő]") + scale_color_manual(values = scalval, limits = force) +
+  labs(x = "", y = "Heti halálozás [fő/M fő]",
+       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  scale_color_manual(values = scalval, limits = force) +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
-        legend.title = element_blank()) +
-  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
+        legend.title = element_blank())
 ```
 
 Érdekes, hogy a két görbének mind a csúcsa, mind az időbeli felfutása eltér egymástól, ráadásul az eltérés nem is egységes a különböző hullámokban. Ennek pontosabb vizsgálata fontos kérdés lenne, itt most csak néhány -- vélhetően -- fontos szerepet játszó szempontra hívnám fel a figyelmet:
@@ -605,11 +606,12 @@ Vagy a kétféle adat viszonyát, pontosabban annak alakulását időben az öss
 ```{r tobbletperjelentettorszagonkent}
 ggplot(res, aes(x = date, y = cumexcess/cumnewdeaths, group = geo)) + geom_line() +
   coord_cartesian(xlim = c(as.Date("2020-07-01"), NA), ylim = c(-1, 3)) + facet_wrap(~geo) +
-  geom_hline(yintercept = 1, col = "red") + labs(x = "", y = "Többlethalálozás / jelentett halálozás") +
+  geom_hline(yintercept = 1, col = "red") +
+  labs(x = "", y = "Többlethalálozás / jelentett halálozás",
+       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   scale_x_date(date_breaks = "2 months", labels = function(z) gsub("^0", "", strftime(z, "%m"))) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
-        legend.title = element_blank()) +
-  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
+        legend.title = element_blank())
 ```
 
 Ezen az ábrán a többlet és a jelentett halálozás hányadosa látható, a piros vonal jelzi a kettő egyenlőségét, tehát a fölötte lévő érték jelenti azt, hogy a többlet meghaladja a jelentett halálozást, az alatta lévő azt, hogy kisebb a többlet, mint a jelentett.
@@ -621,10 +623,10 @@ ggplot(res[,.SD[nrow(.SD)-4], .(geo)], aes(x = cumexcess/population*1e6,
                                            y = cumnewdeaths/population*1e6, label = geo)) +
   geom_point(aes(col = geo=="HU")) + geom_abline() + geom_text(hjust = "left", nudge_x = 30) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
-  labs(x = "Összesített többlethalálozás [fő/1M fő]", y = "Összesített jelentett halálozás [fő/M fő]") +
+  labs(x = "Összesített többlethalálozás [fő/1M fő]", y = "Összesített jelentett halálozás [fő/M fő]",
+       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
-        legend.title = element_blank()) +
-  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
+        legend.title = element_blank())
 ```
 
 (Itt nem ugyanaz az időpont van az egyes országoknál, hiszen mindegyiknél a saját legrégebbi közölt adata az alap.)
@@ -642,11 +644,11 @@ p <- ggplot(melt(res[geo=="HU", .(date, `Többlethalálozás` = cumexcess,
                                              .(date, `Többlethalálozás` = cumexcess,
                                                `Regisztrált koronavírus-halálozás` = cumnewdeaths)], 1),
                                     id.vars = "date"), method = list("last.points", cex = 0.6)) +
-  labs(x = "", y = "Halálozás [fő]") + scale_color_manual(values = scalval, limits = force) +
+  labs(x = "", y = "Halálozás [fő]", caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  scale_color_manual(values = scalval, limits = force) +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
-        legend.title = element_blank()) +
-  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
+        legend.title = element_blank())
 p
 ```
 
@@ -654,10 +656,10 @@ A korábban már felvázolt „lassú" adatszolgáltatási folyamatnak, tehát a
 
 ```{r magyarkumulalttobbletesjelentetteshvb}
 p + geom_point(data = data.frame(x = as.Date("2020-12-31"), y = 8981),
-               inherit.aes = FALSE, aes(x = x, y = y))
+               inherit.aes = FALSE, aes(x = x, y = y, fill = "HVB-k szerinti koronavírus-halálozás"))
 ```
 
-Mint látszik, itt még nagy különbség nincsen, de azért az eredmény szépen egybecseng a másik két adatsorral. Igazán érdekes azonban a későbbi értéke lesz, sajnos, mint volt is róla szó, ezt legközelebb csak 2021 egész évre fogjuk megtudni, azt is csak 2022-ben (és nem az elején).
+Mint látszik, nagy különbség nincsen, az eredmény szépen egybecseng a másik két adatsorral. Ez fontos abból a szempontból, hogy cáfolja azt a vélekedést, miszerint a gyors regisztrálás „boldog-boldogtalant" koronavírusos halottnak sorol, szemben a precíz besorolással; igazán érdekes azonban a későbbi értéke lesz. Sajnos, mint volt is róla szó, ezt legközelebb csak 2021 egész évre fogjuk megtudni, azt is csak 2022-ben (és nem az elején).
 
 ### Érzékenységvizsgálat
 
@@ -731,7 +733,7 @@ ggplot(RawData[geo=="HU"&year<=2019, .(mort = sum(outcome)/sum(population)*1000*
 
 A dolognak van egy nagyon fontos általános tanulsága: kritikus, hogy az ember érezze, hogy a többlethalálozási eredmények nem kőbevésettek. A fenti megállapítás az volt, hogy 22 ezer fő a többlethalálozás, de láthatjuk, hogy egy apró paraméter állításával, kicsit más előrejelző modellel ehelyett 26 ezret kapunk. Természetesen ez nem jelenti azt, hogy akkor ezekkel a kérdésekkel nem is érdemes foglalkozni, hiszen bármi kijöhet, ellenkezőleg, nagyon is fontos végiggondolni, jelen példában, hogy milyen kezdőévtől használjuk az adatokat, de mindez felhívja a figyelmet arra, hogy túl nagy pontossággal nem érdemes megadni az eredményeket. (És persze arra is, hogy igenis van jelentősége a "technikai részletkérdéseknek" is!)
 
-Az "érzékenységvizsgálat" kifejezés alatt tipikusan azt szokták érteni, hogy a végeredmény hogyan függ a felhasznált paraméterek értékétől. Természetesen nem csak a becsléshez használt adatbázis időtartama az egyetlen ilyen paraméter: az Acosta-Irizarry eljárás egy sor további paramétert is használ. Ugyanúgy megnézhetjük, hogy ezek változtatása hogyan hat az eredményre, például, hogy milyen típusú modellt választunk:
+Az „érzékenységvizsgálat" kifejezés alatt tipikusan azt szokták érteni, hogy a végeredmény hogyan függ a felhasznált paraméterek értékétől. Természetesen nem csak a becsléshez használt adatbázis időtartama az egyetlen ilyen paraméter: az Acosta-Irizarry eljárás egy sor további paramétert is használ. Ugyanúgy megnézhetjük, hogy ezek változtatása hogyan hat az eredményre, például, hogy milyen típusú modellt választunk:
 
 ```{r erzekenysegmodell, message = FALSE}
 SensDat <- CJ(year = 2000:2015, model = c("quasipoisson", "correlated"))
@@ -823,13 +825,14 @@ res_flu[, cumexcess := cumsum(excess), .(.id)]
 ggplot(res_flu, aes(x = date, y = cumexcess, group = .id, color = .id, label = round(cumexcess, -2))) +
   geom_line() +
   directlabels::geom_dl(data = res_flu[,tail(.SD, 1), .(.id)], method = list("last.points", cex = 0.6)) +
-  labs(x = "", y = "Halálozás [fő]") + scale_color_manual(values = scalval, limits = force) +
+  labs(x = "", y = "Halálozás [fő]", caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  scale_color_manual(values = scalval, limits = force) +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank()) +
-  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   coord_cartesian(ylim = ggplot_build(p)$layout$panel_scales_y[[1]]$range$range) +
-  geom_point(data = data.frame(x = as.Date("2020-12-31"), y = 8981), inherit.aes = FALSE, aes(x = x, y = y))
+  geom_point(data = data.frame(x = as.Date("2020-12-31"), y = 8981),
+             inherit.aes = FALSE, aes(x = x, y = y, fill = "HVB-k szerinti koronavírus-halálozás"))
 ```
 
 Látszik, hogy így számolva a többlethalálozás 22 ezerről 27 ezer főre emelkedik, amiben az a nagyon szép, hogy bár teljesen máshogy dolgoztunk, de tökéletesen visszajött az influenza-szezon 4-5 ezer fős -- teljesen reális értékű -- halálozása.
@@ -842,13 +845,14 @@ res_flu <- rbind(res_flu[, .(.id, date, cum = cumexcess)],
 
 ggplot(res_flu, aes(x = date, y = cum, group = .id, color = .id, label = round(cum, -2))) + geom_line() +
   directlabels::geom_dl(data = res_flu[,tail(.SD, 1), .(.id)], method = list("last.points", cex = 0.6)) +
-  labs(x = "", y = "Halálozás [fő]") + scale_color_manual(values = scalval, limits = force) +
+  labs(x = "", y = "Halálozás [fő]", caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  scale_color_manual(values = scalval, limits = force) +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank()) +
-  labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   coord_cartesian(ylim = ggplot_build(p)$layout$panel_scales_y[[1]]$range$range) +
-  geom_point(data = data.frame(x = as.Date("2020-12-31"), y = 8981), inherit.aes = FALSE, aes(x = x, y = y))
+  geom_point(data = data.frame(x = as.Date("2020-12-31"), y = 8981),
+             inherit.aes = FALSE, aes(x = x, y = y, fill = "HVB-k szerinti koronavírus-halálozás"))
 ```
 
 Az ábra erősen azt sugallja, hogy így már „rendben vagyunk" (azaz, hogy ezután a korrekció után már a jelentett és a többlethalálozás gyakorlatilag egybeesik, ezáltal kölcsönösen megerősítve egymást), azonban nem lehet elégszer hangsúlyozni, hogy ezzel nagyon óvatosnak kell lenni: most csak egyetlen tényezőt korrigáltunk, miközben rengeteg további elképzelhető, amik ráadásul lehetnek pozitívak vagy negatívak is.
