@@ -561,7 +561,7 @@ helyzetünk.
 legyen, az egyes országok hogyan teljesítettek a járvány kezelésében,
 mik a jó és a rossz példák:
 
-![](README_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+![](README_files/figure-gfm/aktualislelekszamorszagonkent-1.png)<!-- -->
 
 A járvány egészének értékeléséhez nézzük az összesített adatokat (piros
 görbe Magyarország, a szürke görbék a többi európai országot jelölik):
@@ -576,7 +576,7 @@ közepén vagyunk.
 adatokat, tehát a fenti ábra jobb szélét (minden ország az utolsó
 elérhető adatával szerepel):
 
-![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+![](README_files/figure-gfm/utolsoallapotoszlopdiagram-1.png)<!-- -->
 
 Látványos lehet ugyanezeket az adatokat térképen is ábrázolni. Itt ugyan
 az értékeket nehezebb leolvasni, illetve összehasonlítani, hiszen egy
@@ -586,7 +586,7 @@ cserében térbeli információt is ad, ami meg sok szempontból jobban
 országokhoz az egyéb jellemzőiket, látszanak a térbeli csoportosulások
 stb.):
 
-![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![](README_files/figure-gfm/utolsoallapotterkep-1.png)<!-- -->
 
 ## Záró gondolatok
 
@@ -690,7 +690,7 @@ ggplot(SimData, aes(x = year, y = fit*1000, ymin = lwr*1000, ymax = upr*1000, co
   geom_point() + geom_errorbar(width = 0.3) + labs(x = "Év", y = "Mortalitás") + guides(color = "none")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](README_files/figure-gfm/peldaorszag-1.png)<!-- -->
 
 Az egyszerűség kedvéért tételezzük fel, hogy évi adatunk van, és a
 járvány pontosan 2020 elején kezdődött. Nézzük meg ezen képzeletbeli
@@ -707,7 +707,7 @@ ggplot(SimData, aes(x = year, y = fit*1000, ymin = lwr*1000, ymax = upr*1000, co
   geom_point() + geom_errorbar(width = 0.3) + labs(x = "Év", y = "Mortalitás") + guides(color = "none")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](README_files/figure-gfm/peldaorszagutolsoev-1.png)<!-- -->
 
 Ennek a módszernek az előnye, hogy mivel a legközelebbi értéket veszi
 át, így nem érinti annyira érzékenyen, ha a mortalitásoknak hosszútávú
@@ -735,7 +735,7 @@ ggplot(SimData, aes(x = year, y = fit*1000, ymin = lwr*1000, ymax = upr*1000, co
   geom_point() + geom_errorbar(width = 0.3) + labs(x = "Év", y = "Mortalitás") + guides(color = "none")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](README_files/figure-gfm/peldaorszagatlag-1.png)<!-- -->
 
 Ez olyan szempontból jobb, hogy az eredmény biztosabb, mivel a több év
 átlagolása lecsökkenti a véletlen ingadozásokat. (Jól látszik, hogy a
@@ -759,7 +759,7 @@ ggplot(SimData, aes(x = year, y = fit*1000, ymin = lwr*1000, ymax = upr*1000, co
   geom_point() + geom_errorbar(width = 0.3) + labs(x = "Év", y = "Mortalitás") + guides(color = "none")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](README_files/figure-gfm/peldaorszagmeghosszabbitas-1.png)<!-- -->
 
 Ez megfelel a „szabad szemre” történő várakozásunknak arra, hogy hol
 lenne a következő évi eredmény, viszont cserében a bizonytalansága is a
@@ -790,7 +790,7 @@ ggplot(RawData[geo=="HU"&year<=2019], aes(x = week, y = outcome/population*1000*
             aes(x = week, y = mort), color = "blue", inherit.aes = FALSE) + labs(x = "Hét", y = "Mortalitás")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](README_files/figure-gfm/mortszezonalitas-1.png)<!-- -->
 
 Heti adatok használatánál tehát ezzel a mintázattal el kell számolni.
 (Napi adatok használatánál még a héten belüli mintázattal is.)
@@ -922,7 +922,8 @@ adatokat lekérő csomagé (`eurostat`) pedig 3.7.5.
 
 ### Adatok előkészítése
 
-Elsőként betöltjük a szükséges könyvtárakat:
+Elsőként betöltjük a szükséges könyvtárakat, elvégzünk pár egyéb
+technikai előkészületet:
 
 ``` r
 library(data.table)
@@ -931,6 +932,10 @@ library(ggplot2)
 theme_set(theme_bw())
 captionlab <- paste0("Ferenci Tamás, https://github.com/tamas-ferenci/ExcessMortEUR/\nAdatok forrása: ",
                      "Eurostat és STMF, lekérdezés dátuma: ")
+    
+pal <- scales::hue_pal()(3)
+scalval <- c("Többlethalálozás" = pal[1], "Többlethalálozás az influenzára való korrekcióval" = pal[2],
+             "Regisztrált koronavírus-halálozás" = pal[3])
 ```
 
 A mortalitási adatokat az Eurostat-tól kérjük le (`demo_r_mwk_ts`
@@ -1149,7 +1154,7 @@ ggplot(res, aes(x = date, y = excess/population*1e6, group = geo, label = geo)) 
   labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 Ugyanez akkor, ha a várt halálozásra vetítünk:
 
@@ -1157,6 +1162,7 @@ Ugyanez akkor, ha a várt halálozásra vetítünk:
 ggplot(res, aes(x = date, y = increase, group = geo, label = geo)) + geom_line(aes(color = geo=="HU")) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
   labs(x = "", y = "Aktuális többlethalálozás [%]") +
+  geom_abline(slope = 0, intercept = 0, colour = "blue") +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
@@ -1164,7 +1170,7 @@ ggplot(res, aes(x = date, y = increase, group = geo, label = geo)) + geom_line(a
   labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
+![](README_files/figure-gfm/aktualisvart-1.png)<!-- -->
 
 Látszik, hogy a kétféle relatív mutató között nincs nagy különbség.
 Kicsit direktebben is összevethetjük őket, ha országonként külön-külön
@@ -1179,7 +1185,7 @@ ggplot(res, aes(x = increase, y = excess/population*1e6)) + geom_line() +
   labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
+![](README_files/figure-gfm/lelekszamvsvart-1.png)<!-- -->
 
 Az ábra az origón átmenő, 2 meredekségű egyenest tünteti fel a
 viszonyítást segítendő. (Miért pont erre illeszkednek jól? E szerint a
@@ -1201,7 +1207,7 @@ népességszámra vetített ábra:
 
 ``` r
 ggplot(res, aes(x = date, y = cumexcess/meanpopulation*1e6, group = geo, label = geo)) +
-  geom_line(aes(color = geo=="HU")) +
+  geom_line(aes(color = geo=="HU")) + geom_abline(slope = 0, intercept = 0, colour = "blue") +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
   labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]") +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
@@ -1211,7 +1217,7 @@ ggplot(res, aes(x = date, y = cumexcess/meanpopulation*1e6, group = geo, label =
   labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 Kérdés, hogy mi a helyzet a várt értékre vetített mutatóval. A probléma
 a kumulálás, hiszen a százalékok természetesen nem adhatóak egyszerűen
@@ -1220,7 +1226,7 @@ többletet és a várt értéket, majd ezeket osztjuk el egymással:
 
 ``` r
 ggplot(res, aes(x = date, y = cumexcess/cumexpected, group = geo, label = geo)) +
-    geom_line(aes(color = geo=="HU")) +
+    geom_line(aes(color = geo=="HU")) + geom_abline(slope = 0, intercept = 0, colour = "blue") +
     scale_color_manual(values = c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
     labs(x = "", y = "Összesített többlethalálozás [%]") +
     scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
@@ -1230,7 +1236,7 @@ ggplot(res, aes(x = date, y = cumexcess/cumexpected, group = geo, label = geo)) 
     labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
+![](README_files/figure-gfm/kumulaltvart-1.png)<!-- -->
 
 A kép természetesen itt is hasonló, de azért érdemes megnézni a
 különbségeket, mert szépen illusztrálják az elméleti mondanivalót.
@@ -1284,14 +1290,14 @@ Megnézhetjük Magyarország példáján a kétféle adatsort:
 ggplot(melt(res[geo=="HU", .(date, `Többlethalálozás` = excess/population*1e6,
                              `Regisztrált koronavírus-halálozás` = new_deaths/population*1e6)],
             id.vars = "date"), aes(x = date, y = value, group = variable, color = variable)) + geom_line() +
-  labs(x = "", y = "Heti halálozás [fő/M fő]") +
+  labs(x = "", y = "Heti halálozás [fő/M fő]") + scale_color_manual(values = scalval, limits = force) +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank()) +
   labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-30-1.png)<!-- -->
+![](README_files/figure-gfm/magyartobbletesjelentett-1.png)<!-- -->
 
 Érdekes, hogy a két görbének mind a csúcsa, mind az időbeli felfutása
 eltér egymástól, ráadásul az eltérés nem is egységes a különböző
@@ -1342,7 +1348,7 @@ ggplot(res, aes(x = date, y = cumexcess/cumnewdeaths, group = geo)) + geom_line(
   labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
+![](README_files/figure-gfm/tobbletperjelentettorszagonkent-1.png)<!-- -->
 
 Ezen az ábrán a többlet és a jelentett halálozás hányadosa látható, a
 piros vonal jelzi a kettő egyenlőségét, tehát a fölötte lévő érték
@@ -1367,7 +1373,7 @@ ggplot(res[,.SD[nrow(.SD)-4], .(geo)], aes(x = cumexcess/population*1e6,
   labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-32-1.png)<!-- -->
+![](README_files/figure-gfm/utolsotobbletperjelentett-1.png)<!-- -->
 
 (Itt nem ugyanaz az időpont van az egyes országoknál, hiszen
 mindegyiknél a saját legrégebbi közölt adata az alap.)
@@ -1390,15 +1396,15 @@ p <- ggplot(melt(res[geo=="HU", .(date, `Többlethalálozás` = cumexcess,
                                              .(date, `Többlethalálozás` = cumexcess,
                                                `Regisztrált koronavírus-halálozás` = cumnewdeaths)], 1),
                                     id.vars = "date"), method = list("last.points", cex = 0.6)) +
-  labs(x = "", y = "Halálozás [fő]") + scale_x_date(date_breaks = "months",
-                                                             labels = scales::label_date_short()) +
+  labs(x = "", y = "Halálozás [fő]") + scale_color_manual(values = scalval, limits = force) +
+  scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank()) +
   labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d.")))
 p
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-33-1.png)<!-- -->
+![](README_files/figure-gfm/magyarkumulalttobbletesjelentett-1.png)<!-- -->
 
 A korábban már felvázolt „lassú” adatszolgáltatási folyamatnak, tehát a
 HVB-k alapján történő, az Egészségügyi Világszervezet protokollját
@@ -1413,7 +1419,7 @@ p + geom_point(data = data.frame(x = as.Date("2020-12-31"), y = 8981),
                inherit.aes = FALSE, aes(x = x, y = y))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-34-1.png)<!-- -->
+![](README_files/figure-gfm/magyarkumulalttobbletesjelentetteshvb-1.png)<!-- -->
 
 Mint látszik, itt még nagy különbség nincsen, de azért az eredmény
 szépen egybecseng a másik két adatsorral. Igazán érdekes azonban a
@@ -1451,7 +1457,7 @@ ggplot(SensDat, aes(x = year, y = excess)) + geom_line() + geom_point() +
   labs(x = "Kezdőév", y = "Összesített teljes többlethalálozás [fő]")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-35-1.png)<!-- -->
+![](README_files/figure-gfm/erzekenysegkezdoev-1.png)<!-- -->
 
 Látható, hogy a teljes (2000-ben kezdődő) adatsort felhasználva kb. 22
 ezer fő a becsült többlethalálozás, ezt eddig is tudtuk, de ha 2015-től
@@ -1470,7 +1476,7 @@ ggplot(RawData[geo=="HU"&year<=2019, .(mort = sum(outcome)/sum(population)*1000*
   labs(x = "Év", y = "Nyers mortalitás [/1000 fő/év]")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-36-1.png)<!-- -->
+![](README_files/figure-gfm/nyersmortalitas-1.png)<!-- -->
 
 Ha erre az egész, 2000-ben kezdődő adatbázisra illesztünk hosszú távú
 görbét, akkor a legvégén egy gyorsan növekvő trendet fogunk látni:
@@ -1487,7 +1493,7 @@ ggplot(RawData[geo=="HU"&year<=2019, .(mort = sum(outcome)/sum(population)*1000*
   geom_line(data = predgrid1[,.(mort = sum(pred)*1000),.(year)], color = "blue")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-37-1.png)<!-- -->
+![](README_files/figure-gfm/nyersmortalitasegeszillesztes-1.png)<!-- -->
 
 Ezt meghosszabbítva 2020-ra, 2021-re, pláne magasan levő alapvonalat
 fogunk kapni, amihez viszonyítunk – így a különbözet is kisebb lesz.
@@ -1506,7 +1512,7 @@ ggplot(RawData[geo=="HU"&year<=2019&year>=2015, .(mort = sum(outcome)/sum(popula
   geom_line(data = predgrid2[,.(mort = sum(pred)*1000),.(year)], color = "blue")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-38-1.png)<!-- -->
+![](README_files/figure-gfm/nyersmortalitasvegeillesztes-1.png)<!-- -->
 
 Ebben az esetben a végén csak egy sokkal-sokkal kisebb növekedés fog
 látszódni, így azt meghosszabbítva egy alacsonyabban lévő várt
@@ -1523,7 +1529,7 @@ ggplot(RawData[geo=="HU"&year<=2019, .(mort = sum(outcome)/sum(population)*1000*
   geom_line(data = predgrid2[,.(mort = sum(pred)*1000),.(year)], color = "red")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-39-1.png)<!-- -->
+![](README_files/figure-gfm/nyersmortalitasegeszesvegeillesztes-1.png)<!-- -->
 
 A dolognak van egy nagyon fontos általános tanulsága: kritikus, hogy az
 ember érezze, hogy a többlethalálozási eredmények nem kőbevésettek. A
@@ -1564,7 +1570,7 @@ ggplot(SensDat, aes(x = year, y = excess, color = model)) + geom_line() +
   labs(x = "Kezdőév", y = "Összesített teljes többlethalálozás [fő]", color = "Modell típusa")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-40-1.png)<!-- -->
+![](README_files/figure-gfm/erzekenysegmodell-1.png)<!-- -->
 
 Ezt az eredményt úgy lehet leolvasni, hogy a kezdőévre érzékeny a
 végeredmény, de a modell típusára gyakorlatilag nem. És persze az is
@@ -1714,7 +1720,7 @@ ggplot(rbind(exp_orig, exp_flu), aes(x = date, y = expected, color = type)) + ge
   theme(legend.position = "bottom")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-41-1.png)<!-- -->
+![](README_files/figure-gfm/influenzahatasa-1.png)<!-- -->
 
 Szépen látszik, hogy az influenza-szezonok nélkül becsültetett modell
 kevésbé fut fel magas értékekre – hiszen nem kell ráilleszkednie az
@@ -1727,8 +1733,8 @@ tartalmazza az – abban az évben be sem következett – influenza-szezont.
 Nézzük az eredményeket:
 
 ``` r
-res_flu <- rbindlist(lapply(list(`Eredeti többlethalálozás` = exclude_dates,
-                                 `Többlethalálozás az influenza-szezonok kizárásával` = exclude_dates_flu),
+res_flu <- rbindlist(lapply(list(`Többlethalálozás` = exclude_dates,
+                                 `Többlethalálozás az influenzára való korrekcióval` = exclude_dates_flu),
                             function(ed)
                               with(excess_model(RawData[geo=="HU"], start = min(RawData[geo=="HU"]$date),
                                                 end = max(RawData[geo=="HU"]$date), exclude = ed,
@@ -1749,15 +1755,15 @@ res_flu[, cumexcess := cumsum(excess), .(.id)]
 ggplot(res_flu, aes(x = date, y = cumexcess, group = .id, color = .id, label = round(cumexcess, -2))) +
   geom_line() +
   directlabels::geom_dl(data = res_flu[,tail(.SD, 1), .(.id)], method = list("last.points", cex = 0.6)) +
-  labs(x = "", y = "Halálozás [fő]") + scale_x_date(date_breaks = "months",
-                                                    labels = scales::label_date_short()) +
+  labs(x = "", y = "Halálozás [fő]") + scale_color_manual(values = scalval, limits = force) +
+  scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank()) +
   labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   geom_point(data = data.frame(x = as.Date("2020-12-31"), y = 8981), inherit.aes = FALSE, aes(x = x, y = y))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-42-1.png)<!-- -->
+![](README_files/figure-gfm/tobbletesinfluenzanelkul-1.png)<!-- -->
 
 Látszik, hogy így számolva a többlethalálozás 22 ezerről 27 ezer főre
 emelkedik, amiben az a nagyon szép, hogy bár teljesen máshogy
@@ -1772,15 +1778,15 @@ res_flu <- rbind(res_flu[, .(.id, date, cum = cumexcess)],
 
 ggplot(res_flu, aes(x = date, y = cum, group = .id, color = .id, label = round(cum, -2))) + geom_line() +
   directlabels::geom_dl(data = res_flu[,tail(.SD, 1), .(.id)], method = list("last.points", cex = 0.6)) +
-  labs(x = "", y = "Halálozás [fő]") + scale_x_date(date_breaks = "months",
-                                                             labels = scales::label_date_short()) +
+  labs(x = "", y = "Halálozás [fő]") + scale_color_manual(values = scalval, limits = force) +
+  scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank()) +
   labs(caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   geom_point(data = data.frame(x = as.Date("2020-12-31"), y = 8981), inherit.aes = FALSE, aes(x = x, y = y))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-43-1.png)<!-- -->
+![](README_files/figure-gfm/tobbletesinfluenzanelkulesjelentett-1.png)<!-- -->
 
 Az ábra erősen azt sugallja, hogy így már „rendben vagyunk” (azaz, hogy
 ezután a korrekció után már a jelentett és a többlethalálozás
