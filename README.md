@@ -648,6 +648,11 @@ múlt?
 [Azon](https://ourworldindata.org/explorers/coronavirus-data-explorer?zoomToSelection=true&pickerSort=asc&pickerMetric=location&Metric=Tests&Interval=Cumulative&Relative+to+Population=false&Align+outbreaks=false&country=HUN~DNK),
 hogy 2021 októberig mi 6,5 millió koronavírus-tesztet csináltunk, a 6
 milliónál is kevesebb lakosú Dánia 41 milliót?
+[Azon](https://www.gisaid.org/index.php?id=208), hogy Dánia a levett
+minták 47,9%-át vetette genetikai vizsgálat alá és töltötte fel
+nemzetközi adatbázisba, amiből a variánsok elterjedését monitorozni
+lehet, mi 0,052%-át? (Pár további szám összehasonlításként: Etiópia
+0,061%, Banglades 0,189%, Afganisztán 0,064%.)
 [Azon](https://gateway.euro.who.int/en/indicators/hfa_427-3051-spirits-consumed-in-pure-alcohol-litres-per-capita-age-15plus/),
 hogy mi 3,5 liter tömény alkoholt iszunk meg évente, a dánok 1,6-ot?
 [Azon](https://ec.europa.eu/eurostat/databrowser/view/hlth_rs_prsns/),
@@ -916,7 +921,7 @@ eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a
 többi kutatót és az érdeklődő laikusokat hasonló számítások
 elvégézésében, mivel itt látnak egy lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2021-10-15. A többlethalálozást
+A számítások aktualizálásának dátuma: 2021-10-19. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.6.1, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) pedig 3.7.5.
 
