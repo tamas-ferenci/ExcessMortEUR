@@ -34,6 +34,8 @@ Ferenci Tamás
         viszonya](#az-eredmények-ábrázolása-a-kétféle-relatív-mutató-viszonya)
     -   [Összevetés a jelentett
         halálozással](#összevetés-a-jelentett-halálozással)
+    -   [Összevetés a jelentett halálozással – magyar megyei
+        adatok](#összevetés-a-jelentett-halálozással--magyar-megyei-adatok)
     -   [Érzékenységvizsgálat](#érzékenységvizsgálat)
     -   [A direkt hatás elkülönítése: egy kísérlet az influenza-járvány
         kezelésére](#a-direkt-hatás-elkülönítése-egy-kísérlet-az-influenza-járvány-kezelésére)
@@ -529,7 +531,7 @@ többletet is millió lakosra osztjuk rá, akkor a kettő egymással is jól
 összehasonlítható lesz.
 
 Én az Eurostat
-[adatai](https://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=demo_r_mwk_ts&lang=en)
+[adatai](https://ec.europa.eu/eurostat/databrowser/view/demo_r_mwk_ts/)
 alapján kiszámítottam a többlethalálozást, mégpedig heti alapon,
 egységesen az országokra, és valamennyi európai országra. Az elemzéshez
 és ábrázoláshoz használt programot – a „nyílt tudomány” jegyében –
@@ -587,6 +589,52 @@ országokhoz az egyéb jellemzőiket, látszanak a térbeli csoportosulások
 stb.):
 
 ![](README_files/figure-gfm/utolsoallapotterkep-1.png)<!-- -->
+
+Az Eurostat [adatokat
+szolgáltat](https://ec.europa.eu/eurostat/databrowser/view/demo_r_mwk3_t/)
+ún. NUTS3 szintű, országon belüli területi egységekről is, ez
+Magyarországon a megyéknek felel meg. Ilyen módon az összes fenti
+vizsgálatot elvégezhetjük a magyar megyékre is vonatkozóan, egész
+egyszerűen ugyanazt az elemzést kell csak lefuttatnuk – egymástól
+függetlenül – minden megyére.
+
+Az aktuális helyzet alakulása megyei szinten (a piros vonal ezen az
+ábrán az országos értéket jelenti):
+
+![](README_files/figure-gfm/megyeaktualislelekszam-1.png)<!-- -->
+
+Itt is igaz, hogy bár ez összkép szempontjából tanulságos, ha egyesével
+akarjuk vizsgálni a területi egységeket, akkor jobb őket külön
+ábrázolni:
+
+![](README_files/figure-gfm/megyeaktualislelekszammegyenkent-1.png)<!-- -->
+
+Az előzőekhez hasonlóan érdekes lehet a kumulált helyzet, illetve ez
+azért is segít, mert a korábbi ábráról nehéz megítélni, hogy
+összességében mi egy megye helyzete, hiszen kevésbé látszik, hogy
+mennyire ugyanazok bizonyultak rossz helyzetűnek a különböző
+időpontokban:
+
+![](README_files/figure-gfm/megyekumulaltlelekszam-1.png)<!-- -->
+
+Az utolsó állapotról itt is készíthetünk oszlopdiagramot:
+
+![](README_files/figure-gfm/megyeutolsoallapotoszlopdiagram-1.png)<!-- -->
+
+Itt is kézenfekvő ötlet térképet rajzolni:
+
+![](README_files/figure-gfm/megyeutolsoallapotterkep-1.png)<!-- -->
+
+Finomabb felbontású, legalább járási adatok híján nehéz igazán fajsúlyos
+megállapításokat tenni (megyei szinten még a városok és a falusias
+területek is össze vannak vegyítve), ez alól Budapest az egyetlen
+kivétel, és pozitív irányban: míg a nagyobb népsűrűség általában
+kimondottan elősegíti a járványok terjedését, addig Magyarországon belül
+Budapest pont, hogy a jobban teljesítő megyék közé került. Persze
+vigyázat: ezek most nem a fertőződésre, hanem a halálozásra vonatkozó
+adatok, így a megítélést még az is nehezíti, hogy a halálozási arányok
+eltérhetnek (hiszen az függ a társbetegségek gyakoriságától, az életkori
+eloszlástól, és így tovább, amik eltérhetnek megyék között).
 
 ## Záró gondolatok
 
@@ -965,11 +1013,11 @@ RawDataUK <- RawDataUK[Year>=2015&CountryCode%in%c("GBRTENW", "GBR_NIR", "GBR_SC
     ,.(sex = "T", unit = "NR", geo = "UK", time, values)][order(time)]
 RawDataUK <- RawDataUK[1:(nrow(RawDataUK)-1)]
 RawData <- rbind(RawData, RawDataUK)
-# RawDataHunNUTS <- as.data.table(eurostat::get_eurostat("demo_r_mwk3_ts", time_format = "raw"))
-# RawDataHunNUTS <- RawDataHunNUTS[sex=="T"&substring(geo, 1, 2)=="HU"&nchar(geo)==5]
-# RawDataHunNUTS[ , values := round(values*sum(values)/sum(values[geo!="HUXXX"])), .(time)]
-# RawDataHunNUTS <- RawDataHunNUTS[geo!="HUXXX"]
-# RawData <- rbind(RawData, RawDataHunNUTS)
+RawDataHunNUTS <- as.data.table(eurostat::get_eurostat("demo_r_mwk3_ts", time_format = "raw"))
+RawDataHunNUTS <- RawDataHunNUTS[sex=="T"&substring(geo, 1, 2)=="HU"&nchar(geo)==5]
+RawDataHunNUTS[ , values := round(values*sum(values)/sum(values[geo!="HUXXX"])), .(time)]
+RawDataHunNUTS <- RawDataHunNUTS[geo!="HUXXX"]
+RawData <- rbind(RawData, RawDataHunNUTS)
 RawData <- RawData[!is.na(RawData$values)]
 RawData <- RawData[geo%in%(RawData[,.N,.(geo)][N>250]$geo)]
 ```
@@ -979,45 +1027,62 @@ rövidítéseikkel együtt, amik az ábrákon a helytakarékosság végett
 szerepelni fognak:
 
 ``` r
-knitr::kable(data.table(`Kód` = unique(RawData$geo),
-                        `Angol név` = countrycode::countrycode(unique(RawData$geo),
-                                                               "eurostat",
-                                                               "country.name"))[order(`Angol név`)])
+knitr::kable(unique(res[, .(`Kód` = geo, `Angol név` = geoname)])[order(`Kód`)])
 ```
 
-| Kód | Angol név      |
-|:----|:---------------|
-| AT  | Austria        |
-| BE  | Belgium        |
-| BG  | Bulgaria       |
-| HR  | Croatia        |
-| CY  | Cyprus         |
-| CZ  | Czechia        |
-| DK  | Denmark        |
-| EE  | Estonia        |
-| FI  | Finland        |
-| FR  | France         |
-| DE  | Germany        |
-| EL  | Greece         |
-| HU  | Hungary        |
-| IS  | Iceland        |
-| IT  | Italy          |
-| LV  | Latvia         |
-| LI  | Liechtenstein  |
-| LT  | Lithuania      |
-| LU  | Luxembourg     |
-| MT  | Malta          |
-| NL  | Netherlands    |
-| NO  | Norway         |
-| PL  | Poland         |
-| PT  | Portugal       |
-| RO  | Romania        |
-| SK  | Slovakia       |
-| SI  | Slovenia       |
-| ES  | Spain          |
-| SE  | Sweden         |
-| CH  | Switzerland    |
-| UK  | United Kingdom |
+| Kód   | Angol név      |
+|:------|:---------------|
+| AT    | Austria        |
+| BE    | Belgium        |
+| BG    | Bulgaria       |
+| CH    | Switzerland    |
+| CY    | Cyprus         |
+| CZ    | Czechia        |
+| DE    | Germany        |
+| DK    | Denmark        |
+| EE    | Estonia        |
+| EL    | Greece         |
+| ES    | Spain          |
+| FI    | Finland        |
+| FR    | France         |
+| HR    | Croatia        |
+| HU    | Hungary        |
+| HU110 | Budapest       |
+| HU120 | Pest           |
+| HU211 | Fejér          |
+| HU212 | KE             |
+| HU213 | Veszprém       |
+| HU221 | GyMS           |
+| HU222 | Vas            |
+| HU223 | Zala           |
+| HU231 | Baranya        |
+| HU232 | Somogy         |
+| HU233 | Tolna          |
+| HU311 | BAZ            |
+| HU312 | Heves          |
+| HU313 | Nógrád         |
+| HU321 | Hajdú-Bihar    |
+| HU322 | JNSz           |
+| HU323 | SzSzB          |
+| HU331 | Bács-Kiskun    |
+| HU332 | Békés          |
+| HU333 | Csongrád       |
+| IS    | Iceland        |
+| IT    | Italy          |
+| LI    | Liechtenstein  |
+| LT    | Lithuania      |
+| LU    | Luxembourg     |
+| LV    | Latvia         |
+| MT    | Malta          |
+| NL    | Netherlands    |
+| NO    | Norway         |
+| PL    | Poland         |
+| PT    | Portugal       |
+| RO    | Romania        |
+| SE    | Sweden         |
+| SI    | Slovenia       |
+| SK    | Slovakia       |
+| UK    | United Kingdom |
 
 Kikódoljuk az évet és a hónapot:
 
@@ -1062,9 +1127,9 @@ A háttérpopuláció létszám adatait szintén az Eurostat-tól kérjük le
 
 ``` r
 PopData <- as.data.table(eurostat::get_eurostat("demo_pjan"))
-# PopDataHunNUTS <- as.data.table(eurostat::get_eurostat("demo_r_pjanaggr3"))
-# PopDataHunNUTS <- PopDataHunNUTS[substring(geo, 1, 2)=="HU"&nchar(geo)==5&geo!="HUXXX"]
-# PopData <- rbind(PopData, PopDataHunNUTS)
+PopDataHunNUTS <- as.data.table(eurostat::get_eurostat("demo_r_pjanaggr3"))
+PopDataHunNUTS <- PopDataHunNUTS[substring(geo, 1, 2)=="HU"&nchar(geo)==5&geo!="HUXXX"]
+PopData <- rbind(PopData, PopDataHunNUTS)
 PopData$numdate <- as.numeric(PopData$time-as.Date("1960-01-01"))
 PopData <- PopData[age=="TOTAL"&sex=="T"]
 PopData$geo <- as.factor(PopData$geo)
@@ -1136,7 +1201,36 @@ A `geo` átalakítjuk faktorrá, és beállítjuk, hogy Magyarország az utolsó
 legyen, hogy az ábrázolásnál az kerüljön a legtetejére:
 
 ``` r
+res$nuts_level <- nchar(res$geo)-2
 res$geo <- forcats::fct_relevel(as.factor(res$geo), "HU", after = Inf)
+```
+
+A térkép-adatokkal összekapcsoljuk az eredményeket, illetve kibővítjük
+azokat az országok és megyék elnevezéseivel, hogy ne csak kódjaink
+legyenek:
+
+``` r
+geodata <- eurostat::get_eurostat_geospatial(output_class = "sf", resolution = "01", year = "2021")
+```
+
+    ## Reading cache file C:\Users\FERENC~1\AppData\Local\Temp\RtmpIvHqRl/eurostat/sf01all20214326.RData
+
+    ## sf at resolution 1: 01  from year  2021  read from cache file:  C:\Users\FERENC~1\AppData\Local\Temp\RtmpIvHqRl/eurostat/sf01all20214326.RData
+
+    ## Warning in eurostat::get_eurostat_geospatial(output_class = "sf", resolution =
+    ## "01", : Default of 'make_valid' for 'output_class="sf"' will be changed in the
+    ## future (see function details).
+
+``` r
+geodata <- merge(geodata, res[, tail(.SD, 1), .(geo)][, .(y = cumexcess/meanpopulation*1e6,
+                                                          geo, nuts_level)], by = "geo")
+res <- merge(res,
+             data.table(geo = c(unique(RawData[nchar(geo)==2]$geo), unique(RawData[nchar(geo)==5]$geo)),
+                        geoname = c(countrycode::countrycode(unique(RawData[nchar(geo)==2]$geo),
+                                                             "eurostat", "country.name"),
+                                    c("Budapest", "Pest", "Fejér", "KE", "Veszprém", "GyMS", "Vas", "Zala", "Baranya",
+                                      "Somogy", "Tolna", "BAZ", "Heves", "Nógrád", "Hajdú-Bihar", "JNSz", "SzSzB",
+                                      "Bács-Kiskun", "Békés", "Csongrád"))))
 ```
 
 Most, hogy minden adatfeldolgozzásal végeztünk, az eredményeket
@@ -1156,7 +1250,7 @@ Emlékeztetőül, az aktuális többlethalálozás népességszámra vetített
 relatív mutatóként:
 
 ``` r
-ggplot(res, aes(x = date, y = excess/population*1e6, group = geo, label = geo)) +
+ggplot(res[nuts_level==0], aes(x = date, y = excess/population*1e6, group = geo, label = geo)) +
   geom_line(aes(color = geo=="HU")) + geom_abline(slope = 0, intercept = 0, colour = "blue") +
   scale_color_manual(values = c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
   labs(x = "", y = "Aktuális többlethalálozás [fő/1M fő]",
@@ -1167,12 +1261,12 @@ ggplot(res, aes(x = date, y = excess/population*1e6, group = geo, label = geo)) 
         legend.title = element_blank())
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 Ugyanez akkor, ha a várt halálozásra vetítünk:
 
 ``` r
-ggplot(res, aes(x = date, y = increase, group = geo, label = geo)) + geom_line(aes(color = geo=="HU")) +
+ggplot(res[nuts_level==0], aes(x = date, y = increase, group = geo, label = geo)) + geom_line(aes(color = geo=="HU")) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
   labs(x = "", y = "Aktuális többlethalálozás [%]",
        caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
@@ -1190,7 +1284,7 @@ Kicsit direktebben is összevethetjük őket, ha országonként külön-külön
 ábrázoljuk, egymással szemben:
 
 ``` r
-ggplot(res, aes(x = increase, y = excess/population*1e6)) + geom_line() +
+ggplot(res[nuts_level==0], aes(x = increase, y = excess/population*1e6)) + geom_line() +
   labs(x = "Aktuális többlethalálozás [%]", y = "Aktuális többlethalálozás [fő/1M fő]",
        caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   facet_wrap(~geo) + geom_abline(intercept = 0, slope =  2, alpha = 0.3) +
@@ -1219,7 +1313,7 @@ Folytassuk most az összesített többlethalálozással. Emlékeztetőül a
 népességszámra vetített ábra:
 
 ``` r
-ggplot(res, aes(x = date, y = cumexcess/meanpopulation*1e6, group = geo, label = geo)) +
+ggplot(res[nuts_level==0], aes(x = date, y = cumexcess/meanpopulation*1e6, group = geo, label = geo)) +
   geom_line(aes(color = geo=="HU")) + geom_abline(slope = 0, intercept = 0, colour = "blue") +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
   labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]",
@@ -1230,7 +1324,7 @@ ggplot(res, aes(x = date, y = cumexcess/meanpopulation*1e6, group = geo, label =
         legend.position = "bottom", legend.title = element_blank())
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
 Kérdés, hogy mi a helyzet a várt értékre vetített mutatóval. A probléma
 a kumulálás, hiszen a százalékok természetesen nem adhatóak egyszerűen
@@ -1238,7 +1332,7 @@ a kumulálás, hiszen a százalékok természetesen nem adhatóak egyszerűen
 többletet és a várt értéket, majd ezeket osztjuk el egymással:
 
 ``` r
-ggplot(res, aes(x = date, y = cumexcess/cumexpected, group = geo, label = geo)) +
+ggplot(res[nuts_level==0], aes(x = date, y = cumexcess/cumexpected, group = geo, label = geo)) +
     geom_line(aes(color = geo=="HU")) + geom_abline(slope = 0, intercept = 0, colour = "blue") +
     scale_color_manual(values = c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
     labs(x = "", y = "Összesített többlethalálozás [%]",
@@ -1275,7 +1369,8 @@ Következő lépésben kiszámoljuk a 3 betűs ISO-országkódot, a 2 betűs
 Eurostat kódból, hogy később az OWID adatbázissal lehessen egyesíteni:
 
 ``` r
-res$iso_code <- countrycode::countrycode(res$geo, "eurostat", "iso3c")
+res$iso_code <- countrycode::countrycode(ifelse(res$nuts_level==3, NA_character_, res$geo),
+                                         "eurostat", "iso3c")
 ```
 
 A jelentett halálozás céljából letöltjük az OWID adatbázist, kikóduljuk
@@ -1443,6 +1538,17 @@ koronavírusos halottnak sorol, szemben a precíz besorolással; igazán
 érdekes azonban a későbbi értéke lesz. Sajnos, mint volt is róla szó,
 ezt legközelebb csak 2021 egész évre fogjuk megtudni, azt is csak
 2022-ben (és nem az elején).
+
+### Összevetés a jelentett halálozással – magyar megyei adatok
+
+Bármennyire is kézenfekvőnek tűnik (és fontos is), ez sajnos nem oldható
+meg, hiszen Magyarországon nincs nyilvános adatközlés a halálozások
+területi eloszlásáról, még megyei szinten sem.
+
+A fertőzöttekről ugyan van (mégpedig olyan módon, hogy a számokat egy
+képfájlra (!) felírják…), de annak összevetése kérdésesebb, hiszen –
+mint már volt róla korábban is szó – ott még közben van a halálozási
+arány is, ami miatt ez a kapcsolat áttételes.
 
 ### Érzékenységvizsgálat
 

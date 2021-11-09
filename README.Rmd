@@ -35,11 +35,11 @@ RawDataUK <- RawDataUK[Year>=2015&CountryCode%in%c("GBRTENW", "GBR_NIR", "GBR_SC
     ,.(sex = "T", unit = "NR", geo = "UK", time, values)][order(time)]
 RawDataUK <- RawDataUK[1:(nrow(RawDataUK)-1)]
 RawData <- rbind(RawData, RawDataUK)
-# RawDataHunNUTS <- as.data.table(eurostat::get_eurostat("demo_r_mwk3_ts", time_format = "raw"))
-# RawDataHunNUTS <- RawDataHunNUTS[sex=="T"&substring(geo, 1, 2)=="HU"&nchar(geo)==5]
-# RawDataHunNUTS[ , values := round(values*sum(values)/sum(values[geo!="HUXXX"])), .(time)]
-# RawDataHunNUTS <- RawDataHunNUTS[geo!="HUXXX"]
-# RawData <- rbind(RawData, RawDataHunNUTS)
+RawDataHunNUTS <- as.data.table(eurostat::get_eurostat("demo_r_mwk3_ts", time_format = "raw"))
+RawDataHunNUTS <- RawDataHunNUTS[sex=="T"&substring(geo, 1, 2)=="HU"&nchar(geo)==5]
+RawDataHunNUTS[ , values := round(values*sum(values)/sum(values[geo!="HUXXX"])), .(time)]
+RawDataHunNUTS <- RawDataHunNUTS[geo!="HUXXX"]
+RawData <- rbind(RawData, RawDataHunNUTS)
 RawData <- RawData[!is.na(RawData$values)]
 RawData <- RawData[geo%in%(RawData[,.N,.(geo)][N>250]$geo)]
 ```
@@ -69,9 +69,9 @@ RawData$date <- ISOweek::ISOweek2date(paste0(RawData$year, "-W", sprintf("%02d",
 
 ```{r hatterpopulacio, message = FALSE, echo = FALSE}
 PopData <- as.data.table(eurostat::get_eurostat("demo_pjan"))
-# PopDataHunNUTS <- as.data.table(eurostat::get_eurostat("demo_r_pjanaggr3"))
-# PopDataHunNUTS <- PopDataHunNUTS[substring(geo, 1, 2)=="HU"&nchar(geo)==5&geo!="HUXXX"]
-# PopData <- rbind(PopData, PopDataHunNUTS)
+PopDataHunNUTS <- as.data.table(eurostat::get_eurostat("demo_r_pjanaggr3"))
+PopDataHunNUTS <- PopDataHunNUTS[substring(geo, 1, 2)=="HU"&nchar(geo)==5&geo!="HUXXX"]
+PopData <- rbind(PopData, PopDataHunNUTS)
 PopData$numdate <- as.numeric(PopData$time-as.Date("1960-01-01"))
 PopData <- PopData[age=="TOTAL"&sex=="T"]
 PopData$geo <- as.factor(PopData$geo)
@@ -117,14 +117,21 @@ res[, cumexpected := cumsum(expected), .(geo)]
 ```
 
 ```{r geofaktor, echo = FALSE}
+res$nuts_level <- nchar(res$geo)-2
 res$geo <- forcats::fct_relevel(as.factor(res$geo), "HU", after = Inf)
 ```
 
 ```{r terkepelokeszites, message = FALSE, echo = FALSE, warning = FALSE}
-geodata <- eurostat::get_eurostat_geospatial(output_class = "sf", resolution = "20",
-                                             nuts_level = 0, year = "2021")
-geodata <- merge(geodata, res[, tail(.SD, 1), .(geo)][, .(y = cumexcess/meanpopulation*1e6, geo)],
-                 by = "geo")
+geodata <- eurostat::get_eurostat_geospatial(output_class = "sf", resolution = "01", year = "2021")
+geodata <- merge(geodata, res[, tail(.SD, 1), .(geo)][, .(y = cumexcess/meanpopulation*1e6,
+                                                          geo, nuts_level)], by = "geo")
+res <- merge(res,
+             data.table(geo = c(unique(RawData[nchar(geo)==2]$geo), unique(RawData[nchar(geo)==5]$geo)),
+                        geoname = c(countrycode::countrycode(unique(RawData[nchar(geo)==2]$geo),
+                                                             "eurostat", "country.name"),
+                                    c("Budapest", "Pest", "Fejér", "KE", "Veszprém", "GyMS", "Vas", "Zala", "Baranya",
+                                      "Somogy", "Tolna", "BAZ", "Heves", "Nógrád", "Hajdú-Bihar", "JNSz", "SzSzB",
+                                      "Bács-Kiskun", "Békés", "Csongrád"))))
 ```
 
 ## A többlethalálozási mutatóról általában
@@ -213,14 +220,14 @@ Ezekre a szempontokra tekintettel kell lenni *bármilyen* halálozáson alapuló
 
 Próbáljuk meg áttekinthetővé tenni a többlethalálozási mutatókat! Először is, ne év alapú mutatókat nézzük (semmilyen kitüntetett járványügyi jelentősége nincs a december 31-nek, hogy akkor vágjuk el az adatokat), hanem egyszerűen folytonosan kezeljük az időt. Másrészt, érdemesebb relatív mutató gyanánt a lélekszámmal osztani, így ugyanis egy olyan mutatót kapunk, ami analóg a regisztrált halálozások közlésével, hiszen azt is halál / millió főben szokták megadni. Ha a többletet is millió lakosra osztjuk rá, akkor a kettő egymással is jól összehasonlítható lesz.
 
-Én az Eurostat [adatai](https://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=demo_r\_mwk_ts&lang=en) alapján kiszámítottam a többlethalálozást, mégpedig heti alapon, egységesen az országokra, és valamennyi európai országra. Az elemzéshez és ábrázoláshoz használt programot -- a „nyílt tudomány" jegyében -- teljes egészében [nyilvánosságra hozom](https://github.com/tamas-ferenci/ExcessMortEUR#eredmények-a-hazai-többlethalálozási-adatok-és-európai-viszonyításuk), így bárki reprodukálhatja, ellenőrizheti és továbbfejlesztheti a számításaimat, illetve itt elolvashatóak a módszertani részletek is.
+Én az Eurostat [adatai](https://ec.europa.eu/eurostat/databrowser/view/demo_r_mwk_ts/) alapján kiszámítottam a többlethalálozást, mégpedig heti alapon, egységesen az országokra, és valamennyi európai országra. Az elemzéshez és ábrázoláshoz használt programot -- a „nyílt tudomány" jegyében -- teljes egészében [nyilvánosságra hozom](https://github.com/tamas-ferenci/ExcessMortEUR#eredmények-a-hazai-többlethalálozási-adatok-és-európai-viszonyításuk), így bárki reprodukálhatja, ellenőrizheti és továbbfejlesztheti a számításaimat, illetve itt elolvashatóak a módszertani részletek is.
 
 A többlethalálozás számítása az egyik legkorszerűbb eljárással, [Acosta és Irizzary módszerével](https://www.medrxiv.org/content/10.1101/2020.06.06.20120857v2) történt, mely kifinomult statisztikai eljárással igyekszik jól meghatározni a múltbeli adatokból a viszonyítási alapot. Kihagytam azokat az országokat amelyek nem tagjai az EU-nak vagy EFTA-nak.
 
 Mit tudunk mondani egy adott időpontban aktuális helyzetről? Ezt mutatják a heti adatok (piros görbe Magyarország, a szürke görbék a többi európai országot jelölik):
 
 ```{r aktualislelekszam, echo = FALSE}
-ggplot(res, aes(x = date, y = excess/population*1e6, group = geo, label = geo)) +
+ggplot(res[nuts_level==0], aes(x = date, y = excess/population*1e6, group = geo, label = geo)) +
   geom_line(aes(color = geo=="HU")) + geom_abline(slope = 0, intercept = 0, colour = "blue") +
   scale_color_manual(values = c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
   labs(x = "", y = "Aktuális többlethalálozás [fő/1M fő]",
@@ -236,7 +243,7 @@ Jól látszik, hogy az első hullám teljesen kimutathatatlan volt (legalábbis 
 Érdemes lehet országonként külön-külön is ábrázolni, hogy jobban látható legyen, az egyes országok hogyan teljesítettek a járvány kezelésében, mik a jó és a rossz példák:
   
 ```{r aktualislelekszamorszagonkent, echo = FALSE}
-ggplot(res, aes(x = date, y = excess/population*1e6, group = geo)) + geom_line() +
+ggplot(res[nuts_level==0], aes(x = date, y = excess/population*1e6, group = geo)) + geom_line() +
   labs(x = "", y = "Aktuális többlethalálozás [fő/1M fő]",
        caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   scale_x_date(date_breaks = "2 months", labels = function(z) gsub("^0", "", strftime(z, "%m"))) +
@@ -247,7 +254,7 @@ ggplot(res, aes(x = date, y = excess/population*1e6, group = geo)) + geom_line()
 A járvány egészének értékeléséhez nézzük az összesített adatokat (piros görbe Magyarország, a szürke görbék a többi európai országot jelölik):
 
 ```{r kumulaltlelekszam, echo = FALSE}
-ggplot(res, aes(x = date, y = cumexcess/meanpopulation*1e6, group = geo, label = geo)) +
+ggplot(res[nuts_level==0], aes(x = date, y = cumexcess/meanpopulation*1e6, group = geo, label = geo)) +
   geom_line(aes(color = geo=="HU")) + geom_abline(slope = 0, intercept = 0, colour = "blue") +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
   labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]",
@@ -263,7 +270,7 @@ Látható, hogy a legfrissebb adatok szerint -- persze ne felejtsük, ez egy hó
 Érdekes lehet jobban látható módon is kiemelni az utolsó időpontbeli adatokat, tehát a fenti ábra jobb szélét (minden ország az utolsó elérhető adatával szerepel):
 
 ```{r utolsoallapotoszlopdiagram, echo = FALSE}
-ggplot(res[, tail(.SD, 1), .(geo)][order(cumexcess/meanpopulation)],
+ggplot(res[nuts_level==0, tail(.SD, 1), .(geo)][order(cumexcess/meanpopulation)],
        aes(x = factor(geo, levels = geo), y = cumexcess/meanpopulation*1e6, fill = geo=="HU")) + geom_col() +
   guides(fill = "none") + labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]",
                                caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
@@ -274,12 +281,76 @@ ggplot(res[, tail(.SD, 1), .(geo)][order(cumexcess/meanpopulation)],
 Látványos lehet ugyanezeket az adatokat térképen is ábrázolni. Itt ugyan az értékeket nehezebb leolvasni, illetve összehasonlítani, hiszen egy színskála rosszabbul ítélhető meg mint egy oszlop magassága, viszont cserében térbeli információt is ad, ami meg sok szempontból jobban érzékelhető, egyetlen pillantással is (jobban társítani tudjuk az országokhoz az egyéb jellemzőiket, látszanak a térbeli csoportosulások stb.):
 
 ```{r utolsoallapotterkep, echo = FALSE}
-ggplot(geodata, aes(fill = y)) + geom_sf() + coord_sf(xlim = c(-25, 50), ylim = c(33, 73)) +
+ggplot(geodata[geodata$nuts_level==0,], aes(fill = y)) + geom_sf() +
+  coord_sf(xlim = c(-25, 50), ylim = c(33, 73)) + scale_fill_gradient(low = "green", high = "red") +
   labs(fill = "Összesített többlet-\nhalálozás [fő/1M fő]",
        caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
-  scale_fill_gradient(low = "green", high = "red") +
   theme(plot.caption = element_text(face = "bold", hjust = 0))
 ```
+
+Az Eurostat [adatokat szolgáltat](https://ec.europa.eu/eurostat/databrowser/view/demo_r_mwk3_t/) ún. NUTS3 szintű, országon belüli területi egységekről is, ez Magyarországon a megyéknek felel meg. Ilyen módon az összes fenti vizsgálatot elvégezhetjük a magyar megyékre is vonatkozóan, egész egyszerűen ugyanazt az elemzést kell csak lefuttatnuk -- egymástól függetlenül -- minden megyére.
+
+Az aktuális helyzet alakulása megyei szinten (a piros vonal ezen az ábrán az országos értéket jelenti):
+
+```{r megyeaktualislelekszam, echo = FALSE}
+ggplot(res[nuts_level==3|geo=="HU"], aes(x = date, y = excess/population*1e6, group = geoname, label = geoname)) +
+  geom_line(aes(color = geo=="HU")) + geom_abline(slope = 0, intercept = 0, colour = "blue") +
+  scale_color_manual(values = c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
+  labs(x = "", y = "Aktuális többlethalálozás [fő/1M fő]",
+       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
+  directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
+  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
+        legend.title = element_blank())
+```
+
+Itt is igaz, hogy bár ez összkép szempontjából tanulságos, ha egyesével akarjuk vizsgálni a területi egységeket, akkor jobb őket külön ábrázolni:
+
+```{r megyeaktualislelekszammegyenkent, echo = FALSE}
+ggplot(res[nuts_level==3], aes(x = date, y = excess/population*1e6, group = geo)) + geom_line() +
+  labs(x = "", y = "Aktuális többlethalálozás [fő/1M fő]",
+       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  scale_x_date(date_breaks = "2 months", labels = function(z) gsub("^0", "", strftime(z, "%m"))) +
+  facet_wrap(~geoname) + theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
+                           legend.title = element_blank())
+```
+
+Az előzőekhez hasonlóan érdekes lehet a kumulált helyzet, illetve ez azért is segít, mert a korábbi ábráról nehéz megítélni, hogy összességében mi egy megye helyzete, hiszen kevésbé látszik, hogy mennyire ugyanazok bizonyultak rossz helyzetűnek a különböző időpontokban:
+
+```{r megyekumulaltlelekszam, echo = FALSE}
+ggplot(res[nuts_level==3|geo=="HU"], aes(x = date, y = cumexcess/meanpopulation*1e6, group = geo, label = geoname)) +
+  geom_line(aes(color = geo=="HU")) + geom_abline(slope = 0, intercept = 0, colour = "blue") +
+  scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
+  labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]",
+       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
+  directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
+  theme(plot.caption = element_text(face = "bold", hjust = 0),
+        legend.position = "bottom", legend.title = element_blank())
+```
+
+Az utolsó állapotról itt is készíthetünk oszlopdiagramot:
+
+```{r megyeutolsoallapotoszlopdiagram, echo = FALSE}
+ggplot(res[nuts_level==3, tail(.SD, 1), .(geo)][order(cumexcess/meanpopulation)],
+       aes(x = factor(geoname, levels = geoname), y = cumexcess/meanpopulation*1e6, fill = geo=="HU")) + geom_col() +
+  guides(fill = "none") + labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]",
+                               caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
+        legend.title = element_blank()) + guides(x = guide_axis(angle = 45))
+```
+
+Itt is kézenfekvő ötlet térképet rajzolni:
+
+```{r megyeutolsoallapotterkep, echo = FALSE}
+ggplot(geodata[geodata$nuts_level==3,], aes(fill = y)) + geom_sf() +
+  scale_fill_gradient(low = "green", high = "red") +
+  labs(fill = "Összesített többlet-\nhalálozás [fő/1M fő]",
+       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  theme(plot.caption = element_text(face = "bold", hjust = 0))
+```
+
+Finomabb felbontású, legalább járási adatok híján nehéz igazán fajsúlyos megállapításokat tenni (megyei szinten még a városok és a falusias területek is össze vannak vegyítve), ez alól Budapest az egyetlen kivétel, és pozitív irányban: míg a nagyobb népsűrűség általában kimondottan elősegíti a járványok terjedését, addig Magyarországon belül Budapest pont, hogy a jobban teljesítő megyék közé került. Persze vigyázat: ezek most nem a fertőződésre, hanem a halálozásra vonatkozó adatok, így a megítélést még az is nehezíti, hogy a halálozási arányok eltérhetnek (hiszen az függ a társbetegségek gyakoriságától, az életkori eloszlástól, és így tovább, amik eltérhetnek megyék között).
 
 ## Záró gondolatok
 
@@ -422,10 +493,7 @@ A mortalitási adatokat az Eurostat-tól kérjük le (`demo_r_mwk_ts` adatbázis
 A megmaradt, és a későbbi elemzésben felhasznált országok listája, a rövidítéseikkel együtt, amik az ábrákon a helytakarékosság végett szerepelni fognak:
   
 ```{r}
-knitr::kable(data.table(`Kód` = unique(RawData$geo),
-                        `Angol név` = countrycode::countrycode(unique(RawData$geo),
-                                                               "eurostat",
-                                                               "country.name"))[order(`Angol név`)])
+knitr::kable(unique(res[, .(`Kód` = geo, `Angol név` = geoname)])[order(`Kód`)])
 ```
 
 Kikódoljuk az évet és a hónapot:
@@ -496,6 +564,12 @@ A `geo` átalakítjuk faktorrá, és beállítjuk, hogy Magyarország az utolsó
 <<geofaktor>>
 ```
 
+A térkép-adatokkal összekapcsoljuk az eredményeket, illetve kibővítjük azokat az országok és megyék elnevezéseivel, hogy ne csak kódjaink legyenek:
+
+```{r}
+<<terkepelokeszites>>
+```
+
 Most, hogy minden adatfeldolgozzásal végeztünk, az eredményeket kimentjük, hogy más is kényelmesen fel tudja használni:
 
 ```{r}
@@ -515,7 +589,7 @@ Emlékeztetőül, az aktuális többlethalálozás népességszámra vetített r
 Ugyanez akkor, ha a várt halálozásra vetítünk:
 
 ```{r aktualisvart}
-ggplot(res, aes(x = date, y = increase, group = geo, label = geo)) + geom_line(aes(color = geo=="HU")) +
+ggplot(res[nuts_level==0], aes(x = date, y = increase, group = geo, label = geo)) + geom_line(aes(color = geo=="HU")) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
   labs(x = "", y = "Aktuális többlethalálozás [%]",
        caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
@@ -529,7 +603,7 @@ ggplot(res, aes(x = date, y = increase, group = geo, label = geo)) + geom_line(a
 Látszik, hogy a kétféle relatív mutató között nincs nagy különbség. Kicsit direktebben is összevethetjük őket, ha országonként külön-külön ábrázoljuk, egymással szemben:
 
 ```{r lelekszamvsvart}
-ggplot(res, aes(x = increase, y = excess/population*1e6)) + geom_line() +
+ggplot(res[nuts_level==0], aes(x = increase, y = excess/population*1e6)) + geom_line() +
   labs(x = "Aktuális többlethalálozás [%]", y = "Aktuális többlethalálozás [fő/1M fő]",
        caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   facet_wrap(~geo) + geom_abline(intercept = 0, slope =  2, alpha = 0.3) +
@@ -548,7 +622,7 @@ Folytassuk most az összesített többlethalálozással. Emlékeztetőül a nép
 Kérdés, hogy mi a helyzet a várt értékre vetített mutatóval. A probléma a kumulálás, hiszen a százalékok természetesen nem adhatóak egyszerűen össze. Ha kicsit nyakatekertebb is, de van megoldás, külön kumuláljuk a többletet és a várt értéket, majd ezeket osztjuk el egymással:
 
 ```{r kumulaltvart}
-ggplot(res, aes(x = date, y = cumexcess/cumexpected, group = geo, label = geo)) +
+ggplot(res[nuts_level==0], aes(x = date, y = cumexcess/cumexpected, group = geo, label = geo)) +
     geom_line(aes(color = geo=="HU")) + geom_abline(slope = 0, intercept = 0, colour = "blue") +
     scale_color_manual(values = c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
     labs(x = "", y = "Összesített többlethalálozás [%]",
@@ -568,7 +642,8 @@ A kép természetesen itt is hasonló, de azért érdemes megnézni a különbs�
 Következő lépésben kiszámoljuk a 3 betűs ISO-országkódot, a 2 betűs Eurostat kódból, hogy később az OWID adatbázissal lehessen egyesíteni:
 
 ```{r}
-res$iso_code <- countrycode::countrycode(res$geo, "eurostat", "iso3c")
+res$iso_code <- countrycode::countrycode(ifelse(res$nuts_level==3, NA_character_, res$geo),
+                                         "eurostat", "iso3c")
 ```
 
 A jelentett halálozás céljából letöltjük az OWID adatbázist, kikóduljuk ott is az évet és a hetet, majd ott is áttérünk heti adatokra:
@@ -668,6 +743,12 @@ p + geom_point(data = data.frame(x = as.Date("2020-12-31"), y = 8981),
 ```
 
 Mint látszik, nagy különbség nincsen, az eredmény szépen egybecseng a másik két adatsorral. Ez fontos abból a szempontból, hogy cáfolja azt a vélekedést, miszerint a gyors regisztrálás „boldog-boldogtalant" koronavírusos halottnak sorol, szemben a precíz besorolással; igazán érdekes azonban a későbbi értéke lesz. Sajnos, mint volt is róla szó, ezt legközelebb csak 2021 egész évre fogjuk megtudni, azt is csak 2022-ben (és nem az elején).
+
+### Összevetés a jelentett halálozással -- magyar megyei adatok
+
+Bármennyire is kézenfekvőnek tűnik (és fontos is), ez sajnos nem oldható meg, hiszen Magyarországon nincs nyilvános adatközlés a halálozások területi eloszlásáról, még megyei szinten sem.
+
+A fertőzöttekről ugyan van (mégpedig olyan módon, hogy a számokat egy képfájlra (!) felírják...), de annak összevetése kérdésesebb, hiszen -- mint már volt róla korábban is szó -- ott még közben van a halálozási arány is, ami miatt ez a kapcsolat áttételes.
 
 ### Érzékenységvizsgálat
 
