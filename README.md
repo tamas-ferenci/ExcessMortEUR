@@ -921,7 +921,7 @@ eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a
 többi kutatót és az érdeklődő laikusokat hasonló számítások
 elvégézésében, mivel itt látnak egy lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2021-11-02. A többlethalálozást
+A számítások aktualizálásának dátuma: 2021-11-09. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.6.1, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) pedig 3.7.5.
 
@@ -965,6 +965,11 @@ RawDataUK <- RawDataUK[Year>=2015&CountryCode%in%c("GBRTENW", "GBR_NIR", "GBR_SC
     ,.(sex = "T", unit = "NR", geo = "UK", time, values)][order(time)]
 RawDataUK <- RawDataUK[1:(nrow(RawDataUK)-1)]
 RawData <- rbind(RawData, RawDataUK)
+# RawDataHunNUTS <- as.data.table(eurostat::get_eurostat("demo_r_mwk3_ts", time_format = "raw"))
+# RawDataHunNUTS <- RawDataHunNUTS[sex=="T"&substring(geo, 1, 2)=="HU"&nchar(geo)==5]
+# RawDataHunNUTS[ , values := round(values*sum(values)/sum(values[geo!="HUXXX"])), .(time)]
+# RawDataHunNUTS <- RawDataHunNUTS[geo!="HUXXX"]
+# RawData <- rbind(RawData, RawDataHunNUTS)
 RawData <- RawData[!is.na(RawData$values)]
 RawData <- RawData[geo%in%(RawData[,.N,.(geo)][N>250]$geo)]
 ```
@@ -1057,6 +1062,9 @@ A háttérpopuláció létszám adatait szintén az Eurostat-tól kérjük le
 
 ``` r
 PopData <- as.data.table(eurostat::get_eurostat("demo_pjan"))
+# PopDataHunNUTS <- as.data.table(eurostat::get_eurostat("demo_r_pjanaggr3"))
+# PopDataHunNUTS <- PopDataHunNUTS[substring(geo, 1, 2)=="HU"&nchar(geo)==5&geo!="HUXXX"]
+# PopData <- rbind(PopData, PopDataHunNUTS)
 PopData$numdate <- as.numeric(PopData$time-as.Date("1960-01-01"))
 PopData <- PopData[age=="TOTAL"&sex=="T"]
 PopData$geo <- as.factor(PopData$geo)
