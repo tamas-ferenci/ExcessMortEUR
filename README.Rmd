@@ -122,11 +122,15 @@ res$geo <- forcats::fct_relevel(as.factor(res$geo), "HU", after = Inf)
 ```
 
 ```{r terkepelokeszites, message = FALSE, echo = FALSE, warning = FALSE}
-geodata <- eurostat::get_eurostat_geospatial(output_class = "sf", resolution = "01", year = "2021")
+geodata <- eurostat::get_eurostat_geospatial(output_class = "sf", resolution = "01", year = "2021",
+                                             make_valid = TRUE)
 geodata <- merge(geodata, res[, tail(.SD, 1), .(geo)][, .(y = cumexcess/meanpopulation*1e6,
                                                           geo, nuts_level)], by = "geo")
 res <- merge(res,
-             data.table(geo = c(unique(RawData[nchar(geo)==2]$geo), unique(RawData[nchar(geo)==5]$geo)),
+             data.table(geo = c(unique(RawData[nchar(geo)==2]$geo),
+                                c("HU110", "HU120", "HU211", "HU212", "HU213", "HU221", "HU222", "HU223",
+                                  "HU231", "HU232", "HU233", "HU311", "HU312", "HU313", "HU321", "HU322",
+                                  "HU323", "HU331", "HU332", "HU333")),
                         geoname = c(countrycode::countrycode(unique(RawData[nchar(geo)==2]$geo),
                                                              "eurostat", "country.name"),
                                     c("Budapest", "Pest", "Fejér", "KE", "Veszprém", "GyMS", "Vas", "Zala", "Baranya",
@@ -290,10 +294,13 @@ ggplot(geodata[geodata$nuts_level==0,], aes(fill = y)) + geom_sf() +
 
 Az Eurostat [adatokat szolgáltat](https://ec.europa.eu/eurostat/databrowser/view/demo_r_mwk3_t/) ún. NUTS3 szintű, országon belüli területi egységekről is, ez Magyarországon a megyéknek felel meg. Ilyen módon az összes fenti vizsgálatot elvégezhetjük a magyar megyékre is vonatkozóan, egész egyszerűen ugyanazt az elemzést kell csak lefuttatnuk -- egymástól függetlenül -- minden megyére.
 
+Hogy ennek mennyi értelme van? Magyar viszonylatban sajnos egy szempontból egész biztosan van: a magyar rendszer, elképesztő módon, nem ad meg területi halálozási adatokat, még megyei szinten sem (nemhogy járási lebontásban). Így, ha bármilyen halálozási eredményre van szükségünk területi lebontásban, egész egyszerűen a többlethalálozás lesz az egyetlen eszközünk, teljesen mindegy, hogy mennyire jó vagy rossz. Ettől függetlenül azért érdemes feltenni a kérdést, hogy mennyire jó: ha ismernénk a jelentett halálozást megyei szinten, volna értelme mégis nézni a többlethalálozást ez esetben is? Gondoljunk a többlethalálozás két alapvető előnyére: teljesen független a haláloki besorolástól és teljesen független a tesztelési aktivitástól. Az előbbi igen valószínűtlen, hogy országon belül eltérjen, de az utóbbiban nagyon is lehetnek különbségek az ország különböző megyéi között, így még ez esetben is érdekes lehet a többlethalálozás (persze annak a hátrányai is ugyanúgy érvényesülnek egy ilyen, országon belüli elemzés során is).
+
 Az aktuális helyzet alakulása megyei szinten (a piros vonal ezen az ábrán az országos értéket jelenti):
 
 ```{r megyeaktualislelekszam, echo = FALSE}
-ggplot(res[nuts_level==3|geo=="HU"], aes(x = date, y = excess/population*1e6, group = geoname, label = geoname)) +
+ggplot(res[nuts_level==3|geo=="HU"], aes(x = date, y = excess/population*1e6,
+                                         group = geoname, label = geoname)) +
   geom_line(aes(color = geo=="HU")) + geom_abline(slope = 0, intercept = 0, colour = "blue") +
   scale_color_manual(values = c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
   labs(x = "", y = "Aktuális többlethalálozás [fő/1M fő]",
@@ -311,14 +318,15 @@ ggplot(res[nuts_level==3], aes(x = date, y = excess/population*1e6, group = geo)
   labs(x = "", y = "Aktuális többlethalálozás [fő/1M fő]",
        caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   scale_x_date(date_breaks = "2 months", labels = function(z) gsub("^0", "", strftime(z, "%m"))) +
-  facet_wrap(~geoname) + theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
-                           legend.title = element_blank())
+  facet_wrap(~geoname) + theme(plot.caption = element_text(face = "bold", hjust = 0),
+                               legend.position = "bottom", legend.title = element_blank())
 ```
 
 Az előzőekhez hasonlóan érdekes lehet a kumulált helyzet, illetve ez azért is segít, mert a korábbi ábráról nehéz megítélni, hogy összességében mi egy megye helyzete, hiszen kevésbé látszik, hogy mennyire ugyanazok bizonyultak rossz helyzetűnek a különböző időpontokban:
 
 ```{r megyekumulaltlelekszam, echo = FALSE}
-ggplot(res[nuts_level==3|geo=="HU"], aes(x = date, y = cumexcess/meanpopulation*1e6, group = geo, label = geoname)) +
+ggplot(res[nuts_level==3|geo=="HU"], aes(x = date, y = cumexcess/meanpopulation*1e6,
+                                         group = geo, label = geoname)) +
   geom_line(aes(color = geo=="HU")) + geom_abline(slope = 0, intercept = 0, colour = "blue") +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
   labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]",
@@ -333,8 +341,8 @@ Az utolsó állapotról itt is készíthetünk oszlopdiagramot:
 
 ```{r megyeutolsoallapotoszlopdiagram, echo = FALSE}
 ggplot(res[nuts_level==3, tail(.SD, 1), .(geo)][order(cumexcess/meanpopulation)],
-       aes(x = factor(geoname, levels = geoname), y = cumexcess/meanpopulation*1e6, fill = geo=="HU")) + geom_col() +
-  guides(fill = "none") + labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]",
+       aes(x = factor(geoname, levels = geoname), y = cumexcess/meanpopulation*1e6, fill = geo=="HU")) +
+  geom_col() + guides(fill = "none") + labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]",
                                caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank()) + guides(x = guide_axis(angle = 45))
@@ -493,7 +501,7 @@ A mortalitási adatokat az Eurostat-tól kérjük le (`demo_r_mwk_ts` adatbázis
 A megmaradt, és a későbbi elemzésben felhasznált országok listája, a rövidítéseikkel együtt, amik az ábrákon a helytakarékosság végett szerepelni fognak:
   
 ```{r}
-knitr::kable(unique(res[, .(`Kód` = geo, `Angol név` = geoname)])[order(`Kód`)])
+knitr::kable(unique(res[nchar(geo)==2, .(`Kód` = geo, `Angol név` = geoname)])[order(`Kód`)])
 ```
 
 Kikódoljuk az évet és a hónapot:
@@ -566,7 +574,7 @@ A `geo` átalakítjuk faktorrá, és beállítjuk, hogy Magyarország az utolsó
 
 A térkép-adatokkal összekapcsoljuk az eredményeket, illetve kibővítjük azokat az országok és megyék elnevezéseivel, hogy ne csak kódjaink legyenek:
 
-```{r}
+```{r, message = FALSE}
 <<terkepelokeszites>>
 ```
 

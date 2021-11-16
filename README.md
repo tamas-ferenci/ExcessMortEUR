@@ -598,6 +598,22 @@ vizsgálatot elvégezhetjük a magyar megyékre is vonatkozóan, egész
 egyszerűen ugyanazt az elemzést kell csak lefuttatnuk – egymástól
 függetlenül – minden megyére.
 
+Hogy ennek mennyi értelme van? Magyar viszonylatban sajnos egy
+szempontból egész biztosan van: a magyar rendszer, elképesztő módon, nem
+ad meg területi halálozási adatokat, még megyei szinten sem (nemhogy
+járási lebontásban). Így, ha bármilyen halálozási eredményre van
+szükségünk területi lebontásban, egész egyszerűen a többlethalálozás
+lesz az egyetlen eszközünk, teljesen mindegy, hogy mennyire jó vagy
+rossz. Ettől függetlenül azért érdemes feltenni a kérdést, hogy mennyire
+jó: ha ismernénk a jelentett halálozást megyei szinten, volna értelme
+mégis nézni a többlethalálozást ez esetben is? Gondoljunk a
+többlethalálozás két alapvető előnyére: teljesen független a haláloki
+besorolástól és teljesen független a tesztelési aktivitástól. Az előbbi
+igen valószínűtlen, hogy országon belül eltérjen, de az utóbbiban nagyon
+is lehetnek különbségek az ország különböző megyéi között, így még ez
+esetben is érdekes lehet a többlethalálozás (persze annak a hátrányai is
+ugyanúgy érvényesülnek egy ilyen, országon belüli elemzés során is).
+
 Az aktuális helyzet alakulása megyei szinten (a piros vonal ezen az
 ábrán az országos értéket jelenti):
 
@@ -969,7 +985,7 @@ eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a
 többi kutatót és az érdeklődő laikusokat hasonló számítások
 elvégézésében, mivel itt látnak egy lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2021-11-09. A többlethalálozást
+A számítások aktualizálásának dátuma: 2021-11-16. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.6.1, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) pedig 3.7.5.
 
@@ -1027,62 +1043,42 @@ rövidítéseikkel együtt, amik az ábrákon a helytakarékosság végett
 szerepelni fognak:
 
 ``` r
-knitr::kable(unique(res[, .(`Kód` = geo, `Angol név` = geoname)])[order(`Kód`)])
+knitr::kable(unique(res[nchar(geo)==2, .(`Kód` = geo, `Angol név` = geoname)])[order(`Kód`)])
 ```
 
-| Kód   | Angol név      |
-|:------|:---------------|
-| AT    | Austria        |
-| BE    | Belgium        |
-| BG    | Bulgaria       |
-| CH    | Switzerland    |
-| CY    | Cyprus         |
-| CZ    | Czechia        |
-| DE    | Germany        |
-| DK    | Denmark        |
-| EE    | Estonia        |
-| EL    | Greece         |
-| ES    | Spain          |
-| FI    | Finland        |
-| FR    | France         |
-| HR    | Croatia        |
-| HU    | Hungary        |
-| HU110 | Budapest       |
-| HU120 | Pest           |
-| HU211 | Fejér          |
-| HU212 | KE             |
-| HU213 | Veszprém       |
-| HU221 | GyMS           |
-| HU222 | Vas            |
-| HU223 | Zala           |
-| HU231 | Baranya        |
-| HU232 | Somogy         |
-| HU233 | Tolna          |
-| HU311 | BAZ            |
-| HU312 | Heves          |
-| HU313 | Nógrád         |
-| HU321 | Hajdú-Bihar    |
-| HU322 | JNSz           |
-| HU323 | SzSzB          |
-| HU331 | Bács-Kiskun    |
-| HU332 | Békés          |
-| HU333 | Csongrád       |
-| IS    | Iceland        |
-| IT    | Italy          |
-| LI    | Liechtenstein  |
-| LT    | Lithuania      |
-| LU    | Luxembourg     |
-| LV    | Latvia         |
-| MT    | Malta          |
-| NL    | Netherlands    |
-| NO    | Norway         |
-| PL    | Poland         |
-| PT    | Portugal       |
-| RO    | Romania        |
-| SE    | Sweden         |
-| SI    | Slovenia       |
-| SK    | Slovakia       |
-| UK    | United Kingdom |
+| Kód | Angol név      |
+|:----|:---------------|
+| AT  | Austria        |
+| BE  | Belgium        |
+| BG  | Bulgaria       |
+| CH  | Switzerland    |
+| CY  | Cyprus         |
+| CZ  | Czechia        |
+| DE  | Germany        |
+| DK  | Denmark        |
+| EE  | Estonia        |
+| EL  | Greece         |
+| ES  | Spain          |
+| FI  | Finland        |
+| FR  | France         |
+| HR  | Croatia        |
+| HU  | Hungary        |
+| IS  | Iceland        |
+| IT  | Italy          |
+| LI  | Liechtenstein  |
+| LT  | Lithuania      |
+| LU  | Luxembourg     |
+| LV  | Latvia         |
+| MT  | Malta          |
+| NL  | Netherlands    |
+| NO  | Norway         |
+| PL  | Poland         |
+| PT  | Portugal       |
+| RO  | Romania        |
+| SE  | Sweden         |
+| SI  | Slovenia       |
+| SK  | Slovakia       |
+| UK  | United Kingdom |
 
 Kikódoljuk az évet és a hónapot:
 
@@ -1210,22 +1206,15 @@ azokat az országok és megyék elnevezéseivel, hogy ne csak kódjaink
 legyenek:
 
 ``` r
-geodata <- eurostat::get_eurostat_geospatial(output_class = "sf", resolution = "01", year = "2021")
-```
-
-    ## Reading cache file C:\Users\FERENC~1\AppData\Local\Temp\RtmpIvHqRl/eurostat/sf01all20214326.RData
-
-    ## sf at resolution 1: 01  from year  2021  read from cache file:  C:\Users\FERENC~1\AppData\Local\Temp\RtmpIvHqRl/eurostat/sf01all20214326.RData
-
-    ## Warning in eurostat::get_eurostat_geospatial(output_class = "sf", resolution =
-    ## "01", : Default of 'make_valid' for 'output_class="sf"' will be changed in the
-    ## future (see function details).
-
-``` r
+geodata <- eurostat::get_eurostat_geospatial(output_class = "sf", resolution = "01", year = "2021",
+                                             make_valid = TRUE)
 geodata <- merge(geodata, res[, tail(.SD, 1), .(geo)][, .(y = cumexcess/meanpopulation*1e6,
                                                           geo, nuts_level)], by = "geo")
 res <- merge(res,
-             data.table(geo = c(unique(RawData[nchar(geo)==2]$geo), unique(RawData[nchar(geo)==5]$geo)),
+             data.table(geo = c(unique(RawData[nchar(geo)==2]$geo),
+                                c("HU110", "HU120", "HU211", "HU212", "HU213", "HU221", "HU222", "HU223",
+                                  "HU231", "HU232", "HU233", "HU311", "HU312", "HU313", "HU321", "HU322",
+                                  "HU323", "HU331", "HU332", "HU333")),
                         geoname = c(countrycode::countrycode(unique(RawData[nchar(geo)==2]$geo),
                                                              "eurostat", "country.name"),
                                     c("Budapest", "Pest", "Fejér", "KE", "Veszprém", "GyMS", "Vas", "Zala", "Baranya",
