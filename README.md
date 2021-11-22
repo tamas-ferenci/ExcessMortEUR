@@ -918,6 +918,31 @@ multiplikatív az egész modell). Explicite nem ráta van benne, de
 lényegében igen, hiszen offszetként felhasználjuk a háttérpopuláció
 lélekszámát.
 
+Az *f*(*t*), tehát a (százalékos) többlet kapcsán fontos megemlíteni,
+hogy ezt az eljárás igyekszik úgy becsülni, hogy bár az alakja
+általános, akár még szakadása is előfordulhat, de ahol lehet, ott sima
+legyen. A nyersen számolt többlet
+(*Y*<sub>*t*</sub> − *μ*<sub>*t*</sub>) ugyanis a véletlen hatások miatt
+elég zajos lehet, így az *f*(*t*) használata lényegében egy simítást
+jelent. Ez szemléletesen látszik, ha ábrázoljuk a kettőt, például a
+magyar adatokon:
+
+``` r
+ggplot(melt(res[geo=="HU", .(date, `Nyers` = y, `f(t)` = increase)], id.vars = "date"),
+       aes(x = date, y = value, group = variable, color = variable)) + geom_line() +
+  labs(x = "Dátum", y = "Százalékos többlet") +
+  scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
+  theme(legend.position = "bottom", legend.title = element_blank())
+```
+
+![](README_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+
+A többlet abszolút értékének számítása természetesen már *f*(*t*)
+alapján történik (tehát *μ*<sub>*t*</sub> ⋅ *f*(*t*) és nem
+*Y*<sub>*t*</sub> − *μ*<sub>*t*</sub> alakban). A `res` adattáblában `y`
+néven érhető el a nyersen számolt (százalékos) többlet, `increase` néven
+*f*(*t*) és `excess` néven az – *f*(*t*)-vel számolt – többlet.
+
 A modell becslése cseles, alapvetően maximum likelihood, de elég
 komplex, mert óvatosan kell eljárni (*ε*<sub>*t*</sub> is elég
 általános, és *f*(*t*) is nézhet ki furcsán, például lehet szakadása).
@@ -985,7 +1010,7 @@ eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a
 többi kutatót és az érdeklődő laikusokat hasonló számítások
 elvégézésében, mivel itt látnak egy lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2021-11-16. A többlethalálozást
+A számítások aktualizálásának dátuma: 2021-11-23. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.6.1, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) pedig 3.7.5.
 
@@ -1250,7 +1275,7 @@ ggplot(res[nuts_level==0], aes(x = date, y = excess/population*1e6, group = geo,
         legend.title = element_blank())
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
 Ugyanez akkor, ha a várt halálozásra vetítünk:
 
@@ -1313,7 +1338,7 @@ ggplot(res[nuts_level==0], aes(x = date, y = cumexcess/meanpopulation*1e6, group
         legend.position = "bottom", legend.title = element_blank())
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 Kérdés, hogy mi a helyzet a várt értékre vetített mutatóval. A probléma
 a kumulálás, hiszen a százalékok természetesen nem adhatóak egyszerűen

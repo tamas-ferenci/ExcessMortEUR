@@ -464,6 +464,18 @@ Nagyon röviden és nagyon technikai szinten a következő történik. Először
 
 A modell felállítása logikus, hiszen a halálozások száma darabszám jellegű adat, erre csakugyan a Poisson a legszokványosabb választás. (A Poisson az overdiszperzió kezelésére kvázi-Poisson eloszlásra cserélhető; a lenti elemzés is így készült.) Látható, hogy $f\left(t\right)$ a keresett többlet (szorzóként lép be, hiszen log-link mellett multiplikatív az egész modell). Explicite nem ráta van benne, de lényegében igen, hiszen offszetként felhasználjuk a háttérpopuláció lélekszámát.
 
+Az $f\left(t\right)$, tehát a (százalékos) többlet kapcsán fontos megemlíteni, hogy ezt az eljárás igyekszik úgy becsülni, hogy bár az alakja általános, akár még szakadása is előfordulhat, de ahol lehet, ott sima legyen. A nyersen számolt többlet ($Y_t-\mu_t$) ugyanis a véletlen hatások miatt elég zajos lehet, így az $f\left(t\right)$ használata lényegében egy simítást jelent. Ez szemléletesen látszik, ha ábrázoljuk a kettőt, például a magyar adatokon:
+
+```{r}
+ggplot(melt(res[geo=="HU", .(date, `Nyers` = y, `f(t)` = increase)], id.vars = "date"),
+       aes(x = date, y = value, group = variable, color = variable)) + geom_line() +
+  labs(x = "Dátum", y = "Százalékos többlet") +
+  scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
+  theme(legend.position = "bottom", legend.title = element_blank())
+```
+
+A többlet abszolút értékének számítása természetesen már $f\left(t\right)$ alapján történik (tehát $\mu_t\cdot f\left(t\right)$ és nem $Y_t-\mu_t$ alakban). A `res` adattáblában `y` néven érhető el a nyersen számolt (százalékos) többlet, `increase` néven $f\left(t\right)$ és `excess` néven az -- $f\left(t\right)$-vel számolt -- többlet.
+
 A modell becslése cseles, alapvetően maximum likelihood, de elég komplex, mert óvatosan kell eljárni ($\varepsilon_t$ is elég általános, és $f\left(t\right)$ is nézhet ki furcsán, például lehet szakadása).
 
 A modellt most összesített adatokon futtatom (tehát nem pedig rétegzett, például életkor és nem szerint rétegzett adatokon). Szemben azzal, amit az ember első ránézésre gondolna, hogy ti. az életkori és nemi összetételek eltérése miatt ez hiba lehet, ez valójában nagy bajt nem okoz, különösen, ha a várthoz viszonyított relatív eltéréseket használjuk (lásd következő pont). Mégis lehet valamennyi értelme a rétegzésnek, de egy kevésbé fontos ok miatt: ha a hosszú távú trend, vagy szezonalitás eltér az egyes rétegek között.
