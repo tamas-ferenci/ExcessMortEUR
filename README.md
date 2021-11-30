@@ -429,7 +429,7 @@ módszerek is (görbét rakunk a megelőző évekre és azt meghosszabbítjuk),
 lesz a kérdés, hogy igazából mi sem tudhatjuk, hogy tényleg ennyi
 halálozás lett-e volna, ha nincs a járvány.
 
-A másik probléma sokkal jelentősebb: a többlethalálozás egy nettó
+A másik probléma sokkal jelentősebb: a többlethalálozás egy bruttó
 jellegű mutató, ami egybeméri a járvány direkt hatásaival (belehalnak
 emberek) annak indirekt hatásait is. Hogy még rosszabb legyen a helyzet,
 ezek az indirekt hatások egyaránt lehetnek pozitívak és negatívak.
@@ -1010,7 +1010,7 @@ eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a
 többi kutatót és az érdeklődő laikusokat hasonló számítások
 elvégézésében, mivel itt látnak egy lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2021-11-23. A többlethalálozást
+A számítások aktualizálásának dátuma: 2021-11-30. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.6.1, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) pedig 3.7.5.
 
