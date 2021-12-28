@@ -192,18 +192,19 @@ jelentkezni. Mindezeket tökéletesen szemléleti a 2020 őszi cseh helyzet:
 ![Cseh járványügyi mutatók 2020 őszén](CsehAdatok2.png)
 
 Ez egy jól vizsgálható szituáció, mert a csehek egyetlen időpontban,
-koncentráltan hoztak egy komoly szigorítást október közepén. Ettől még
-mind a fertőzöttek száma, mind a halálozások száma vidáman nőtt tovább,
-mígnem a beszélt egy-két hét múlva a fertőzött-szám növekedése megállt
-(a felső tengelyen láthatóak az intézkedés bevezetése után eltelt napok
-száma). Igen ám, de a halottak száma még *ekkor is* teljesen
-változatlanul nőtt tovább, még jó egy-két hétig! Ez a járványkezelés
-tehetetlensége, és mellesleg egy nagyon fontos tanulsággal bír: a
-járványkezelésben nagyon veszélyes taktika, hogy megvárjuk, amíg
-elromlik a helyzet, és majd akkor lépünk, hiszen így fertőzöttek
-tekintetében még egy-két hétig, halálozásokban még akár több mint egy
-hónapig az eredeti trend szerint fogunk továbbhaladni! Amiből nagyon
-nagy baj is lehet, ha az egy gyorsan növekvő trend…
+koncentráltan hoztak egy komoly szigorítást október közepén, ezt jelzi a
+függőleges fekete vonal. Ettől még mind a fertőzöttek száma, mind a
+halálozások száma vidáman nőtt tovább, mígnem a beszélt egy-két hét
+múlva a fertőzött-szám növekedése megállt (a felső tengelyen láthatóak
+az intézkedés bevezetése után eltelt napok száma). Igen ám, de a
+halottak száma még *ekkor is* teljesen változatlanul nőtt tovább, még jó
+egy-két hétig! Ez a járványkezelés tehetetlensége, és mellesleg egy
+nagyon fontos tanulsággal bír: a járványkezelésben nagyon veszélyes
+taktika, hogy megvárjuk, amíg elromlik a helyzet, és majd akkor lépünk,
+hiszen így fertőzöttek tekintetében még egy-két hétig, halálozásokban
+még akár több mint egy hónapig az eredeti trend szerint fogunk
+továbbhaladni! Amiből nagyon nagy baj is lehet, ha az egy gyorsan
+növekvő trend…
 
 A halálozási adatok második problémája, hogy valójában nem csak a
 járvány terjedését méri, hiszen szerepet játszik benne két további
@@ -542,7 +543,7 @@ számításaimat, illetve itt elolvashatóak a módszertani részletek is.
 
 A többlethalálozás számítása az egyik legkorszerűbb eljárással, [Acosta
 és Irizzary
-módszerével](https://www.medrxiv.org/content/10.1101/2020.06.06.20120857v2)
+módszerével](https://www.medrxiv.org/content/10.1101/2020.06.06.20120857v3)
 történt, mely kifinomult statisztikai eljárással igyekszik jól
 meghatározni a múltbeli adatokból a viszonyítási alapot. Kihagytam
 azokat az országokat amelyek nem tagjai az EU-nak vagy EFTA-nak.
@@ -1010,7 +1011,7 @@ eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a
 többi kutatót és az érdeklődő laikusokat hasonló számítások
 elvégézésében, mivel itt látnak egy lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2021-12-21. A többlethalálozást
+A számítások aktualizálásának dátuma: 2021-12-28. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.6.1, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) pedig 3.7.5.
 
@@ -1970,7 +1971,8 @@ is.
 -   Tóth G. Csaba. “Többlethalandóság a koronavírus-járvány miatt
     Magyarországon 2020-ban.” Korfa. 2021 March;21(2):1-4.
     [Link](https://demografia.hu/kiadvanyokonline/index.php/korfa/article/view/2812/2700).
--   Rolando J Acosta, Rafael A Irizarry. “Monitoring Health Systems by
-    Estimating Excess Mortality.” medRxiv. 2020 June
-    09;2020.06.06.20120857. DOI: 10.1101/2020.06.06.20120857. Preprint.
-    [Link](https://www.medrxiv.org/content/10.1101/2020.06.06.20120857v2).
+-   Rolando J Acosta, Rafael A Irizarry. “A Flexible Statistical
+    Framework for Estimating Excess Mortality.” medRxiv. 2021 November
+    22;2020.06.06.20120857v3. DOI: 10.1101/2020.06.06.20120857.
+    Preprint.
+    [Link](https://www.medrxiv.org/content/10.1101/2020.06.06.20120857v3).
