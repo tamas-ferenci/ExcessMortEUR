@@ -442,14 +442,28 @@ is lehet távlatibb kérdésekre gondolni, például mi van, ha megnő az
 öngyilkosságok száma a szociális elszigetelődés miatt, vagy emelkedik az
 – egészségügyi állapotot közismerten rontó – munkanélküliség a gazdaság
 visszaesése miatt. Ezek feltárása véleményem szerint rendkívül fontos
-feladat, és az első empirikus eredmények már meg is jelentek. (Amerikai
-adatok szerint például megnőtt a kórházon kívüli szívmegállások
-előfordulása és halálozási aránya, de az öngyilkosságra vonatkozóan
-nincs egyértelmű negatív trend.) Nagyon fontos hangsúlyozni, hogy ezek
-elkülönítése lehetetlen, vagy szinte lehetetlen a többlethalálozás
-alapján!
+feladat, és az első empirikus eredmények már meg is jelentek.
 
-Sajnos a dolog mindkét irányban előfordulhat: elképzelhető olyan
+Nézzük meg például, hogy a [KSH
+adatai](https://www.ksh.hu/stadat_files/nep/hu/nep0010.html) alapján
+hogyan alakult az elmúlt 10 évben az autóbalesetben és az öngyilkosság
+miatt meghaltak száma Magyarországon:
+
+![](README_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+
+A mintázat nagyon látványos, mindkét fenti jelenség szemléltetésére.
+Fontos persze hangsúlyozni, hogy ez egy nagyon durva felbontású
+eredmény, azt például végképp nem bizonyítja, hogy ez minden életkorban,
+nemnél, szocioökonómiai helyzetben stb. is így van. Ami még fontosabb,
+hogy ez csak illusztráció, nem arról van szó, hogy ezek lennének a
+legjelentősebb indirekt tényezők (az influenza visszaszorulása például
+egész biztos, hogy lényegesebb), viszont az alapgondolatot jól mutatják.
+
+E tényezők elkülönítése tehát lehetetlen, vagy szinte lehetetlen a
+többlethalálozás alapján! (A „szinte” szó az influenza kérdésköre miatt
+van ott, amire később még visszatérünk.)
+
+Sajnos mindkét irányban előfordulhat probléma: elképzelhető olyan
 helyzet, hogy nem halnak meg sokan, de a többlethalálozás magas (komoly
 negatív indirekt hatások vannak), illetve az is, hogy sokan meghalnak,
 még sincs lényeges többlethalálozás (komoly pozitív indirekt hatások
@@ -936,7 +950,7 @@ ggplot(melt(res[geo=="HU", .(date, `Nyers` = y, `f(t)` = increase)], id.vars = "
   theme(legend.position = "bottom", legend.title = element_blank())
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 A többlet abszolút értékének számítása természetesen már *f*(*t*)
 alapján történik (tehát *μ*<sub>*t*</sub> ⋅ *f*(*t*) és nem
@@ -1011,7 +1025,7 @@ eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a
 többi kutatót és az érdeklődő laikusokat hasonló számítások
 elvégézésében, mivel itt látnak egy lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2022-01-04. A többlethalálozást
+A számítások aktualizálásának dátuma: 2022-01-07. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.6.1, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) pedig 3.7.5.
 
@@ -1276,7 +1290,7 @@ ggplot(res[nuts_level==0], aes(x = date, y = excess/population*1e6, group = geo,
         legend.title = element_blank())
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 Ugyanez akkor, ha a várt halálozásra vetítünk:
 
@@ -1339,7 +1353,7 @@ ggplot(res[nuts_level==0], aes(x = date, y = cumexcess/meanpopulation*1e6, group
         legend.position = "bottom", legend.title = element_blank())
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
 
 Kérdés, hogy mi a helyzet a várt értékre vetített mutatóval. A probléma
 a kumulálás, hiszen a százalékok természetesen nem adhatóak egyszerűen
