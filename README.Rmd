@@ -5,6 +5,8 @@ output:
   github_document:
     toc: true
     toc_depth: 3
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include = FALSE}
@@ -64,6 +66,8 @@ names(RawData)[names(RawData)=="values"] <- "outcome"
 <!-- # ``` -->
 
 ```{r datum, echo = FALSE}
+RawData[ , outcome := round(outcome*sum(outcome)/sum(outcome[week!=99])), .(geo, year)]
+RawData <- RawData[week!=99]
 RawData$date <- ISOweek::ISOweek2date(paste0(RawData$year, "-W", sprintf("%02d", RawData$week), "-1"))
 ```
 
@@ -218,7 +222,7 @@ ggplot(melt(as.data.table(rio::import(
   labs(y = "Halálozások száma [fő/év]", color = "") + theme(legend.position = "bottom")
 ```
 
-A mintázat nagyon látványos, mindkét fenti jelenség szemléltetésére. Fontos persze hangsúlyozni, hogy ez egy nagyon durva felbontású eredmény, azt például végképp nem bizonyítja, hogy ez minden életkorban, nemnél, szocioökonómiai helyzetben stb. is így van. Ami még fontosabb, hogy ez csak illusztráció, nem arról van szó, hogy ezek lennének a legjelentősebb indirekt tényezők (az influenza visszaszorulása például egész biztos, hogy lényegesebb), viszont az alapgondolatot jól mutatják.
+A mintázat nagyon látványos, mindkét fenti jelenség szemléltetésére. Fontos persze hangsúlyozni, hogy ez egy nagyon durva felbontású eredmény, azt például végképp nem bizonyítja, hogy ez minden életkorban, nemnél, szocioökonómiai helyzetben stb. is így van. Ami még fontosabb, hogy ez csak illusztráció, nem arról van szó, hogy ezek lennének a legjelentősebb indirekt tényezők (az influenza visszaszorulása például egész biztos, hogy lényegesebb az egyik irányban, az elmaradó ellátások pedig a másikban), viszont sokkal biztosabban megragadható adatok és az alapgondolatot jól mutatják.
 
 E tényezők elkülönítése tehát lehetetlen, vagy szinte lehetetlen a többlethalálozás alapján! (A „szinte" szó az influenza kérdésköre miatt van ott, amire később még visszatérünk.)
 

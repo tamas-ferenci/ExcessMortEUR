@@ -457,7 +457,9 @@ eredmény, azt például végképp nem bizonyítja, hogy ez minden életkorban,
 nemnél, szocioökonómiai helyzetben stb. is így van. Ami még fontosabb,
 hogy ez csak illusztráció, nem arról van szó, hogy ezek lennének a
 legjelentősebb indirekt tényezők (az influenza visszaszorulása például
-egész biztos, hogy lényegesebb), viszont az alapgondolatot jól mutatják.
+egész biztos, hogy lényegesebb az egyik irányban, az elmaradó ellátások
+pedig a másikban), viszont sokkal biztosabban megragadható adatok és az
+alapgondolatot jól mutatják.
 
 E tényezők elkülönítése tehát lehetetlen, vagy szinte lehetetlen a
 többlethalálozás alapján! (A „szinte” szó az influenza kérdésköre miatt
@@ -1025,7 +1027,7 @@ eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a
 többi kutatót és az érdeklődő laikusokat hasonló számítások
 elvégézésében, mivel itt látnak egy lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2022-01-07. A többlethalálozást
+A számítások aktualizálásának dátuma: 2022-01-11. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.6.1, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) pedig 3.7.5.
 
@@ -1155,6 +1157,8 @@ szerinti hétbesorolást használja az Eurostat, amit az `ISOweek` csomag
 kezel:
 
 ``` r
+RawData[ , outcome := round(outcome*sum(outcome)/sum(outcome[week!=99])), .(geo, year)]
+RawData <- RawData[week!=99]
 RawData$date <- ISOweek::ISOweek2date(paste0(RawData$year, "-W", sprintf("%02d", RawData$week), "-1"))
 ```
 
