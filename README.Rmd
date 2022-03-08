@@ -5,6 +5,7 @@ output:
   github_document:
     toc: true
     toc_depth: 3
+    math_method: NULL
 editor_options: 
   chunk_output_type: console
 ---
