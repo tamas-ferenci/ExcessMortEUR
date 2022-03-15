@@ -1027,7 +1027,7 @@ eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a
 többi kutatót és az érdeklődő laikusokat hasonló számítások
 elvégézésében, mivel itt látnak egy lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2022-03-08. A többlethalálozást
+A számítások aktualizálásának dátuma: 2022-03-15. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.6.1, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) pedig 3.7.10.
 
@@ -1383,7 +1383,7 @@ különbségeket, mert szépen illusztrálják az elméleti mondanivalót.
 Vegyük például Olaszországot: a lélekszámra vetített ábrán jobb
 helyzetben van mint mi, itt viszont rosszabban. A magyarázat pontosan
 az, hogy más a nyers halandóság; az egész adatbázist tekintve
-Olaszországban 10.7 /1000 fő/év, míg Magyaroszágon ugyanez 13.3 /1000
+Olaszországban 10.8 /1000 fő/év, míg Magyaroszágon ugyanez 13.3 /1000
 fő/év. Azaz Olaszországban kevesebben halnak meg lakosságarányosan, így
 a várt halálozás is kisebb lakosságarányosan, és ez a magyarázat: ha
 kisebb számmal osztunk, akkor nagyobb értéket kapunk, és ezért kerülnek
