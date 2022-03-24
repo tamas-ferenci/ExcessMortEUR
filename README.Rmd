@@ -307,7 +307,7 @@ Látványos lehet ugyanezeket az adatokat térképen is ábrázolni. Itt ugyan a
 
 ```{r utolsoallapotterkep, echo = FALSE}
 ggplot(geodata[geodata$nuts_level==0,], aes(fill = y)) + geom_sf() +
-  coord_sf(xlim = c(-25, 50), ylim = c(33, 73)) + scale_fill_gradient(low = "green", high = "red") +
+  coord_sf(xlim = c(-25, 50), ylim = c(33, 73)) + scale_fill_distiller(palette = "Oranges", direction = 1) +
   labs(fill = "Összesített többlet-\nhalálozás [fő/1M fő]",
        caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   theme(plot.caption = element_text(face = "bold", hjust = 0))
@@ -373,7 +373,7 @@ Itt is kézenfekvő ötlet térképet rajzolni:
 
 ```{r megyeutolsoallapotterkep, echo = FALSE}
 ggplot(geodata[geodata$nuts_level==3,], aes(fill = y)) + geom_sf() +
-  scale_fill_gradient(low = "green", high = "red") +
+  scale_fill_distiller(palette = "Oranges", direction = 1) +
   labs(fill = "Összesített többlet-\nhalálozás [fő/1M fő]",
        caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   theme(plot.caption = element_text(face = "bold", hjust = 0))
