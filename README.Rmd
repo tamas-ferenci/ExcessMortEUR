@@ -43,6 +43,15 @@ RawDataHunNUTS <- RawDataHunNUTS[sex=="T"&substring(geo, 1, 2)=="HU"&nchar(geo)=
 RawDataHunNUTS[ , values := round(values*sum(values)/sum(values[geo!="HUXXX"])), .(time)]
 RawDataHunNUTS <- RawDataHunNUTS[geo!="HUXXX"]
 RawData <- rbind(RawData, RawDataHunNUTS)
+RawData$age <- "TOTAL"
+RawDataHunAge <- as.data.table(eurostat::get_eurostat("demo_r_mwk_05", time_format = "raw"))
+RawDataHunAge <- RawDataHunAge[sex=="T"&geo=="HU"&age!="TOTAL"]
+RawDataHunAge$age <- ifelse(RawDataHunAge$age=="Y_GE90", "Y85-89", RawDataHunAge$age)
+RawDataHunAge <- RawDataHunAge[, .(values = sum(values)) , .(age, sex, unit, geo, time)]
+RawDataHunAge[age=="Y85-89"]$age <- "Y_GE85"
+RawDataHunAge[ , values := round(values*sum(values)/sum(values[age!="UNK"])), .(time)]
+RawDataHunAge <- RawDataHunAge[age!="UNK"]
+RawData <- rbind(RawData, RawDataHunAge)
 RawData <- RawData[!is.na(RawData$values)]
 RawData <- RawData[geo%in%(RawData[,.N,.(geo)][N>250]$geo)]
 ```
@@ -73,52 +82,64 @@ RawData$date <- ISOweek::ISOweek2date(paste0(RawData$year, "-W", sprintf("%02d",
 ```
 
 ```{r hatterpopulacio, message = FALSE, echo = FALSE}
-PopData <- as.data.table(eurostat::get_eurostat("demo_pjan"))
+PopData <- as.data.table(eurostat::get_eurostat("demo_pjangroup"))
+PopData <- PopData[!age%in%c("UNK", "Y_GE75", "Y_GE80")]
 PopDataHunNUTS <- as.data.table(eurostat::get_eurostat("demo_r_pjanaggr3"))
 PopDataHunNUTS <- PopDataHunNUTS[substring(geo, 1, 2)=="HU"&nchar(geo)==5&geo!="HUXXX"]
+PopDataHunNUTS <- PopDataHunNUTS[age=="TOTAL"]
 PopData <- rbind(PopData, PopDataHunNUTS)
+PopData <- PopData[sex=="T"]
+# PopDataHunAge <- as.data.table(eurostat::get_eurostat("demo_pjan"))
+# PopDataHunAge <- PopDataHunAge[sex=="T"&geo=="HU"&!age%in%c("TOTAL", "UNK")]
+# PopDataHunAge$age <- ifelse(PopDataHunAge$age=="Y_LT1", 0,
+#                             ifelse(PopDataHunAge$age=="Y_OPEN", 100,
+#                                    substring(PopDataHunAge$age, 2)))
+# PopDataHunAge$age <- as.numeric(PopDataHunAge$age)
+# PopDataHunAge[age>=90]$age <- 90
+# PopDataHunAge <- PopDataHunAge[, .(values=sum(values)), .(unit, age, sex, geo, time)]
+# PopDataHunAge$age <- as.character(cut(PopDataHunAge$age, breaks = c(seq(0, 90, 5), Inf), 
+#                                       labels = c("Y_LT5", paste0("Y", seq(5, 85, 5), "-",
+#                                                                  seq(10, 90, 5)-1), "Y_GE90"),
+#                                       right = FALSE))
+# PopData <- rbind(PopData, PopDataHunAge)
 PopData$numdate <- as.numeric(PopData$time-as.Date("1960-01-01"))
-PopData <- PopData[age=="TOTAL"&sex=="T"]
 PopData$geo <- as.factor(PopData$geo)
 ```
 
 ```{r adatbazis, echo = FALSE}
-RawData <- merge(RawData, rbindlist(lapply(unique(RawData$geo), function(g)
-  data.frame(date = unique(RawData$date), geo = g,
-             population = predict(mgcv::gam(values ~ s(numdate), data = PopData[geo==g]),
-                                  data.frame(numdate =
-                                               as.numeric(unique(RawData$date)-as.Date("1960-01-01"))))))))
+RawData <- merge(RawData,
+                 PopData[geo%in%unique(RawData$geo),
+                         .(date = unique(RawData$date),
+                           population = as.numeric(predict(mgcv::gam(values ~ s(numdate)),
+                                                           data.frame(numdate = as.numeric(unique(RawData$date)-as.Date("1960-01-01")))))),
+                         .(geo, age)], by = c("geo", "age", "date"))
 ```
 
 ```{r szamitas, message = FALSE, echo = FALSE}
 exclude_dates <- seq(as.Date("2020-03-01"), max(RawData$date), by = "day")
 
-res <- rbindlist(setNames(lapply(unique(RawData$geo), function(cntry)
-  with(excess_model(RawData[geo==cntry], start = min(RawData[geo==cntry]$date),
-                    end = max(RawData[geo==cntry]$date), exclude = exclude_dates,
-                    frequency = nrow(RawData[geo==cntry])/
-                      (as.numeric(diff(range(RawData[geo==cntry]$date)))/365.25)),
-       data.table(date = date, observed = observed, expected = expected,
-                  y = 100 * (observed - expected)/expected,
-                  increase = 100 * fitted,
-                  excess = expected * fitted,
-                  se = sapply(1:length(date), function(i) {
-                    mu <- matrix(expected[i], nr = 1)
-                    x <- matrix(x[i,], nr = 1)
-                    sqrt(mu %*% x %*% betacov %*% t(x) %*% t(mu))
-                  })))), unique(RawData$geo)), idcol = "geo")
+res <- RawData[, with(excess_model(.SD, start = min(date), end = max(date), exclude = exclude_dates,
+                            frequency = .N/(as.numeric(diff(range(date)))/365.25)),
+               list(date = date, observed = observed, expected = expected,
+                    y = 100 * (observed - expected)/expected,
+                    increase = 100 * fitted,  excess = expected * fitted,
+                    se = sapply(1:length(date), function(i) {
+                      mu <- matrix(expected[i], nr = 1)
+                      x <- matrix(x[i,], nr = 1)
+                      sqrt(mu %*% x %*% betacov %*% t(x) %*% t(mu))
+                    }))), .(geo, age)]
 ```
 
 ```{r veglegesadatok, echo = FALSE}
-res <- merge(res, RawData, by = c("geo", "date"))
-res <- res[order(geo, date)]
+res <- merge(res, RawData, by = c("geo", "age", "date"))
+res <- res[order(geo, age, date)]
 res <- res[date>=as.Date("2020-03-01")]
 ```
 
 ```{r tobbletszamolas, echo = FALSE}
-res[, cumexcess := cumsum(excess), .(geo)]
-res[, meanpopulation := dplyr::cummean(population), .(geo)]
-res[, cumexpected := cumsum(expected), .(geo)]
+res[, cumexcess := cumsum(excess), .(geo, age)]
+res[, meanpopulation := dplyr::cummean(population), .(geo, age)]
+res[, cumexpected := cumsum(expected), .(geo, age)]
 ```
 
 ```{r geofaktor, echo = FALSE}
@@ -129,8 +150,8 @@ res$geo <- forcats::fct_relevel(as.factor(res$geo), "HU", after = Inf)
 ```{r terkepelokeszites, message = FALSE, echo = FALSE, warning = FALSE}
 geodata <- eurostat::get_eurostat_geospatial(output_class = "sf", resolution = "01", year = "2021",
                                              make_valid = TRUE)
-geodata <- merge(geodata, res[, tail(.SD, 1), .(geo)][, .(y = cumexcess/meanpopulation*1e6,
-                                                          geo, nuts_level)], by = "geo")
+geodata <- merge(geodata, res[, tail(.SD, 1), .(geo, age)][, .(y = cumexcess/meanpopulation*1e6,
+                                                          geo, age, nuts_level)], by = "geo")
 res <- merge(res,
              data.table(geo = c(unique(RawData[nchar(geo)==2]$geo),
                                 c("HU110", "HU120", "HU211", "HU212", "HU213", "HU221", "HU222", "HU223",
@@ -227,7 +248,7 @@ A mintázat nagyon látványos, mindkét fenti jelenség szemléltetésére. Fon
 
 E tényezők elkülönítése tehát lehetetlen, vagy szinte lehetetlen a többlethalálozás alapján! (A „szinte" szó az influenza kérdésköre miatt van ott, amire később még visszatérünk.)
 
-Sajnos mindkét irányban előfordulhat probléma: elképzelhető olyan helyzet, hogy nem halnak meg sokan, de a többlethalálozás magas (komoly negatív indirekt hatások vannak), illetve az is, hogy sokan meghalnak, még sincs lényeges többlethalálozás (komoly pozitív indirekt hatások vannak). Ez szükségszerűen korlátozza a többlethalálozás gyakorlati hasznosíthatóságát.
+Sajnos mindkét irányban előfordulhat probléma: elképzelhető olyan helyzet, hogy nem halnak meg sokan a járvány következtében, de a többlethalálozás magas (komoly negatív indirekt hatások vannak), illetve az is, hogy sokan meghalnak, még sincs lényeges többlethalálozás (komoly pozitív indirekt hatások vannak). Ez szükségszerűen korlátozza a többlethalálozás gyakorlati hasznosíthatóságát.
 
 Remélem, a fentiekből is érzékelhető, hogy nincsenek univerzálisan „jobb" és „rosszabb" mutatók, az ilyen indikátorokat mindig egészében kell vizsgálni, és az átfogó kép alapján értékelni.
 
@@ -236,7 +257,7 @@ Remélem, a fentiekből is érzékelhető, hogy nincsenek univerzálisan „jobb
 Függetlenül attól, hogy pontosan hogyan mérjük le, a halálozásnak, mint a járvány terhének mutatója, van egy sor hátránya is, általában, pusztán amiatt, hogy a halálozáson alapul. A probléma többrétű:
 
 - A „járvány terhe" egy többdimenziós fogalom, ami nem szűkíthető le a elhunytakra (noha kétségtelen, hogy sok tekintetben ez a legdrámaibb teher). Azonban az is teher, ha emberek szenvednek (még ha a végén fel is épülnek), más szempontból de az is teher, ha az egészségügyi ellátórendszer kapacitásait igénybe veszik, megint más szempontból, de az is teher, hogy kiesnek a munkából. A halálozás mindezekről nem ad számot. Mindazonáltal a halálozás használatát mégiscsak védi -- túl azon, hogy a legrelevánsabb megjelenése a tehernek -- az, hogy általában jól korrelált az összes többi szemponttal is: ha többen halnak meg, akkor tipikusan többen is szenvednek, többen is veszik igénybe az ellátórendszert, többen is esnek ki a munkából.
-- Ha egyszerűen a halálozásokat számoljuk, akkor figyelmen kívül hagyjuk az elhunyt minden jellemzőjét: ugyanakkora teher egy makkegészséges 30 évest elveszteni, mint egy egyébként is végstádiumú 85 éves tumoros beteget? A halálozás szempontjából igen, sokan azonban inkább azt érzik, hogy az előző valójában nagyobb teher. Ezt legkézenfekvőbben az elvesztett életévek koncepciója ragadja meg, azaz, hogy az alany hány évet élet *volna*, ha nem viszi el a járvány. Az így kapott életév-veszteség kifejezi azt, amit a halálozás nem: hogy a példánkban szerepelő első alany halála nagyobb teher, hiszen -- mind az életkora, mind az egészségi állapota miatt -- ő jóval többet élt volna még ha nincs a járvány. (Természetesen itt *népegészségügyi* teherről beszélünk, nem arról, hogy például a családnak mekkora tragédia egy halál, legyen az akár egy 85 éves tumoros beteg halála.) Ezek számítása nem könnyű, hiszen egy fiktív helyzetet kell vizsgálni -- ugyan ki mondja meg, hogy valaki mennyit élt *volna*, ha nem kapta *volna* el a fertőzést? Erre természetesen csak becslést lehet adni, a jó hír viszont, hogy a becslés adására vannak bevált demográfiai, statisztikai módszerek. (Ezeket magyar viszonyokra nézve én is [kiszámoltam és közöltem](https://link.springer.com/article/10.1007/s10654-021-00774-0).) Bizonyos értelemben azonban minden ilyen módszer ingoványos talajt jelent, mert bármennyire is kézenfekvő, ezek a számítások végeredményben mégis azt jelentik, hogy súlyozzuk a különböző halálokat, ami messzire vezető morális kérdéseket vet fel.
+- Ha egyszerűen a halálozásokat számoljuk a lakosság egészében, akkor figyelmen kívül hagyjuk az elhunyt minden jellemzőjét: ugyanakkora teher egy makkegészséges 30 évest elveszteni, mint egy egyébként is végstádiumú 85 éves tumoros beteget? A halálozás szempontjából igen, sokan azonban inkább azt érzik, hogy az előző valójában nagyobb teher. Ezt legkézenfekvőbben az elvesztett életévek koncepciója ragadja meg, azaz, hogy az alany hány évet élet *volna*, ha nem viszi el a járvány. Az így kapott életév-veszteség kifejezi azt, amit a halálozás nem: hogy a példánkban szerepelő első alany halála nagyobb teher, hiszen -- mind az életkora, mind az egészségi állapota miatt -- ő jóval többet élt volna még ha nincs a járvány. (Természetesen itt *népegészségügyi* teherről beszélünk, nem arról, hogy például a családnak mekkora tragédia egy halál, legyen az akár egy 85 éves tumoros beteg halála.) Ezek számítása nem könnyű, hiszen egy fiktív helyzetet kell vizsgálni -- ugyan ki mondja meg, hogy valaki mennyit élt *volna*, ha nem kapta *volna* el a fertőzést? Erre természetesen csak becslést lehet adni, a jó hír viszont, hogy a becslés adására vannak bevált demográfiai, statisztikai módszerek. (Ezeket magyar viszonyokra nézve én is [kiszámoltam és közöltem](https://link.springer.com/article/10.1007/s10654-021-00774-0).) A másik lehetőség, hogy kitűzünk egy -- ideálisan magasra rakott -- rögzített „cél életkort" és [ahhoz viszonyítjuk](https://link.springer.com/article/10.1007/s10654-022-00854-9) az elvesztett éveket. E kérdés vizsgálatához segítséget jelenthet, ha a halálozási adatokat lebontjuk életkorcsoportok szerint. Bizonyos értelemben azonban minden ilyen módszer ingoványos talajt jelent, mert bármennyire is kézenfekvő, ezek a számítások végeredményben mégis azt jelentik, hogy súlyozzuk a különböző halálokat, ami messzire vezető morális kérdéseket vet fel.
 - Még ha az életév-veszteséget is használjuk, akkor is figyelmen kívül marad egy fontos szempont: az életminőség kérdése. (Talán pontosabb lenne úgy fogalmazni, hogy az egészségi állapottal összefüggő életminőség.) Ez két, egymással ellentétes irányban hat. Egyfelől ennél a mostani betegségnél sajnos előfordul, hogy a túlélők maradványtünetekkel gyógyulnak, ami rontja az életminőséget, ezért ha életév helyett minőséggel korrigált életévet használunk, akkor még a felgyógyulóknál is van veszteség, nem csak a végül meghalóknál. A másik, ezzel ellentétes szempont, hogy az idős, több krónikus betegségben szenvedő elhunytaknak, ami a mostani járványnál a többséget jelenti, tipikusan már a fertőzés *előtt* sem volt tökéletes az életminőségük, ezért az ő esetükben a minőséggel korrigált életév használata kisebb veszteséget mutatna ki, mint ha ezt figyelmen kívül hagyjuk.
 
 Ezekre a szempontokra tekintettel kell lenni *bármilyen* halálozáson alapuló mutató használatakor.
@@ -252,7 +273,7 @@ A többlethalálozás számítása az egyik legkorszerűbb eljárással, [Acosta
 Mit tudunk mondani egy adott időpontban aktuális helyzetről? Ezt mutatják a heti adatok (piros görbe Magyarország, a szürke görbék a többi európai országot jelölik):
 
 ```{r aktualislelekszam, echo = FALSE}
-ggplot(res[nuts_level==0], aes(x = date, y = excess/population*1e6, group = geo, label = geo)) +
+ggplot(res[nuts_level==0&age=="TOTAL"], aes(x = date, y = excess/population*1e6, group = geo, label = geo)) +
   geom_line(aes(color = geo=="HU")) + geom_abline(slope = 0, intercept = 0, colour = "blue") +
   scale_color_manual(values = c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
   labs(x = "", y = "Aktuális többlethalálozás [fő/1M fő]",
@@ -268,7 +289,7 @@ Jól látszik, hogy az első hullám teljesen kimutathatatlan volt (legalábbis 
 Érdemes lehet országonként külön-külön is ábrázolni, hogy jobban látható legyen, az egyes országok hogyan teljesítettek a járvány kezelésében, mik a jó és a rossz példák:
   
 ```{r aktualislelekszamorszagonkent, echo = FALSE}
-ggplot(res[nuts_level==0], aes(x = date, y = excess/population*1e6, group = geo)) + geom_line() +
+ggplot(res[nuts_level==0&age=="TOTAL"], aes(x = date, y = excess/population*1e6, group = geo)) + geom_line() +
   labs(x = "", y = "Aktuális többlethalálozás [fő/1M fő]",
        caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   scale_x_date(date_breaks = "2 months", labels = function(z) gsub("^0", "", strftime(z, "%m"))) +
@@ -279,7 +300,7 @@ ggplot(res[nuts_level==0], aes(x = date, y = excess/population*1e6, group = geo)
 A járvány egészének értékeléséhez nézzük az összesített adatokat (piros görbe Magyarország, a szürke görbék a többi európai országot jelölik):
 
 ```{r kumulaltlelekszam, echo = FALSE}
-ggplot(res[nuts_level==0], aes(x = date, y = cumexcess/meanpopulation*1e6, group = geo, label = geo)) +
+ggplot(res[nuts_level==0&age=="TOTAL"], aes(x = date, y = cumexcess/meanpopulation*1e6, group = geo, label = geo)) +
   geom_line(aes(color = geo=="HU")) + geom_abline(slope = 0, intercept = 0, colour = "blue") +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
   labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]",
@@ -290,12 +311,12 @@ ggplot(res[nuts_level==0], aes(x = date, y = cumexcess/meanpopulation*1e6, group
         legend.position = "bottom", legend.title = element_blank())
 ```
 
-Látható, hogy a legfrissebb adatok szerint -- persze ne felejtsük, ez egy hónappal ezelőtti állapotot jelent! -- nagyjából a legrosszabb harmad közepén vagyunk.
+Látható, hogy a legfrissebb adatok szerint -- persze ne felejtsük, ez egy hónappal ezelőtti állapotot jelent! -- Magyarország a legkedvezőtlenebb harmad elején-közepén van.
 
 Érdekes lehet jobban látható módon is kiemelni az utolsó időpontbeli adatokat, tehát a fenti ábra jobb szélét (minden ország az utolsó elérhető adatával szerepel):
 
 ```{r utolsoallapotoszlopdiagram, echo = FALSE}
-ggplot(res[nuts_level==0, tail(.SD, 1), .(geo)][order(cumexcess/meanpopulation)],
+ggplot(res[nuts_level==0&age=="TOTAL", tail(.SD, 1), .(geo)][order(cumexcess/meanpopulation)],
        aes(x = factor(geo, levels = geo), y = cumexcess/meanpopulation*1e6, fill = geo=="HU")) + geom_col() +
   guides(fill = "none") + labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]",
                                caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
@@ -306,7 +327,7 @@ ggplot(res[nuts_level==0, tail(.SD, 1), .(geo)][order(cumexcess/meanpopulation)]
 Látványos lehet ugyanezeket az adatokat térképen is ábrázolni. Itt ugyan az értékeket nehezebb leolvasni, illetve összehasonlítani, hiszen egy színskála rosszabbul ítélhető meg mint egy oszlop magassága, viszont cserében térbeli információt is ad, ami meg sok szempontból jobban érzékelhető, egyetlen pillantással is (jobban társítani tudjuk az országokhoz az egyéb jellemzőiket, látszanak a térbeli csoportosulások stb.):
 
 ```{r utolsoallapotterkep, echo = FALSE}
-ggplot(geodata[geodata$nuts_level==0,], aes(fill = y)) + geom_sf() +
+ggplot(geodata[geodata$nuts_level==0&geodata$age=="TOTAL",], aes(fill = y)) + geom_sf() +
   coord_sf(xlim = c(-25, 50), ylim = c(33, 73)) + scale_fill_distiller(palette = "Oranges", direction = 1) +
   labs(fill = "Összesített többlet-\nhalálozás [fő/1M fő]",
        caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
@@ -320,7 +341,7 @@ Hogy ennek mennyi értelme van? Magyar viszonylatban sajnos egy szempontból eg�
 Az aktuális helyzet alakulása megyei szinten (a piros vonal ezen az ábrán az országos értéket jelenti):
 
 ```{r megyeaktualislelekszam, echo = FALSE}
-ggplot(res[nuts_level==3|geo=="HU"], aes(x = date, y = excess/population*1e6,
+ggplot(res[age=="TOTAL"&(nuts_level==3|geo=="HU")], aes(x = date, y = excess/population*1e6,
                                          group = geoname, label = geoname)) +
   geom_line(aes(color = geo=="HU")) + geom_abline(slope = 0, intercept = 0, colour = "blue") +
   scale_color_manual(values = c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
@@ -335,7 +356,7 @@ ggplot(res[nuts_level==3|geo=="HU"], aes(x = date, y = excess/population*1e6,
 Itt is igaz, hogy bár ez összkép szempontjából tanulságos, ha egyesével akarjuk vizsgálni a területi egységeket, akkor jobb őket külön ábrázolni:
 
 ```{r megyeaktualislelekszammegyenkent, echo = FALSE}
-ggplot(res[nuts_level==3], aes(x = date, y = excess/population*1e6, group = geo)) + geom_line() +
+ggplot(res[age=="TOTAL"&nuts_level==3], aes(x = date, y = excess/population*1e6, group = geo)) + geom_line() +
   labs(x = "", y = "Aktuális többlethalálozás [fő/1M fő]",
        caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   scale_x_date(date_breaks = "2 months", labels = function(z) gsub("^0", "", strftime(z, "%m"))) +
@@ -346,7 +367,7 @@ ggplot(res[nuts_level==3], aes(x = date, y = excess/population*1e6, group = geo)
 Az előzőekhez hasonlóan érdekes lehet a kumulált helyzet, illetve ez azért is segít, mert a korábbi ábráról nehéz megítélni, hogy összességében mi egy megye helyzete, hiszen kevésbé látszik, hogy mennyire ugyanazok bizonyultak rossz helyzetűnek a különböző időpontokban:
 
 ```{r megyekumulaltlelekszam, echo = FALSE}
-ggplot(res[nuts_level==3|geo=="HU"], aes(x = date, y = cumexcess/meanpopulation*1e6,
+ggplot(res[age=="TOTAL"&(nuts_level==3|geo=="HU")], aes(x = date, y = cumexcess/meanpopulation*1e6,
                                          group = geo, label = geoname)) +
   geom_line(aes(color = geo=="HU")) + geom_abline(slope = 0, intercept = 0, colour = "blue") +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
@@ -361,7 +382,7 @@ ggplot(res[nuts_level==3|geo=="HU"], aes(x = date, y = cumexcess/meanpopulation*
 Az utolsó állapotról itt is készíthetünk oszlopdiagramot:
 
 ```{r megyeutolsoallapotoszlopdiagram, echo = FALSE}
-ggplot(res[nuts_level==3, tail(.SD, 1), .(geo)][order(cumexcess/meanpopulation)],
+ggplot(res[age=="TOTAL"&nuts_level==3, tail(.SD, 1), .(geo)][order(cumexcess/meanpopulation)],
        aes(x = factor(geoname, levels = geoname), y = cumexcess/meanpopulation*1e6, fill = geo=="HU")) +
   geom_col() + guides(fill = "none") + labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]",
                                caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
@@ -372,7 +393,7 @@ ggplot(res[nuts_level==3, tail(.SD, 1), .(geo)][order(cumexcess/meanpopulation)]
 Itt is kézenfekvő ötlet térképet rajzolni:
 
 ```{r megyeutolsoallapotterkep, echo = FALSE}
-ggplot(geodata[geodata$nuts_level==3,], aes(fill = y)) + geom_sf() +
+ggplot(geodata[geodata$age=="TOTAL"&geodata$nuts_level==3,], aes(fill = y)) + geom_sf() +
   scale_fill_distiller(palette = "Oranges", direction = 1) +
   labs(fill = "Összesített többlet-\nhalálozás [fő/1M fő]",
        caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
@@ -460,12 +481,12 @@ A jelen esetben, mivel rengeteg adat áll rendelkezésre, így a fenti értelmű
 Természetesen a valóságban egy sor bonyolító tényezővel kell számolni. Egyrészt nem éves adataink vannak, hanem haviak, jobb esetben hetiek (legjobb esetben napiak), ilyenkor el kell számolni az éven belüli mintázattal. A mortalitásnak ugyanis van egy jellegzetes éven belüli alakulása, úgy szokták mondani, szezonalitása; az alábbi ábra ezt szemlélteti a járvány előtti magyar adatokkal (a kék görbe mutatja az összes adat simítását, a halvány fekete görbék az egyes évek adatait):
 
 ```{r mortszezonalitas}
-ggplot(RawData[geo=="HU"&year<=2019], aes(x = week, y = outcome/population*1000*52, group = year)) +
+ggplot(RawData[age=="TOTAL"&geo=="HU"&year<=2019], aes(x = week, y = outcome/population*1000*52, group = year)) +
   geom_line(alpha = 0.2) +
   geom_line(data = data.frame(week = 1:53,
                               mort = predict(mgcv::gam(outcome ~ s(week, bs = "cc"),
                                                        offset = log(population),
-                                                       data = RawData[geo=="HU"&year<=2019],
+                                                       data = RawData[age=="TOTAL"&geo=="HU"&year<=2019],
                                                        family = quasipoisson),
                                              newdata = data.frame(week = 1:53), type = "response")*1000*52),
             aes(x = week, y = mort), color = "blue", inherit.aes = FALSE) + labs(x = "Hét", y = "Mortalitás")
@@ -488,7 +509,7 @@ A modell felállítása logikus, hiszen a halálozások száma darabszám jelleg
 Az $f\left(t\right)$, tehát a (százalékos) többlet kapcsán fontos megemlíteni, hogy ezt az eljárás igyekszik úgy becsülni, hogy bár az alakja általános, akár még szakadása is előfordulhat, de ahol lehet, ott sima legyen. A nyersen számolt többlet ($Y_t-\mu_t$) ugyanis a véletlen hatások miatt elég zajos lehet, így az $f\left(t\right)$ használata lényegében egy simítást jelent. Ez szemléletesen látszik, ha ábrázoljuk a kettőt, például a magyar adatokon:
 
 ```{r}
-ggplot(melt(res[geo=="HU", .(date, `Nyers` = y, `f(t)` = increase)], id.vars = "date"),
+ggplot(melt(res[age=="TOTAL"&geo=="HU", .(date, `Nyers` = y, `f(t)` = increase)], id.vars = "date"),
        aes(x = date, y = value, group = variable, color = variable)) + geom_line() +
   labs(x = "Dátum", y = "Százalékos többlet") +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
@@ -630,7 +651,7 @@ Emlékeztetőül, az aktuális többlethalálozás népességszámra vetített r
 Ugyanez akkor, ha a várt halálozásra vetítünk:
 
 ```{r aktualisvart}
-ggplot(res[nuts_level==0], aes(x = date, y = increase, group = geo, label = geo)) + geom_line(aes(color = geo=="HU")) +
+ggplot(res[age=="TOTAL"&nuts_level==0], aes(x = date, y = increase, group = geo, label = geo)) + geom_line(aes(color = geo=="HU")) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
   labs(x = "", y = "Aktuális többlethalálozás [%]",
        caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
@@ -644,7 +665,7 @@ ggplot(res[nuts_level==0], aes(x = date, y = increase, group = geo, label = geo)
 Látszik, hogy a kétféle relatív mutató között nincs nagy különbség. Kicsit direktebben is összevethetjük őket, ha országonként külön-külön ábrázoljuk, egymással szemben:
 
 ```{r lelekszamvsvart}
-ggplot(res[nuts_level==0], aes(x = increase, y = excess/population*1e6)) + geom_line() +
+ggplot(res[age=="TOTAL"&nuts_level==0], aes(x = increase, y = excess/population*1e6)) + geom_line() +
   labs(x = "Aktuális többlethalálozás [%]", y = "Aktuális többlethalálozás [fő/1M fő]",
        caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
   facet_wrap(~geo) + geom_abline(intercept = 0, slope =  2, alpha = 0.3) +
@@ -663,7 +684,7 @@ Folytassuk most az összesített többlethalálozással. Emlékeztetőül a nép
 Kérdés, hogy mi a helyzet a várt értékre vetített mutatóval. A probléma a kumulálás, hiszen a százalékok természetesen nem adhatóak egyszerűen össze. Ha kicsit nyakatekertebb is, de van megoldás, külön kumuláljuk a többletet és a várt értéket, majd ezeket osztjuk el egymással:
 
 ```{r kumulaltvart}
-ggplot(res[nuts_level==0], aes(x = date, y = cumexcess/cumexpected, group = geo, label = geo)) +
+ggplot(res[age=="TOTAL"&nuts_level==0], aes(x = date, y = cumexcess/cumexpected, group = geo, label = geo)) +
     geom_line(aes(color = geo=="HU")) + geom_abline(slope = 0, intercept = 0, colour = "blue") +
     scale_color_manual(values = c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
     labs(x = "", y = "Összesített többlethalálozás [%]",
@@ -701,13 +722,13 @@ Egyesítjük az előbbi táblával, és a jelentett halálozásokat itt is felku
 
 ```{r}
 res <- merge(res, EpiData, by = c("iso_code", "year", "week"))
-res[, cumnewdeaths := cumsum(new_deaths), .(geo)]
+res[, cumnewdeaths := cumsum(new_deaths), .(geo, age)]
 ```
 
 Megnézhetjük Magyarország példáján a kétféle adatsort:
 
 ```{r magyartobbletesjelentett}
-ggplot(melt(res[geo=="HU", .(date, `Többlethalálozás` = excess/population*1e6,
+ggplot(melt(res[age=="TOTAL"&geo=="HU", .(date, `Többlethalálozás` = excess/population*1e6,
                              `Regisztrált koronavírus-halálozás` = new_deaths/population*1e6)],
             id.vars = "date"), aes(x = date, y = value, group = variable, color = variable)) + geom_line() +
   labs(x = "", y = "Heti halálozás [fő/M fő]",
@@ -728,7 +749,7 @@ ggplot(melt(res[geo=="HU", .(date, `Többlethalálozás` = excess/population*1e6
 Vagy a kétféle adat viszonyát, pontosabban annak alakulását időben az összes országra:
 
 ```{r tobbletperjelentettorszagonkent}
-ggplot(res, aes(x = date, y = cumexcess/cumnewdeaths, group = geo)) + geom_line() +
+ggplot(res[age=="TOTAL"], aes(x = date, y = cumexcess/cumnewdeaths, group = geo)) + geom_line() +
   coord_cartesian(xlim = c(as.Date("2020-07-01"), NA), ylim = c(-1, 3)) + facet_wrap(~geo) +
   geom_hline(yintercept = 1, col = "red") +
   labs(x = "", y = "Többlethalálozás / jelentett halálozás",
@@ -743,7 +764,7 @@ Ezen az ábrán a többlet és a jelentett halálozás hányadosa látható, a p
 Érdekes lehet összevetni a kétféle mutatót az aktuális helyzet szerint. Amint korábban volt is róla szó, a többlethalálozás utolsó adatai nem véglegesek, ezért korrektebb egy régebbi állapotot nézni; vegyük az egy hónappal megelőzőt, amikor a regisztráltság már szinte tökéletes (a fekete vonal az egyenlőség vonala, ahol a többlethalálozás egyezne a jelentett halálozással):
 
 ```{r utolsotobbletperjelentett}
-ggplot(res[,.SD[nrow(.SD)-4], .(geo)], aes(x = cumexcess/population*1e6,
+ggplot(res[age=="TOTAL", .SD[nrow(.SD)-4], .(geo, age)], aes(x = cumexcess/population*1e6,
                                            y = cumnewdeaths/population*1e6, label = geo)) +
   geom_point(aes(col = geo=="HU")) + geom_abline() + geom_text(hjust = "left", nudge_x = 30) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
@@ -760,11 +781,11 @@ Látszik, hogy az országok többségében a többlethalálozás meghaladja a je
 Zárásként nézzük meg az összesített magyar helyzetet mindkét mutatóval, és a konkrét számokat is feltüntetve (szándékosan 100-ra kerekítve, hogy elkerüljük a túlzott pontosság hamis érzetét), most kivételesen abszolút skálán:
 
 ```{r magyarkumulalttobbletesjelentett}
-p <- ggplot(melt(res[geo=="HU", .(date, `Többlethalálozás` = cumexcess,
+p <- ggplot(melt(res[geo=="HU"&age=="TOTAL", .(date, `Többlethalálozás` = cumexcess,
                                   `Regisztrált koronavírus-halálozás` = cumnewdeaths)],
                  id.vars = "date"), aes(x = date, y = value, group = variable, color = variable,
                                         label = round(value, -2))) + geom_line() +
-  directlabels::geom_dl(data = melt(tail(res[geo=="HU",
+  directlabels::geom_dl(data = melt(tail(res[geo=="HU"&age=="TOTAL",
                                              .(date, `Többlethalálozás` = cumexcess,
                                                `Regisztrált koronavírus-halálozás` = cumnewdeaths)], 1),
                                     id.vars = "date"), method = list("last.points", cex = 0.6)) +
@@ -800,10 +821,10 @@ Vegyük például lerögzítettnek, hogy Acosta és Irizarry módszerét haszná
 ```{r erzekenysegkezdoev, message = FALSE}
 SensDat <- data.table(year = 2000:2015)
 SensDat$excess <- sapply(SensDat$year, function(y)
-  tail(excess_cumulative(excess_model(RawData[geo=="HU"&year>=y], start = min(RawData[geo=="HU"]$date),
-                                      end = max(RawData[geo=="HU"]$date), exclude = exclude_dates,
-                                      frequency = nrow(RawData[geo=="HU"&year>=y])/
-                                        (as.numeric(diff(range(RawData[geo=="HU"&year>=y]$date)))/365.25)),
+  tail(excess_cumulative(excess_model(RawData[geo=="HU"&age=="TOTAL"&year>=y], start = min(RawData[geo=="HU"&age=="TOTAL"]$date),
+                                      end = max(RawData[geo=="HU"&age=="TOTAL"]$date), exclude = exclude_dates,
+                                      frequency = nrow(RawData[geo=="HU"&age=="TOTAL"&year>=y])/
+                                        (as.numeric(diff(range(RawData[geo=="HU"&age=="TOTAL"&year>=y]$date)))/365.25)),
                          min(exclude_dates), max(exclude_dates)), 1)[["fitted"]])
 ggplot(SensDat, aes(x = year, y = excess)) + geom_line() + geom_point() +
   labs(x = "Kezdőév", y = "Összesített teljes többlethalálozás [fő]")
@@ -814,7 +835,7 @@ Látható, hogy a teljes (2000-ben kezdődő) adatsort felhasználva kb. 22 ezer
 Mi ennek az oka? Azonnal megértjük, ha megnézzük a mortalitás alakulását Magyarországon. Az illusztráció kedvéért először számoljuk ki az éves adatokat (nyers mortalitásokat):
 
 ```{r nyersmortalitas}
-ggplot(RawData[geo=="HU"&year<=2019, .(mort = sum(outcome)/sum(population)*1000*52), .(year)],
+ggplot(RawData[geo=="HU"&age=="TOTAL"&year<=2019, .(mort = sum(outcome)/sum(population)*1000*52), .(year)],
        aes(x = year, y = mort)) + geom_line() + geom_point() +
   labs(x = "Év", y = "Nyers mortalitás [/1000 fő/év]")
 ```
@@ -823,11 +844,11 @@ Ha erre az egész, 2000-ben kezdődő adatbázisra illesztünk hosszú távú g�
 
 ```{r nyersmortalitasegeszillesztes, message = FALSE}
 fitSens <- mgcv::gam(outcome ~ s(year) + s(week, bs = "cc"), offset = log(population), family = quasipoisson,
-                     data = RawData[geo=="HU"&year<=2019])
+                     data = RawData[geo=="HU"&age=="TOTAL"&year<=2019])
 predgrid1 <- CJ(year = 2000:2019, week = 1:52)
 predgrid1$pred <- predict(fitSens, newdata = predgrid1, type = "response")
 
-ggplot(RawData[geo=="HU"&year<=2019, .(mort = sum(outcome)/sum(population)*1000*52), .(year)],
+ggplot(RawData[geo=="HU"&age=="TOTAL"&year<=2019, .(mort = sum(outcome)/sum(population)*1000*52), .(year)],
        aes(x = year, y = mort)) + geom_line() + geom_point() +
   labs(x = "Év", y = "Nyers mortalitás [/1000 fő/év]") +
   geom_line(data = predgrid1[,.(mort = sum(pred)*1000),.(year)], color = "blue")
@@ -839,11 +860,11 @@ Más azonban a helyzet, ha csak 2015-től nézzük a képet:
 
 ```{r nyersmortalitasvegeillesztes, message = FALSE}
 fitSens <- mgcv::gam(outcome ~ s(year, k = 3) + s(week, bs = "cc"), offset = log(population),
-                     family = quasipoisson, data = RawData[geo=="HU"&year<=2019&year>=2015])
+                     family = quasipoisson, data = RawData[geo=="HU"&age=="TOTAL"&year<=2019&year>=2015])
 predgrid2 <- CJ(year = 2015:2019, week = 1:52)
 predgrid2$pred <- predict(fitSens, newdata = predgrid2, type = "response")
 
-ggplot(RawData[geo=="HU"&year<=2019&year>=2015, .(mort = sum(outcome)/sum(population)*1000*52), .(year)],
+ggplot(RawData[geo=="HU"&age=="TOTAL"&year<=2019&year>=2015, .(mort = sum(outcome)/sum(population)*1000*52), .(year)],
        aes(x = year, y = mort)) + geom_line() + geom_point() +
   labs(x = "Év", y = "Nyers mortalitás [/1000 fő/év]") +
   geom_line(data = predgrid2[,.(mort = sum(pred)*1000),.(year)], color = "blue")
@@ -854,7 +875,7 @@ Ebben az esetben a végén csak egy sokkal-sokkal kisebb növekedés fog látsz�
 Még látványosabb, ha egy ábrán jelenítjük meg a kettőt:
 
 ```{r nyersmortalitasegeszesvegeillesztes}
-ggplot(RawData[geo=="HU"&year<=2019, .(mort = sum(outcome)/sum(population)*1000*52), .(year)],
+ggplot(RawData[geo=="HU"&age=="TOTAL"&year<=2019, .(mort = sum(outcome)/sum(population)*1000*52), .(year)],
        aes(x = year, y = mort)) + geom_line() + geom_point() +
   labs(x = "Év", y = "Nyers mortalitás [/1000 fő/év]") +
   geom_line(data = predgrid1[,.(mort = sum(pred)*1000),.(year)], color = "blue") +
@@ -868,16 +889,16 @@ Az „érzékenységvizsgálat" kifejezés alatt tipikusan azt szokták érteni,
 ```{r erzekenysegmodell, message = FALSE}
 SensDat <- CJ(year = 2000:2015, model = c("quasipoisson", "correlated"))
 SensDat$excess <- sapply(1:nrow(SensDat), function(i)
-  tail(excess_cumulative(excess_model(RawData[geo=="HU"&year>=SensDat$year[i]],
-                                      start = min(RawData[geo=="HU"]$date),
-                                      end = max(RawData[geo=="HU"]$date), exclude = exclude_dates,
-                                      control.dates = as.Date(setdiff(seq(min(RawData[geo=="HU"]$date),
-                                                                          max(RawData[geo=="HU"]$date),
+  tail(excess_cumulative(excess_model(RawData[geo=="HU"&age=="TOTAL"&year>=SensDat$year[i]],
+                                      start = min(RawData[geo=="HU"&age=="TOTAL"]$date),
+                                      end = max(RawData[geo=="HU"&age=="TOTAL"]$date), exclude = exclude_dates,
+                                      control.dates = as.Date(setdiff(seq(min(RawData[geo=="HU"&age=="TOTAL"]$date),
+                                                                          max(RawData[geo=="HU"&age=="TOTAL"]$date),
                                                                           by = "day"), exclude_dates),
                                                               origin = "1970-01-01"),
                                       model = SensDat$model[i], max.control = 10000,
-                                      frequency = nrow(RawData[geo=="HU"&year>=SensDat$year[i]])/
-                                        (as.numeric(diff(range(RawData[geo=="HU"&year>=
+                                      frequency = nrow(RawData[geo=="HU"&age=="TOTAL"&year>=SensDat$year[i]])/
+                                        (as.numeric(diff(range(RawData[geo=="HU"&age=="TOTAL"&year>=
                                                                          SensDat$year[i]]$date)))/365.25)),
                          min(exclude_dates), max(exclude_dates)), 1)[["fitted"]])
 ggplot(SensDat, aes(x = year, y = excess, color = model)) + geom_line() +
@@ -914,13 +935,13 @@ exclude_dates_flu <- c(do.call(c, sapply(2000:2019, function(i) seq(as.Date(past
                                                                     by = "day"))),
                        seq(as.Date("2020-03-01"), max(RawData$date), by = "day"))
 
-exp_orig <- with(compute_expected(RawData[geo=="HU"], exclude = exclude_dates,
-                             frequency = nrow(RawData[geo=="HU"])/
-                               (as.numeric(diff(range(RawData[geo=="HU"]$date)))/365.25)),
+exp_orig <- with(compute_expected(RawData[geo=="HU"&age=="TOTAL"], exclude = exclude_dates,
+                             frequency = nrow(RawData[geo=="HU"&age=="TOTAL"])/
+                               (as.numeric(diff(range(RawData[geo=="HU"&age=="TOTAL"]$date)))/365.25)),
                  data.table(type = "Eredeti többlethalálozás", date, expected))
-exp_flu <- with(compute_expected(RawData[geo=="HU"], exclude = exclude_dates_flu,
-                             frequency = nrow(RawData[geo=="HU"])/
-                               (as.numeric(diff(range(RawData[geo=="HU"]$date)))/365.25)),
+exp_flu <- with(compute_expected(RawData[geo=="HU"&age=="TOTAL"], exclude = exclude_dates_flu,
+                             frequency = nrow(RawData[geo=="HU"&age=="TOTAL"])/
+                               (as.numeric(diff(range(RawData[geo=="HU"&age=="TOTAL"]$date)))/365.25)),
                 data.table(type = "Többlethalálozás az influenza-szezonok kizárásával", date, expected))
 
 ggplot(rbind(exp_orig, exp_flu), aes(x = date, y = expected, color = type)) + geom_line() +
@@ -936,10 +957,10 @@ Szépen látszik, hogy az influenza-szezonok nélkül becsültetett modell kevé
 res_flu <- rbindlist(lapply(list(`Többlethalálozás` = exclude_dates,
                                  `Többlethalálozás az influenzára való korrekcióval` = exclude_dates_flu),
                             function(ed)
-                              with(excess_model(RawData[geo=="HU"], start = min(RawData[geo=="HU"]$date),
-                                                end = max(RawData[geo=="HU"]$date), exclude = ed,
-                                                frequency = nrow(RawData[geo=="HU"])/
-                                                  (as.numeric(diff(range(RawData[geo=="HU"]$date)))/365.25)),
+                              with(excess_model(RawData[geo=="HU"&age=="TOTAL"], start = min(RawData[geo=="HU"&age=="TOTAL"]$date),
+                                                end = max(RawData[geo=="HU"&age=="TOTAL"]$date), exclude = ed,
+                                                frequency = nrow(RawData[geo=="HU"&age=="TOTAL"])/
+                                                  (as.numeric(diff(range(RawData[geo=="HU"&age=="TOTAL"]$date)))/365.25)),
                                    data.table(date = date, observed = observed, expected = expected,
                                               y = 100 * (observed - expected)/expected,
                                               increase = 100 * fitted,
@@ -971,7 +992,7 @@ Látszik, hogy így számolva a többlethalálozás 22 ezerről 27 ezer főre em
 
 ```{r tobbletesinfluenzanelkulesjelentett}
 res_flu <- rbind(res_flu[, .(.id, date, cum = cumexcess)],
-                 res[geo=="HU", .(.id = "Regisztrált koronavírus-halálozás", date, cum = cumnewdeaths)])
+                 res[geo=="HU"&age=="TOTAL", .(.id = "Regisztrált koronavírus-halálozás", date, cum = cumnewdeaths)])
 
 ggplot(res_flu, aes(x = date, y = cum, group = .id, color = .id, label = round(cum, -2))) + geom_line() +
   directlabels::geom_dl(data = res_flu[,tail(.SD, 1), .(.id)], method = list("last.points", cex = 0.6)) +
@@ -989,7 +1010,7 @@ Az ábra erősen azt sugallja, hogy így már „rendben vagyunk" (azaz, hogy ez
 
 ## Továbbfejlesztési ötletek
 
-- [ ] Életkori és nemi lebontás. (Hátha mások a mortalitási trendek!)
+- [ ] Életkori és nemi lebontás. (Hátha mások a mortalitási trendek! + elvesztett életév aspektus)
 - [ ] Életkorra és nemre standardizálás. (van bármi értelme??)
 - [x] A jelentés teljességének a vizsgálata (mennyire nőnek még az utolsó adatok, és meddig?). Válasz: Eurostat metadata 13.1-es pont.
 - [ ] Területi adatok használata.
