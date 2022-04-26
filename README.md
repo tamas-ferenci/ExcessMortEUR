@@ -778,7 +778,8 @@ SimData <- cbind(SimData, t(sapply(1:nrow(SimData),
                                                     c(fit = unname(estimate), lwr = conf.int[1],
                                                       upr = conf.int[2])))))
 ggplot(SimData, aes(x = year, y = fit*1000, ymin = lwr*1000, ymax = upr*1000, color = type)) +
-  geom_point() + geom_errorbar(width = 0.3) + labs(x = "Év", y = "Mortalitás") + guides(color = "none")
+  geom_point() + geom_errorbar(width = 0.3) + labs(x = "Év", y = "Mortalitás [/1000 fő/év]") +
+  guides(color = "none")
 ```
 
 ![](README_files/figure-gfm/peldaorszag-1.png)<!-- -->
@@ -795,7 +796,8 @@ Az első lehetőség, hogy a 2019-re vonatkozó adatokat egy az egyben
 SimData <- rbind(SimData, data.table(year = "2019 megis-\nmételve", type = "pred",
                                      SimData[year=="2019", -c("year", "type")]))
 ggplot(SimData, aes(x = year, y = fit*1000, ymin = lwr*1000, ymax = upr*1000, color = type)) +
-  geom_point() + geom_errorbar(width = 0.3) + labs(x = "Év", y = "Mortalitás") + guides(color = "none")
+  geom_point() + geom_errorbar(width = 0.3) + labs(x = "Év", y = "Mortalitás [/1000 fő/év]") +
+  guides(color = "none")
 ```
 
 ![](README_files/figure-gfm/peldaorszagutolsoev-1.png)<!-- -->
@@ -823,7 +825,8 @@ SimData <- rbind(SimData, data.table(year = "2015-2019\nátlagolva", type = "pre
                                           t(c(fit = unname(estimate), lwr = conf.int[1],
                                               upr = conf.int[2])))))
 ggplot(SimData, aes(x = year, y = fit*1000, ymin = lwr*1000, ymax = upr*1000, color = type)) +
-  geom_point() + geom_errorbar(width = 0.3) + labs(x = "Év", y = "Mortalitás") + guides(color = "none")
+  geom_point() + geom_errorbar(width = 0.3) + labs(x = "Év", y = "Mortalitás [/1000 fő/év]") +
+  guides(color = "none")
 ```
 
 ![](README_files/figure-gfm/peldaorszagatlag-1.png)<!-- -->
@@ -847,7 +850,8 @@ SimData <- rbind(SimData, data.table(year = "2015-2019\nmeghosszabbítva", type 
                                                 data = SimData[type=="fact"]),
                                              data.frame(year = 2020), interval = "prediction")))
 ggplot(SimData, aes(x = year, y = fit*1000, ymin = lwr*1000, ymax = upr*1000, color = type)) +
-  geom_point() + geom_errorbar(width = 0.3) + labs(x = "Év", y = "Mortalitás") + guides(color = "none")
+  geom_point() + geom_errorbar(width = 0.3) + labs(x = "Év", y = "Mortalitás [/1000 fő/év]") +
+  guides(color = "none")
 ```
 
 ![](README_files/figure-gfm/peldaorszagmeghosszabbitas-1.png)<!-- -->
@@ -878,7 +882,8 @@ ggplot(RawData[age=="TOTAL"&geo=="HU"&year<=2019], aes(x = week, y = outcome/pop
                                                        data = RawData[age=="TOTAL"&geo=="HU"&year<=2019],
                                                        family = quasipoisson),
                                              newdata = data.frame(week = 1:53), type = "response")*1000*52),
-            aes(x = week, y = mort), color = "blue", inherit.aes = FALSE) + labs(x = "Hét", y = "Mortalitás")
+            aes(x = week, y = mort), color = "blue", inherit.aes = FALSE) +
+  labs(x = "Hét", y = "Mortalitás [/1000 fő/év]")
 ```
 
 ![](README_files/figure-gfm/mortszezonalitas-1.png)<!-- -->
@@ -1032,7 +1037,7 @@ eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a
 többi kutatót és az érdeklődő laikusokat hasonló számítások
 elvégézésében, mivel itt látnak egy lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2022-04-19. A többlethalálozást
+A számítások aktualizálásának dátuma: 2022-04-26. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.6.1, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) pedig 3.7.10.
 

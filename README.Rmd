@@ -431,7 +431,8 @@ SimData <- cbind(SimData, t(sapply(1:nrow(SimData),
                                                     c(fit = unname(estimate), lwr = conf.int[1],
                                                       upr = conf.int[2])))))
 ggplot(SimData, aes(x = year, y = fit*1000, ymin = lwr*1000, ymax = upr*1000, color = type)) +
-  geom_point() + geom_errorbar(width = 0.3) + labs(x = "Év", y = "Mortalitás") + guides(color = "none")
+  geom_point() + geom_errorbar(width = 0.3) + labs(x = "Év", y = "Mortalitás [/1000 fő/év]") +
+  guides(color = "none")
 ```
 
 Az egyszerűség kedvéért tételezzük fel, hogy évi adatunk van, és a járvány pontosan 2020 elején kezdődött. Nézzük meg ezen képzeletbeli ország példáján a legtipikusabb megoldásokat a 2020-ra vonatkozó előrejelzés készítésében!
@@ -442,7 +443,8 @@ Az első lehetőség, hogy a 2019-re vonatkozó adatokat egy az egyben átvessz�
 SimData <- rbind(SimData, data.table(year = "2019 megis-\nmételve", type = "pred",
                                      SimData[year=="2019", -c("year", "type")]))
 ggplot(SimData, aes(x = year, y = fit*1000, ymin = lwr*1000, ymax = upr*1000, color = type)) +
-  geom_point() + geom_errorbar(width = 0.3) + labs(x = "Év", y = "Mortalitás") + guides(color = "none")
+  geom_point() + geom_errorbar(width = 0.3) + labs(x = "Év", y = "Mortalitás [/1000 fő/év]") +
+  guides(color = "none")
 ```
 
 Ennek a módszernek az előnye, hogy mivel a legközelebbi értéket veszi át, így nem érinti annyira érzékenyen, ha a mortalitásoknak hosszútávú trendje van -- márpedig általában van. (Bár azért érezhető, hogy még így sem tökéletes a helyzet, hiszen a példában azt érzi az ember, hogy valójában még ennél is lejjebb volt a várható, mivel egy folyamatos csökkenésben vagyunk.) A hátránya, hogy egyetlen év adatait használja, így nagyobb a bizonytalansága: a mortalitási adatokban lényeges évről-évre történő véletlen ingadozás van (mikor volt épp egy rosszabb influenza-szezon, mikor egy jobb stb.); emiatt egy év adata szükségképp nagyobb bizonytalanságot jelent.
@@ -458,7 +460,8 @@ SimData <- rbind(SimData, data.table(year = "2015-2019\nátlagolva", type = "pre
                                           t(c(fit = unname(estimate), lwr = conf.int[1],
                                               upr = conf.int[2])))))
 ggplot(SimData, aes(x = year, y = fit*1000, ymin = lwr*1000, ymax = upr*1000, color = type)) +
-  geom_point() + geom_errorbar(width = 0.3) + labs(x = "Év", y = "Mortalitás") + guides(color = "none")
+  geom_point() + geom_errorbar(width = 0.3) + labs(x = "Év", y = "Mortalitás [/1000 fő/év]") +
+  guides(color = "none")
 ```
 
 Ez olyan szempontból jobb, hogy az eredmény biztosabb, mivel a több év átlagolása lecsökkenti a véletlen ingadozásokat. (Jól látszik, hogy a konfidenciaintervallum is szűkebb, jelezve, hogy pontosabban becsült értéket kaptunk.) A nagy problémája is látszik azonban az ábrán: ha hosszú távú trendje van a halálozásoknak, akkor az átlag nagyon félrevezető lehet; jelen esetben a korábbi nagy értékek miatt torz módon magas lesz.
@@ -471,7 +474,8 @@ SimData <- rbind(SimData, data.table(year = "2015-2019\nmeghosszabbítva", type 
                                                 data = SimData[type=="fact"]),
                                              data.frame(year = 2020), interval = "prediction")))
 ggplot(SimData, aes(x = year, y = fit*1000, ymin = lwr*1000, ymax = upr*1000, color = type)) +
-  geom_point() + geom_errorbar(width = 0.3) + labs(x = "Év", y = "Mortalitás") + guides(color = "none")
+  geom_point() + geom_errorbar(width = 0.3) + labs(x = "Év", y = "Mortalitás [/1000 fő/év]") +
+  guides(color = "none")
 ```
 
 Ez megfelel a „szabad szemre" történő várakozásunknak arra, hogy hol lenne a következő évi eredmény, viszont cserében a bizonytalansága is a legnagyobb.
@@ -489,7 +493,8 @@ ggplot(RawData[age=="TOTAL"&geo=="HU"&year<=2019], aes(x = week, y = outcome/pop
                                                        data = RawData[age=="TOTAL"&geo=="HU"&year<=2019],
                                                        family = quasipoisson),
                                              newdata = data.frame(week = 1:53), type = "response")*1000*52),
-            aes(x = week, y = mort), color = "blue", inherit.aes = FALSE) + labs(x = "Hét", y = "Mortalitás")
+            aes(x = week, y = mort), color = "blue", inherit.aes = FALSE) +
+  labs(x = "Hét", y = "Mortalitás [/1000 fő/év]")
 ```
 
 Heti adatok használatánál tehát ezzel a mintázattal el kell számolni. (Napi adatok használatánál még a héten belüli mintázattal is.)
