@@ -1,6 +1,6 @@
 Többlethalálozási adatok európai összevetésben
 ================
-Ferenci Tamás
+Ferenci Tamás (<tamas.ferenci@medstat.hu>)
 
 -   [A többlethalálozási mutatóról
     általában](#a-többlethalálozási-mutatóról-általában)
@@ -1037,7 +1037,7 @@ eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a
 többi kutatót és az érdeklődő laikusokat hasonló számítások
 elvégézésében, mivel itt látnak egy lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2022-05-31. A többlethalálozást
+A számítások aktualizálásának dátuma: 2022-06-14. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.6.1, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) pedig 3.7.10.
 

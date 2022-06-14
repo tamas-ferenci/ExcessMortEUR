@@ -1,6 +1,7 @@
 ---
 title: "Többlethalálozási adatok európai összevetésben"
-author: "Ferenci Tamás"
+author:
+  - Ferenci Tamás (tamas.ferenci@medstat.hu)
 output:
   github_document:
     toc: true
