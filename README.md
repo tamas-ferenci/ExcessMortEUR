@@ -1037,7 +1037,7 @@ eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a
 többi kutatót és az érdeklődő laikusokat hasonló számítások
 elvégézésében, mivel itt látnak egy lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2022-06-14. A többlethalálozást
+A számítások aktualizálásának dátuma: 2022-06-16. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.6.1, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) pedig 3.7.10.
 
@@ -1075,7 +1075,7 @@ RawData <- as.data.table(eurostat::get_eurostat("demo_r_mwk_ts", time_format = "
 RawData <- RawData[sex=="T"]
 RawData <- RawData[geo%in%eurostat::eu_countries$code|geo%in%eurostat::efta_countries$code]
 RawData <- RawData[geo!="UK"]
-RawDataUK <- fread("https://www.mortality.org/Public/STMF/Outputs/stmf.csv")
+RawDataUK <- fread("https://www.mortality.org/File/GetDocument/Public/STMF/Outputs/stmf.csv")
 RawDataUK <- RawDataUK[Year>=2015&CountryCode%in%c("GBRTENW", "GBR_NIR", "GBR_SCO")&Sex=="b"][
   ,.(time = paste0(Year, "W", sprintf("%02d", Week)), values = sum(DTotal)),.(Year, Week)][
     ,.(sex = "T", unit = "NR", geo = "UK", time, values)][order(time)]
@@ -1302,6 +1302,7 @@ kimentjük, hogy más is kényelmesen fel tudja használni:
 
 ``` r
 fwrite(res, "ExcessMortEUR_data.csv", sep = ";", dec = ",", row.names = FALSE)
+saveRDS(res, "res.rds")
 ```
 
 ### Az eredmények ábrázolása, a kétféle relatív mutató viszonya
@@ -1938,6 +1939,8 @@ res_flu <- rbindlist(lapply(list(`Többlethalálozás` = exclude_dates,
                                               })))), idcol = TRUE)
 res_flu <- res_flu[date>=as.Date("2020-03-01")]
 res_flu[, cumexcess := cumsum(excess), .(.id)]
+
+saveRDS(res_flu, "res_flu.rds")
 
 ggplot(res_flu, aes(x = date, y = cumexcess, group = .id, color = .id, label = round(cumexcess, -2))) +
   geom_line() +
