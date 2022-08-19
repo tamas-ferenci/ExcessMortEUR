@@ -2,45 +2,70 @@ Többlethalálozási adatok európai összevetésben
 ================
 Ferenci Tamás (<tamas.ferenci@medstat.hu>)
 
--   [A többlethalálozási mutatóról
-    általában](#a-többlethalálozási-mutatóról-általában)
-    -   [A halálozási statisztikák használatának általános
-        motivációja](#a-halálozási-statisztikák-használatának-általános-motivációja)
-    -   [A haláloki statisztikák
-        problémái](#a-haláloki-statisztikák-problémái)
-    -   [A magyar haláloki statisztikák adatszolgáltatási
-        folyamata](#a-magyar-haláloki-statisztikák-adatszolgáltatási-folyamata)
-    -   [A többlethalálozási mutató definíciója és
-        logikája](#a-többlethalálozási-mutató-definíciója-és-logikája)
-    -   [A többlethalálozási mutató előnyei és
-        hátrányai](#a-többlethalálozási-mutató-előnyei-és-hátrányai)
-    -   [A halálozás mint mutató használatának általános
-        problémái](#a-halálozás-mint-mutató-használatának-általános-problémái)
--   [Eredmények: A hazai többlethalálozási adatok, és európai
-    viszonyításuk](#eredmények-a-hazai-többlethalálozási-adatok-és-európai-viszonyításuk)
--   [Záró gondolatok](#záró-gondolatok)
--   [Módszertani kérdések](#módszertani-kérdések)
-    -   [A várt halálozások
-        előrejelzése](#a-várt-halálozások-előrejelzése)
-    -   [Acosta és Irizarry módszerének technikai
-        részletei](#acosta-és-irizarry-módszerének-technikai-részletei)
-    -   [Relatív és abszolút
-        eredmények](#relatív-és-abszolút-eredmények)
--   [A számítások részletei, kiegészítő
-    elemzések](#a-számítások-részletei-kiegészítő-elemzések)
-    -   [Adatok előkészítése](#adatok-előkészítése)
-    -   [A többlethalálozás becslése](#a-többlethalálozás-becslése)
-    -   [Az eredmények ábrázolása, a kétféle relatív mutató
-        viszonya](#az-eredmények-ábrázolása-a-kétféle-relatív-mutató-viszonya)
-    -   [Összevetés a jelentett
-        halálozással](#összevetés-a-jelentett-halálozással)
-    -   [Összevetés a jelentett halálozással – magyar megyei
-        adatok](#összevetés-a-jelentett-halálozással--magyar-megyei-adatok)
-    -   [Érzékenységvizsgálat](#érzékenységvizsgálat)
-    -   [A direkt hatás elkülönítése: egy kísérlet az influenza-járvány
-        kezelésére](#a-direkt-hatás-elkülönítése-egy-kísérlet-az-influenza-járvány-kezelésére)
--   [Továbbfejlesztési ötletek](#továbbfejlesztési-ötletek)
--   [Irodalmi hivatkozások](#irodalmi-hivatkozások)
+-   <a href="#a-többlethalálozási-mutatóról-általában"
+    id="toc-a-többlethalálozási-mutatóról-általában">A többlethalálozási
+    mutatóról általában</a>
+    -   <a href="#a-halálozási-statisztikák-használatának-általános-motivációja"
+        id="toc-a-halálozási-statisztikák-használatának-általános-motivációja">A
+        halálozási statisztikák használatának általános motivációja</a>
+    -   <a href="#a-haláloki-statisztikák-problémái"
+        id="toc-a-haláloki-statisztikák-problémái">A haláloki statisztikák
+        problémái</a>
+    -   <a href="#a-magyar-haláloki-statisztikák-adatszolgáltatási-folyamata"
+        id="toc-a-magyar-haláloki-statisztikák-adatszolgáltatási-folyamata">A
+        magyar haláloki statisztikák adatszolgáltatási folyamata</a>
+    -   <a href="#a-többlethalálozási-mutató-definíciója-és-logikája"
+        id="toc-a-többlethalálozási-mutató-definíciója-és-logikája">A
+        többlethalálozási mutató definíciója és logikája</a>
+    -   <a href="#a-többlethalálozási-mutató-előnyei-és-hátrányai"
+        id="toc-a-többlethalálozási-mutató-előnyei-és-hátrányai">A
+        többlethalálozási mutató előnyei és hátrányai</a>
+    -   <a href="#a-halálozás-mint-mutató-használatának-általános-problémái"
+        id="toc-a-halálozás-mint-mutató-használatának-általános-problémái">A
+        halálozás mint mutató használatának általános problémái</a>
+-   <a
+    href="#eredmények-a-hazai-többlethalálozási-adatok-és-európai-viszonyításuk"
+    id="toc-eredmények-a-hazai-többlethalálozási-adatok-és-európai-viszonyításuk">Eredmények:
+    A hazai többlethalálozási adatok, és európai viszonyításuk</a>
+-   <a href="#záró-gondolatok" id="toc-záró-gondolatok">Záró gondolatok</a>
+-   <a href="#módszertani-kérdések"
+    id="toc-módszertani-kérdések">Módszertani kérdések</a>
+    -   <a href="#a-várt-halálozások-előrejelzése"
+        id="toc-a-várt-halálozások-előrejelzése">A várt halálozások
+        előrejelzése</a>
+    -   <a href="#acosta-és-irizarry-módszerének-technikai-részletei"
+        id="toc-acosta-és-irizarry-módszerének-technikai-részletei">Acosta és
+        Irizarry módszerének technikai részletei</a>
+    -   <a href="#relatív-és-abszolút-eredmények"
+        id="toc-relatív-és-abszolút-eredmények">Relatív és abszolút
+        eredmények</a>
+-   <a href="#a-számítások-részletei-kiegészítő-elemzések"
+    id="toc-a-számítások-részletei-kiegészítő-elemzések">A számítások
+    részletei, kiegészítő elemzések</a>
+    -   <a href="#adatok-előkészítése" id="toc-adatok-előkészítése">Adatok
+        előkészítése</a>
+    -   <a href="#a-többlethalálozás-becslése"
+        id="toc-a-többlethalálozás-becslése">A többlethalálozás becslése</a>
+    -   <a href="#az-eredmények-ábrázolása-a-kétféle-relatív-mutató-viszonya"
+        id="toc-az-eredmények-ábrázolása-a-kétféle-relatív-mutató-viszonya">Az
+        eredmények ábrázolása, a kétféle relatív mutató viszonya</a>
+    -   <a href="#összevetés-a-jelentett-halálozással"
+        id="toc-összevetés-a-jelentett-halálozással">Összevetés a jelentett
+        halálozással</a>
+    -   <a href="#összevetés-a-jelentett-halálozással--magyar-megyei-adatok"
+        id="toc-összevetés-a-jelentett-halálozással--magyar-megyei-adatok">Összevetés
+        a jelentett halálozással – magyar megyei adatok</a>
+    -   <a href="#érzékenységvizsgálat"
+        id="toc-érzékenységvizsgálat">Érzékenységvizsgálat</a>
+    -   <a
+        href="#a-direkt-hatás-elkülönítése-egy-kísérlet-az-influenza-járvány-kezelésére"
+        id="toc-a-direkt-hatás-elkülönítése-egy-kísérlet-az-influenza-járvány-kezelésére">A
+        direkt hatás elkülönítése: egy kísérlet az influenza-járvány
+        kezelésére</a>
+-   <a href="#továbbfejlesztési-ötletek"
+    id="toc-továbbfejlesztési-ötletek">Továbbfejlesztési ötletek</a>
+-   <a href="#irodalmi-hivatkozások" id="toc-irodalmi-hivatkozások">Irodalmi
+    hivatkozások</a>
 
 <!-- # ```{r het99statisztika, echo = FALSE} -->
 <!-- # knitr::kable(dcast(RawData[,.(outcome[week==99]/sum(outcome)*100),.(geo, year)], -->
@@ -381,9 +406,42 @@ Az alapötlet a következő: a múltbeli halálozási adatok alapján, amikor
 még nem volt járvány, készítünk egy előrejelzést az aktuális időszak
 halálozási számára, ezt szokás várt halálozásnak nevezni, és azt
 mondjuk, hogy ez tükrözi, hogy mi lett *volna* ha nem lett *volna*
-járvány. (Hiszen olyan adatokat felhasználva készült, amikor még nem is
-volt.) Ha fogjuk a tényleges halálozás-számot, és abból kivonjuk ezt a
-várt értéket, akkor megkapjuk a járvány hatását!
+járvány. Hiszen olyan adatokat felhasználva készült, amikor még nem is
+volt. (A „várt” szót itt természetesen nem abban az értelemben
+használjuk, hogy valamire pozitív érzelmekkel várunk, hanem, hogy mi a
+várakozásunk.) Ha fogjuk a tényleges halálozás-számot, és abból kivonjuk
+ezt a várt értéket, akkor megkapjuk a járvány hatását! Természetesen a
+módszerrel nem csak az új koronavírus-járvány hatása vizsgálható, hanem
+bármilyen, mortalitást módosító eseményé.
+
+Félig előrefutva, így néz ki az elmúlt bő két évtized tényleges magyar
+heti halálozása, rajta a – későbbiekben bemutatandó – módszerrel
+meghatározott várt halálozás:
+
+``` r
+ggplot(melt(resFull[geo=="HU"&age=="TOTAL", .(date, `Tényleges` = observed, `Várt` = expected)],
+            id.vars = "date"),
+       aes(x = lubridate::isoweek(date), y = value, group = variable, color = variable)) + geom_line() +
+  facet_wrap(~lubridate::isoyear(date)) +
+  labs(x = "Hét", y = "Halálozások száma [fő/hét]",
+       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
+        legend.title = element_blank())
+```
+
+![](README_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+
+Ez nagyon jól mutatja a módszer működését: azt vizsgáljuk, hogy a
+tényleges görbe mikor – és mennnyire – ment a várt fölé. A
+koronavírus-járvány hatása nagyon durva, további kommentárt nem is
+nagyon igényel, de érdemes megnézni, hogy közel nem az egyetlen eltérés:
+sok télen látszik egy csúcs (téli többletmortalitás, tipikusan ezt
+szokták az influenzának megfeleltetni), például 2016/17-es szezon nagyon
+rossz volt, de előfordul ilyen kiugrás nyáron is (például 2007-ben
+nagyon látványos, ez egy hőhullám hatása). Nagyon érdekes ezt
+összekorreláltani azzal, ahogy a mögötte lévő jelenségekről annak idején
+a sajtó is beszámolt (mint a [2007-es
+hőhullámról](https://www.met.hu/ismeret-tar/erdekessegek_tanulmanyok/index.php?id=1969&hir=Hohullamok:_ami_ma_szelsoseges,_az_a_jovoben_valoszinuleg_atlagos_lesz))
 
 ### A többlethalálozási mutató előnyei és hátrányai
 
@@ -449,7 +507,7 @@ adatai](https://www.ksh.hu/stadat_files/nep/hu/nep0010.html) alapján
 hogyan alakult az elmúlt 10 évben az autóbalesetben és az öngyilkosság
 miatt meghaltak száma Magyarországon:
 
-![](README_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 A mintázat nagyon látványos, mindkét fenti jelenség szemléltetésére.
 Fontos persze hangsúlyozni, hogy ez egy nagyon durva felbontású
@@ -926,33 +984,33 @@ University) és Rafael A. Irizarry (Dana-Farber Cancer Institute)
 
 Nagyon röviden és nagyon technikai szinten a következő történik. Először
 is kell egy valószínűségi modell, ez a következő lesz:
-*Y*<sub>*t*</sub> ∣ *ε*<sub>*t*</sub> ∼ Poi(*μ*<sub>*t*</sub>\[1+*f*(*t*)\]*ε*<sub>*t*</sub>),
-ahol *ε*<sub>*t*</sub> nem feltétlenül fehérzaj, lehet autokorrelált, az
+$Y_t \mid \varepsilon_t \sim \text{Poi}\left(\mu_t\left[1+f\left(t\right)\right]\varepsilon_t\right)$,
+ahol $\varepsilon_t$ nem feltétlenül fehérzaj, lehet autokorrelált, az
 adatok autokorreláltságának elszámolására (a napi adat erősen az, a heti
-nem feltétlenül), legyen többváltozós normális AR(*p*) szerinti
+nem feltétlenül), legyen többváltozós normális AR($p$) szerinti
 kovarianciamátrixszal és
-*μ*<sub>*t*</sub> = *N*<sub>*t*</sub>exp \[*α*(*t*)+*s*(*t*)+*w*(*t*)\],
-ahol *α*(*t*) a hosszú távú – lassan változó – trend, *s*(*t*) az éven
-belüli mintázat (szezonalitás), *w*(*t*) pedig a hét napja hatás (ha
-napi adatunk van), és *N*<sub>*t*</sub> a háttérpopuláció.
+$\mu_t = N_t \exp\left[\alpha\left(t\right)+s\left(t\right)+w\left(t\right)\right]$,
+ahol $\alpha\left(t\right)$ a hosszú távú – lassan változó – trend,
+$s\left(t\right)$ az éven belüli mintázat (szezonalitás),
+$w\left(t\right)$ pedig a hét napja hatás (ha napi adatunk van), és
+$N_t$ a háttérpopuláció.
 
 A modell felállítása logikus, hiszen a halálozások száma darabszám
 jellegű adat, erre csakugyan a Poisson a legszokványosabb választás. (A
 Poisson az overdiszperzió kezelésére kvázi-Poisson eloszlásra
-cserélhető; a lenti elemzés is így készült.) Látható, hogy *f*(*t*) a
-keresett többlet (szorzóként lép be, hiszen log-link mellett
-multiplikatív az egész modell). Explicite nem ráta van benne, de
+cserélhető; a lenti elemzés is így készült.) Látható, hogy
+$f\left(t\right)$ a keresett többlet (szorzóként lép be, hiszen log-link
+mellett multiplikatív az egész modell). Explicite nem ráta van benne, de
 lényegében igen, hiszen offszetként felhasználjuk a háttérpopuláció
 lélekszámát.
 
-Az *f*(*t*), tehát a (százalékos) többlet kapcsán fontos megemlíteni,
-hogy ezt az eljárás igyekszik úgy becsülni, hogy bár az alakja
-általános, akár még szakadása is előfordulhat, de ahol lehet, ott sima
-legyen. A nyersen számolt többlet
-(*Y*<sub>*t*</sub> − *μ*<sub>*t*</sub>) ugyanis a véletlen hatások miatt
-elég zajos lehet, így az *f*(*t*) használata lényegében egy simítást
-jelent. Ez szemléletesen látszik, ha ábrázoljuk a kettőt, például a
-magyar adatokon:
+Az $f\left(t\right)$, tehát a (százalékos) többlet kapcsán fontos
+megemlíteni, hogy ezt az eljárás igyekszik úgy becsülni, hogy bár az
+alakja általános, akár még szakadása is előfordulhat, de ahol lehet, ott
+sima legyen. A nyersen számolt többlet ($Y_t-\mu_t$) ugyanis a véletlen
+hatások miatt elég zajos lehet, így az $f\left(t\right)$ használata
+lényegében egy simítást jelent. Ez szemléletesen látszik, ha ábrázoljuk
+a kettőt, például a magyar adatokon:
 
 ``` r
 ggplot(melt(res[age=="TOTAL"&geo=="HU", .(date, `Nyers` = y, `f(t)` = increase)], id.vars = "date"),
@@ -962,17 +1020,17 @@ ggplot(melt(res[age=="TOTAL"&geo=="HU", .(date, `Nyers` = y, `f(t)` = increase)]
   theme(legend.position = "bottom", legend.title = element_blank())
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
 
-A többlet abszolút értékének számítása természetesen már *f*(*t*)
-alapján történik (tehát *μ*<sub>*t*</sub> ⋅ *f*(*t*) és nem
-*Y*<sub>*t*</sub> − *μ*<sub>*t*</sub> alakban). A `res` adattáblában `y`
-néven érhető el a nyersen számolt (százalékos) többlet, `increase` néven
-*f*(*t*) és `excess` néven az – *f*(*t*)-vel számolt – többlet.
+A többlet abszolút értékének számítása természetesen már
+$f\left(t\right)$ alapján történik (tehát $\mu_t\cdot f\left(t\right)$
+és nem $Y_t-\mu_t$ alakban). A `res` adattáblában `y` néven érhető el a
+nyersen számolt (százalékos) többlet, `increase` néven $f\left(t\right)$
+és `excess` néven az – $f\left(t\right)$-vel számolt – többlet.
 
 A modell becslése cseles, alapvetően maximum likelihood, de elég
-komplex, mert óvatosan kell eljárni (*ε*<sub>*t*</sub> is elég
-általános, és *f*(*t*) is nézhet ki furcsán, például lehet szakadása).
+komplex, mert óvatosan kell eljárni ($\varepsilon_t$ is elég általános,
+és $f\left(t\right)$ is nézhet ki furcsán, például lehet szakadása).
 
 A modellt most összesített adatokon futtatom (tehát nem pedig rétegzett,
 például életkor és nem szerint rétegzett adatokon). Szemben azzal, amit
@@ -1037,7 +1095,7 @@ eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a
 többi kutatót és az érdeklődő laikusokat hasonló számítások
 elvégézésében, mivel itt látnak egy lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2022-06-16. A többlethalálozást
+A számítások aktualizálásának dátuma: 2022-08-19. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.6.1, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) pedig 3.7.10.
 
@@ -1053,7 +1111,7 @@ library(ggplot2)
 theme_set(theme_bw())
 captionlab <- paste0("Ferenci Tamás, https://github.com/tamas-ferenci/ExcessMortEUR/\nAdatok forrása: ",
                      "Eurostat és STMF, lekérdezés dátuma: ")
-    
+
 pal <- scales::hue_pal()(3)
 scalval <- c("Többlethalálozás" = pal[1], "Többlethalálozás az influenzára való korrekcióval" = pal[2],
              "Regisztrált koronavírus-halálozás" = pal[3])
@@ -1232,21 +1290,33 @@ a számításokat. Kiszedjük a tényleges és a várt halálozást, a nyersen
 számolt és modellel simított többletet, a többlet abszolút értékét,
 illetve ez utóbbihoz standard hibát is számolunk (ezt kénytelenek
 vagyunk kézzel megtenni), bár a mostani számításban nem lesz rá
-szükségünk:
+szükségünk. Először beállítjuk az érzékenységvizsgálat paramétereit:
+
+``` r
+RawData <- merge(RawData,
+                 unique(RawData[, .(geo, age)])[
+                   , .(geo, age, tkpy = ifelse((age=="Y70-74"|age=="Y_GE85")&geo=="HU", 7,
+                                               ifelse(age=="Y80-84"&geo=="HU", 4, 9)))],
+                 by = c("age", "geo"))
+```
+
+Majd elvégezzük a tényleges számítást:
 
 ``` r
 exclude_dates <- seq(as.Date("2020-03-01"), max(RawData$date), by = "day")
 
 res <- RawData[, with(excess_model(.SD, start = min(date), end = max(date), exclude = exclude_dates,
-                            frequency = .N/(as.numeric(diff(range(date)))/365.25)),
-               list(date = date, observed = observed, expected = expected,
-                    y = 100 * (observed - expected)/expected,
-                    increase = 100 * fitted,  excess = expected * fitted,
-                    se = sapply(1:length(date), function(i) {
-                      mu <- matrix(expected[i], nr = 1)
-                      x <- matrix(x[i,], nr = 1)
-                      sqrt(mu %*% x %*% betacov %*% t(x) %*% t(mu))
-                    }))), .(geo, age)]
+                                   frequency = .N/(as.numeric(diff(range(date)))/365.25),
+                                   trend.knots.per.year = 1/tkpy[1]),
+                      list(date = date, observed = observed, expected = expected,
+                           y = 100 * (observed - expected)/expected,
+                           increase = 100 * fitted,  excess = expected * fitted,
+                           se = sapply(1:length(date), function(i) {
+                             mu <- matrix(expected[i], nr = 1)
+                             x <- matrix(x[i,], nr = 1)
+                             sqrt(mu %*% x %*% betacov %*% t(x) %*% t(mu))
+                           }))), .(geo, age)]
+resFull <- res
 ```
 
 Egyesítjük a többlethalálozási adatbázist a korábbi adatokkal, leszűrjük
@@ -1284,7 +1354,7 @@ legyenek:
 geodata <- eurostat::get_eurostat_geospatial(output_class = "sf", resolution = "01", year = "2021",
                                              make_valid = TRUE)
 geodata <- merge(geodata, res[, tail(.SD, 1), .(geo, age)][, .(y = cumexcess/meanpopulation*1e6,
-                                                          geo, age, nuts_level)], by = "geo")
+                                                               geo, age, nuts_level)], by = "geo")
 res <- merge(res,
              data.table(geo = c(unique(RawData[nchar(geo)==2]$geo),
                                 c("HU110", "HU120", "HU211", "HU212", "HU213", "HU221", "HU222", "HU223",
@@ -1316,7 +1386,8 @@ relatív mutatóként:
 
 ``` r
 ggplot(res[nuts_level==0&age=="TOTAL"], aes(x = date, y = excess/population*1e6, group = geo, label = geo)) +
-  geom_line(aes(color = geo=="HU")) + geom_abline(slope = 0, intercept = 0, colour = "blue") +
+  geom_line(aes(color = geo=="HU", group = forcats::fct_reorder(geo, geo=="HU", .fun = first))) +
+  geom_abline(slope = 0, intercept = 0, colour = "blue") +
   scale_color_manual(values = c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
   labs(x = "", y = "Aktuális többlethalálozás [fő/1M fő]",
        caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
@@ -1326,12 +1397,13 @@ ggplot(res[nuts_level==0&age=="TOTAL"], aes(x = date, y = excess/population*1e6,
         legend.title = element_blank())
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
 Ugyanez akkor, ha a várt halálozásra vetítünk:
 
 ``` r
-ggplot(res[age=="TOTAL"&nuts_level==0], aes(x = date, y = increase, group = geo, label = geo)) + geom_line(aes(color = geo=="HU")) +
+ggplot(res[age=="TOTAL"&nuts_level==0], aes(x = date, y = increase, group = geo, label = geo)) +
+  geom_line(aes(color = geo=="HU", group = forcats::fct_reorder(geo, geo=="HU", .fun = first))) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
   labs(x = "", y = "Aktuális többlethalálozás [%]",
        caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
@@ -1362,24 +1434,25 @@ ggplot(res[age=="TOTAL"&nuts_level==0], aes(x = increase, y = excess/population*
 Az ábra az origón átmenő, 2 meredekségű egyenest tünteti fel a
 viszonyítást segítendő. (Miért pont erre illeszkednek jól? E szerint a
 100% többlet – azaz épp a halálozás – 200 fő/M főnek felel meg. De
-vigyázat, ez heti adat, így az éves az 52 ⋅ 200 = 10400, ami ezer főre
-vetítve 10,4, és csakugyan ennyi nagyjából az európai országok nyers
-halálozási rátája.) Ez egyúttal arra a korábban is tárgyalt jelenségre
-is rámutat, hogy mi a lélekszámra vetítés jellegzetessége: függ a nyers
-halandóságtól. Ilyen szempontból a várt halálozásra való vetítés jobb,
-de mint láthatjuk, a különbség európai viszonyokon belül nem nagy. A
-várt értékre való vetítés hátránya, azon a már említett szemponton túl,
-hogy egy eleve becsült értékkel oszt, egyrészt az, hogy nem vethető
-közvetlenül össze a jelentett halálozással (hiszen más a mértékegységük
-is), másrészt pedig az, hogy nem nyilvánvaló a kumulálása (de azért
-megoldható, lásd következő pont).
+vigyázat, ez heti adat, így az éves az $52 \cdot 200 = 10 400$, ami ezer
+főre vetítve 10,4, és csakugyan ennyi nagyjából az európai országok
+nyers halálozási rátája.) Ez egyúttal arra a korábban is tárgyalt
+jelenségre is rámutat, hogy mi a lélekszámra vetítés jellegzetessége:
+függ a nyers halandóságtól. Ilyen szempontból a várt halálozásra való
+vetítés jobb, de mint láthatjuk, a különbség európai viszonyokon belül
+nem nagy. A várt értékre való vetítés hátránya, azon a már említett
+szemponton túl, hogy egy eleve becsült értékkel oszt, egyrészt az, hogy
+nem vethető közvetlenül össze a jelentett halálozással (hiszen más a
+mértékegységük is), másrészt pedig az, hogy nem nyilvánvaló a kumulálása
+(de azért megoldható, lásd következő pont).
 
 Folytassuk most az összesített többlethalálozással. Emlékeztetőül a
 népességszámra vetített ábra:
 
 ``` r
 ggplot(res[nuts_level==0&age=="TOTAL"], aes(x = date, y = cumexcess/meanpopulation*1e6, group = geo, label = geo)) +
-  geom_line(aes(color = geo=="HU")) + geom_abline(slope = 0, intercept = 0, colour = "blue") +
+  geom_line(aes(color = geo=="HU", group = forcats::fct_reorder(geo, geo=="HU", .fun = first))) +
+  geom_abline(slope = 0, intercept = 0, colour = "blue") +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
   labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]",
        caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
@@ -1389,7 +1462,7 @@ ggplot(res[nuts_level==0&age=="TOTAL"], aes(x = date, y = cumexcess/meanpopulati
         legend.position = "bottom", legend.title = element_blank())
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
 
 Kérdés, hogy mi a helyzet a várt értékre vetített mutatóval. A probléma
 a kumulálás, hiszen a százalékok természetesen nem adhatóak egyszerűen
@@ -1398,14 +1471,15 @@ többletet és a várt értéket, majd ezeket osztjuk el egymással:
 
 ``` r
 ggplot(res[age=="TOTAL"&nuts_level==0], aes(x = date, y = cumexcess/cumexpected, group = geo, label = geo)) +
-    geom_line(aes(color = geo=="HU")) + geom_abline(slope = 0, intercept = 0, colour = "blue") +
-    scale_color_manual(values = c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
-    labs(x = "", y = "Összesített többlethalálozás [%]",
-         caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
-    scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
-    directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
-    theme(plot.caption = element_text(face = "bold", hjust = 0),
-          legend.position = "bottom", legend.title = element_blank())
+  geom_line(aes(color = geo=="HU", group = forcats::fct_reorder(geo, geo=="HU", .fun = first))) +
+  geom_abline(slope = 0, intercept = 0, colour = "blue") +
+  scale_color_manual(values = c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
+  labs(x = "", y = "Összesített többlethalálozás [%]",
+       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
+  directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
+  theme(plot.caption = element_text(face = "bold", hjust = 0),
+        legend.position = "bottom", legend.title = element_blank())
 ```
 
 ![](README_files/figure-gfm/kumulaltvart-1.png)<!-- -->
@@ -1461,7 +1535,7 @@ Megnézhetjük Magyarország példáján a kétféle adatsort:
 
 ``` r
 ggplot(melt(res[age=="TOTAL"&geo=="HU", .(date, `Többlethalálozás` = excess/population*1e6,
-                             `Regisztrált koronavírus-halálozás` = new_deaths/population*1e6)],
+                                          `Regisztrált koronavírus-halálozás` = new_deaths/population*1e6)],
             id.vars = "date"), aes(x = date, y = value, group = variable, color = variable)) + geom_line() +
   labs(x = "", y = "Heti halálozás [fő/M fő]",
        caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
@@ -1539,7 +1613,7 @@ jelentett halálozással):
 
 ``` r
 ggplot(res[age=="TOTAL", .SD[nrow(.SD)-4], .(geo, age)], aes(x = cumexcess/population*1e6,
-                                           y = cumnewdeaths/population*1e6, label = geo)) +
+                                                             y = cumnewdeaths/population*1e6, label = geo)) +
   geom_point(aes(col = geo=="HU")) + geom_abline() + geom_text(hjust = "left", nudge_x = 30) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
   labs(x = "Összesített többlethalálozás [fő/1M fő]", y = "Összesített jelentett halálozás [fő/M fő]",
@@ -1564,7 +1638,7 @@ skálán:
 
 ``` r
 p <- ggplot(melt(res[geo=="HU"&age=="TOTAL", .(date, `Többlethalálozás` = cumexcess,
-                                  `Regisztrált koronavírus-halálozás` = cumnewdeaths)],
+                                               `Regisztrált koronavírus-halálozás` = cumnewdeaths)],
                  id.vars = "date"), aes(x = date, y = value, group = variable, color = variable,
                                         label = round(value, -2))) + geom_line() +
   directlabels::geom_dl(data = melt(tail(res[geo=="HU"&age=="TOTAL",
@@ -1895,12 +1969,12 @@ exclude_dates_flu <- c(do.call(c, sapply(2000:2019, function(i) seq(as.Date(past
                        seq(as.Date("2020-03-01"), max(RawData$date), by = "day"))
 
 exp_orig <- with(compute_expected(RawData[geo=="HU"&age=="TOTAL"], exclude = exclude_dates,
-                             frequency = nrow(RawData[geo=="HU"&age=="TOTAL"])/
-                               (as.numeric(diff(range(RawData[geo=="HU"&age=="TOTAL"]$date)))/365.25)),
+                                  frequency = nrow(RawData[geo=="HU"&age=="TOTAL"])/
+                                    (as.numeric(diff(range(RawData[geo=="HU"&age=="TOTAL"]$date)))/365.25)),
                  data.table(type = "Eredeti többlethalálozás", date, expected))
 exp_flu <- with(compute_expected(RawData[geo=="HU"&age=="TOTAL"], exclude = exclude_dates_flu,
-                             frequency = nrow(RawData[geo=="HU"&age=="TOTAL"])/
-                               (as.numeric(diff(range(RawData[geo=="HU"&age=="TOTAL"]$date)))/365.25)),
+                                 frequency = nrow(RawData[geo=="HU"&age=="TOTAL"])/
+                                   (as.numeric(diff(range(RawData[geo=="HU"&age=="TOTAL"]$date)))/365.25)),
                 data.table(type = "Többlethalálozás az influenza-szezonok kizárásával", date, expected))
 
 ggplot(rbind(exp_orig, exp_flu), aes(x = date, y = expected, color = type)) + geom_line() +
