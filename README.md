@@ -415,19 +415,8 @@ módszerrel nem csak az új koronavírus-járvány hatása vizsgálható, hanem
 bármilyen, mortalitást módosító eseményé.
 
 Félig előrefutva, így néz ki az elmúlt bő két évtized tényleges magyar
-heti halálozása, rajta a – későbbiekben bemutatandó – módszerrel
-meghatározott várt halálozás:
-
-``` r
-ggplot(melt(resFull[geo=="HU"&age=="TOTAL", .(date, `Tényleges` = observed, `Várt` = expected)],
-            id.vars = "date"),
-       aes(x = lubridate::isoweek(date), y = value, group = variable, color = variable)) + geom_line() +
-  facet_wrap(~lubridate::isoyear(date)) +
-  labs(x = "Hét", y = "Halálozások száma [fő/hét]",
-       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
-  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
-        legend.title = element_blank())
-```
+heti halálozása, rajta a – későbbiekben bemutatandó módszerrel
+meghatározott – várt halálozás:
 
 ![](README_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
 
@@ -441,7 +430,7 @@ rossz volt, de előfordul ilyen kiugrás nyáron is (például 2007-ben
 nagyon látványos, ez egy hőhullám hatása). Nagyon érdekes ezt
 összekorreláltani azzal, ahogy a mögötte lévő jelenségekről annak idején
 a sajtó is beszámolt (mint a [2007-es
-hőhullámról](https://www.met.hu/ismeret-tar/erdekessegek_tanulmanyok/index.php?id=1969&hir=Hohullamok:_ami_ma_szelsoseges,_az_a_jovoben_valoszinuleg_atlagos_lesz))
+hőhullámról](https://www.met.hu/ismeret-tar/erdekessegek_tanulmanyok/index.php?id=1969&hir=Hohullamok:_ami_ma_szelsoseges,_az_a_jovoben_valoszinuleg_atlagos_lesz)).
 
 ### A többlethalálozási mutató előnyei és hátrányai
 
@@ -1095,7 +1084,7 @@ eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a
 többi kutatót és az érdeklődő laikusokat hasonló számítások
 elvégézésében, mivel itt látnak egy lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2022-08-19. A többlethalálozást
+A számítások aktualizálásának dátuma: 2022-08-20. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.6.1, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) pedig 3.7.10.
 

@@ -231,9 +231,9 @@ Látható tehát, hogy mi a két nagy problémája a halálozási adatoknak, ami
 
 Az alapötlet a következő: a múltbeli halálozási adatok alapján, amikor még nem volt járvány, készítünk egy előrejelzést az aktuális időszak halálozási számára, ezt szokás várt halálozásnak nevezni, és azt mondjuk, hogy ez tükrözi, hogy mi lett *volna* ha nem lett *volna* járvány. Hiszen olyan adatokat felhasználva készült, amikor még nem is volt. (A „várt" szót itt természetesen nem abban az értelemben használjuk, hogy valamire pozitív érzelmekkel várunk, hanem, hogy mi a várakozásunk.) Ha fogjuk a tényleges halálozás-számot, és abból kivonjuk ezt a várt értéket, akkor megkapjuk a járvány hatását! Természetesen a módszerrel nem csak az új koronavírus-járvány hatása vizsgálható, hanem bármilyen, mortalitást módosító eseményé.
 
-Félig előrefutva, így néz ki az elmúlt bő két évtized tényleges magyar heti halálozása, rajta a -- későbbiekben bemutatandó -- módszerrel meghatározott várt halálozás:
+Félig előrefutva, így néz ki az elmúlt bő két évtized tényleges magyar heti halálozása, rajta a -- későbbiekben bemutatandó módszerrel meghatározott -- várt halálozás:
 
-```{r, fig.height = 10}
+```{r, fig.height = 10, echo = FALSE}
 ggplot(melt(resFull[geo=="HU"&age=="TOTAL", .(date, `Tényleges` = observed, `Várt` = expected)],
             id.vars = "date"),
        aes(x = lubridate::isoweek(date), y = value, group = variable, color = variable)) + geom_line() +
@@ -244,7 +244,7 @@ ggplot(melt(resFull[geo=="HU"&age=="TOTAL", .(date, `Tényleges` = observed, `V�
         legend.title = element_blank())
 ```
 
-Ez nagyon jól mutatja a módszer működését: azt vizsgáljuk, hogy a tényleges görbe mikor -- és mennnyire -- ment a várt fölé. A koronavírus-járvány hatása nagyon durva, további kommentárt nem is nagyon igényel, de érdemes megnézni, hogy közel nem az egyetlen eltérés: sok télen látszik egy csúcs (téli többletmortalitás, tipikusan ezt szokták az influenzának megfeleltetni), például 2016/17-es szezon nagyon rossz volt, de előfordul ilyen kiugrás nyáron is (például 2007-ben nagyon látványos, ez egy hőhullám hatása). Nagyon érdekes ezt összekorreláltani azzal, ahogy a mögötte lévő jelenségekről annak idején a sajtó is beszámolt (mint a [2007-es hőhullámról](https://www.met.hu/ismeret-tar/erdekessegek_tanulmanyok/index.php?id=1969&hir=Hohullamok:_ami_ma_szelsoseges,_az_a_jovoben_valoszinuleg_atlagos_lesz))
+Ez nagyon jól mutatja a módszer működését: azt vizsgáljuk, hogy a tényleges görbe mikor -- és mennnyire -- ment a várt fölé. A koronavírus-járvány hatása nagyon durva, további kommentárt nem is nagyon igényel, de érdemes megnézni, hogy közel nem az egyetlen eltérés: sok télen látszik egy csúcs (téli többletmortalitás, tipikusan ezt szokták az influenzának megfeleltetni), például 2016/17-es szezon nagyon rossz volt, de előfordul ilyen kiugrás nyáron is (például 2007-ben nagyon látványos, ez egy hőhullám hatása). Nagyon érdekes ezt összekorreláltani azzal, ahogy a mögötte lévő jelenségekről annak idején a sajtó is beszámolt (mint a [2007-es hőhullámról](https://www.met.hu/ismeret-tar/erdekessegek_tanulmanyok/index.php?id=1969&hir=Hohullamok:_ami_ma_szelsoseges,_az_a_jovoben_valoszinuleg_atlagos_lesz)).
 
 ### A többlethalálozási mutató előnyei és hátrányai
 
