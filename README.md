@@ -1084,7 +1084,7 @@ eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a
 többi kutatót és az érdeklődő laikusokat hasonló számítások
 elvégézésében, mivel itt látnak egy lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2022-08-20. A többlethalálozást
+A számítások aktualizálásának dátuma: 2022-08-26. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.6.1, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) pedig 3.7.10.
 
@@ -1360,8 +1360,8 @@ Most, hogy minden adatfeldolgozzásal végeztünk, az eredményeket
 kimentjük, hogy más is kényelmesen fel tudja használni:
 
 ``` r
-fwrite(res, "ExcessMortEUR_data.csv", sep = ";", dec = ",", row.names = FALSE)
-saveRDS(res, "res.rds")
+fwrite(resFull, "ExcessMortEUR_data.csv", sep = ";", dec = ",", row.names = FALSE)
+saveRDS(resFull, "res.rds")
 ```
 
 ### Az eredmények ábrázolása, a kétféle relatív mutató viszonya

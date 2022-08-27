@@ -676,8 +676,8 @@ A térkép-adatokkal összekapcsoljuk az eredményeket, illetve kibővítjük az
 Most, hogy minden adatfeldolgozzásal végeztünk, az eredményeket kimentjük, hogy más is kényelmesen fel tudja használni:
 
 ```{r}
-fwrite(res, "ExcessMortEUR_data.csv", sep = ";", dec = ",", row.names = FALSE)
-saveRDS(res, "res.rds")
+fwrite(resFull, "ExcessMortEUR_data.csv", sep = ";", dec = ",", row.names = FALSE)
+saveRDS(resFull, "res.rds")
 ```
 
 ### Az eredmények ábrázolása, a kétféle relatív mutató viszonya
