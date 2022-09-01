@@ -53,12 +53,9 @@ RawDataHunAge[ , values := round(values*sum(values)/sum(values[age!="UNK"])), .(
 RawDataHunAge <- RawDataHunAge[age!="UNK"]
 RawData <- rbind(RawData, RawDataHunAge)
 RawData <- RawData[!is.na(RawData$values)]
-RawData <- RawData[geo%in%(RawData[,.N,.(geo)][N>250]$geo)]
-```
-
-```{r evhonap, message=FALSE, echo = FALSE}
 RawData$year <- as.numeric(substring(RawData$time, 1, 4))
 RawData$week <- as.numeric(substring(RawData$time, 6, 7))
+RawData <- RawData[geo%in%(RawData[year<2020,.N,.(geo)][N>250]$geo)]
 ```
 
 ```{r atnevezes, echo = FALSE}
@@ -219,7 +216,7 @@ Az egyik az az eljárás, amely bármely haláleset bekövetkezésekor megtört�
 
 Ez a folyamat nagyon lassú, heteket vesz igénybe, így egy éppen zajló járvány esetén, ahol napi sűrűséggel van szükség adatra, nem használható. Szükség van tehát egy gyorsabb besorolásra is; ez az, aminek az adatait mindannyian halljuk a napi kommunikációban.
 
-Sajnálatos módon Magyarországon a mai napig nincsen nyilvánosan, írásban rögzítve, hogy milyen eljárásrend határozza meg, hogy ezen besorolás szerint ki minősül koronavírusos halottnak. Tovább rontja a helyzetet, hogy elhangzott ezzel kapcsolatban egy nyilvánvaló nyelvbotlás, miszerint „valamennyi olyan elhunytat, akinél a betegség időtartama alatt, vagy előtte bármikor [!] pozitív személynek regisztráltak, tehát készült nála laboratóriumi vizsgálat, ami pozitivitást mutatott, mindenkit beszámolunk az elhunytak közé". Ez természetesen -- szerencsére -- nem igaz, hiszen ha szó szerint vennénk, akkor valakit, aki tavaly áprilisban megbetegedett majd meggyógyult, majd ma elüti egy autó, azt elvileg koronavírusos halottként kellene elszámolni. (Most olyan apróságokról nem beszélve, hogy így a koronavírus halálozási aránya, tehát, hogy a fertőzöttek mekkora hányada hal bele a betegségbe, garantáltan 100 százalék lenne...) Erről természetesen nincs szó, a gyakorlatban senki sem fog törődni azzal, hogy mondjuk egy autóbaleset áldozatának egy évvel korábban volt egy pozitív tesztje, de az nagyon fontos lenne, hogy közzé legyen téve, hogy elvileg milyen szempontok döntenek abban a kérdésben, hogy kit lehet koronavírusos elhunytnak minősíteni. Az európai járványügyi szervezet, az ECDC például [azt az ajánlást](https://www.ecdc.europa.eu/en/covid-19/surveillance/surveillance-definitions) fogalmazza meg, hogy nem koronavírus a halálok akkor, ha (1) van egyértelmű, alternatív, a koronavírustól független mechanizmussal ható halálok (pl. trauma autóbalesetben), vagy ha (2) a diagnózis és a halál között teljes gyógyulás következett be. Több ország nem ez követi, hanem egyszerűen bevezetett egy [időbeli küszöböt is](https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/916035/RA_Technical_Summary_-_PHE_Data_Series_COVID_19_Deaths_20200812.pdf), tipikusan a diagnózistól számított 28 napot, ameddig koronavírusos halálozásnak mutat ki egy halálesetet, minden további vizsgálat nélkül. Persze, ez sem tökéletes (valakit elüthet az autó a tizedik napon, vagy fordítva, feladhatja a fertőzéssel való küzdelmet a negyvenediken), de ez legalább egy definiált, reprodukálható algoritmus.
+Sajnálatos módon Magyarországon a mai napig nincsen nyilvánosan, írásban rögzítve, hogy milyen eljárásrend határozza meg, hogy ezen besorolás szerint ki minősül koronavírusos halottnak. Tovább rontja a helyzetet, hogy elhangzott ezzel kapcsolatban egy nyilvánvaló nyelvbotlás, miszerint „valamennyi olyan elhunytat, akinél a betegség időtartama alatt, vagy előtte bármikor [!] pozitív személynek regisztráltak, tehát készült nála laboratóriumi vizsgálat, ami pozitivitást mutatott, mindenkit beszámolunk az elhunytak közé". Ez természetesen -- szerencsére -- nem igaz, hiszen ha szó szerint vennénk, akkor valakit, aki tavaly áprilisban megbetegedett majd meggyógyult, majd ma elüti egy autó, azt elvileg koronavírusos halottként kellene elszámolni. (Most olyan apróságokról nem beszélve, hogy így a koronavírus halálozási aránya, tehát, hogy a fertőzöttek mekkora hányada hal bele a betegségbe, garantáltan 100 százalék lenne...) Erről természetesen nincs szó, a gyakorlatban senki sem fog törődni azzal, hogy mondjuk egy autóbaleset áldozatának egy évvel korábban volt egy pozitív tesztje, de az nagyon fontos lenne, hogy közzé legyen téve, hogy elvileg milyen szempontok döntenek abban a kérdésben, hogy kit lehet koronavírusos elhunytnak minősíteni. Az Európai Unió járványügyi szervezete, az ECDC például [azt az ajánlást](https://www.ecdc.europa.eu/en/covid-19/surveillance/surveillance-definitions) fogalmazza meg, hogy nem koronavírus a halálok akkor, ha (1) van egyértelmű, alternatív, a koronavírustól független mechanizmussal ható halálok (pl. trauma autóbalesetben), vagy ha (2) a diagnózis és a halál között teljes gyógyulás következett be. Több ország nem ez követi, hanem egyszerűen bevezetett egy [időbeli küszöböt is](https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/916035/RA_Technical_Summary_-_PHE_Data_Series_COVID_19_Deaths_20200812.pdf), tipikusan a diagnózistól számított 28 napot, ameddig koronavírusos halálozásnak mutat ki egy halálesetet, minden további vizsgálat nélkül. Persze, ez sem tökéletes (valakit elüthet az autó a tizedik napon, vagy fordítva, feladhatja a fertőzéssel való küzdelmet a negyvenediken), de ez legalább egy definiált, reprodukálható algoritmus.
 
 Senkit nem szeretnék kérdőre vonni egy szerencsétlen nyelvbotlás miatt, de az már probléma, hogy ennek a nyelvbotlásnak a korrekciója, és a valódi eljárásrend közlésével való helyesbítése a mai napig nem történt meg.
 
@@ -292,9 +289,9 @@ Ezekre a szempontokra tekintettel kell lenni *bármilyen* halálozáson alapuló
 
 Próbáljuk meg áttekinthetővé tenni a többlethalálozási mutatókat! Először is, ne év alapú mutatókat nézzük (semmilyen kitüntetett járványügyi jelentősége nincs a december 31-nek, hogy akkor vágjuk el az adatokat), hanem egyszerűen folytonosan kezeljük az időt. Másrészt, érdemesebb relatív mutató gyanánt a lélekszámmal osztani, így ugyanis egy olyan mutatót kapunk, ami analóg a regisztrált halálozások közlésével, hiszen azt is halál / millió főben szokták megadni. Ha a többletet is millió lakosra osztjuk rá, akkor a kettő egymással is jól összehasonlítható lesz.
 
-Én az Eurostat [adatai](https://ec.europa.eu/eurostat/databrowser/view/demo_r_mwk_ts/) alapján kiszámítottam a többlethalálozást, mégpedig heti alapon, egységesen az országokra, és valamennyi európai országra. Az elemzéshez és ábrázoláshoz használt programot -- a „nyílt tudomány" jegyében -- teljes egészében [nyilvánosságra hozom](https://github.com/tamas-ferenci/ExcessMortEUR#eredmények-a-hazai-többlethalálozási-adatok-és-európai-viszonyításuk), így bárki reprodukálhatja, ellenőrizheti és továbbfejlesztheti a számításaimat, illetve itt elolvashatóak a módszertani részletek is.
+Én az Eurostat [adatai](https://ec.europa.eu/eurostat/databrowser/view/demo_r_mwk_ts/) alapján kiszámítottam a többlethalálozást, mégpedig heti alapon, egységesen az országokra, valamennyi Eurostat-nak jelentő EU és EFTA országra, valamint az Egyesült Királyságra. Az elemzéshez és ábrázoláshoz használt programot -- a „nyílt tudomány" jegyében -- teljes egészében [nyilvánosságra hozom](https://github.com/tamas-ferenci/ExcessMortEUR#eredmények-a-hazai-többlethalálozási-adatok-és-európai-viszonyításuk), így bárki reprodukálhatja, ellenőrizheti és továbbfejlesztheti a számításaimat, illetve itt elolvashatóak a módszertani részletek is.
 
-A többlethalálozás számítása az egyik legkorszerűbb eljárással, [Acosta és Irizzary módszerével](https://www.medrxiv.org/content/10.1101/2020.06.06.20120857v3) történt, mely kifinomult statisztikai eljárással igyekszik jól meghatározni a múltbeli adatokból a viszonyítási alapot. Kihagytam azokat az országokat amelyek nem tagjai az EU-nak vagy EFTA-nak.
+A többlethalálozás számítása az egyik legkorszerűbb eljárással, [Acosta és Irizzary módszerével](https://www.medrxiv.org/content/10.1101/2020.06.06.20120857v3) történt, mely kifinomult statisztikai eljárással igyekszik jól meghatározni a múltbeli adatokból a viszonyítási alapot.
 
 Mit tudunk mondani egy adott időpontban aktuális helyzetről? Ezt mutatják a heti adatok (piros görbe Magyarország, a szürke görbék a többi európai országot jelölik):
 
@@ -581,7 +578,13 @@ Elsőként betöltjük a szükséges könyvtárakat, elvégzünk pár egyéb tec
 <<konyvtar>>
 ```
 
-A mortalitási adatokat az Eurostat-tól kérjük le (`demo_r_mwk_ts` adatbázis), az `eurostat` csomag használatával. Leszűrjük, hogy mindkét nem összesített adata legyen benne (ahogy életkor szerint sem bontunk), és megszorítjuk magunkat az EU/EFTA-országokra és az Egyesült Királyságra. Ez utóbbi sajnos az Eurostat adatbázisból problémás: az adatsor 2020 végén megszakad, ráadásul félő lehet az is, hogy az Unióból történő kilépés miatt végleg, éppen ezért az angol adatokat a Short Term Mortality Fluctuations (STMF) adatbázisból kérjük le. Csak azokat az országokat tartjuk meg, ahonnan legalább 250 hétnyi (tehát kb. 5 évnyi) visszamenőleges adat elérhető:
+A mortalitási adatokat az Eurostat-tól kérjük le (`demo_r_mwk_ts` adatbázis), az `eurostat` csomag használatával. Az EU és EFTA országok adatait kérjük le, illetve az Egyesült Királyságét, hiszen a vizsgálati időszak elején még az is EU tagállam volt. Ennek deklarálása azért is fontos, hogy látszódjon: az országok körét nem önkényesen választottuk meg.
+
+Az Egyesült Királyság adatsora sajnos 2020 végén, a kilépésükkel megszakad, így ott, egyedüli kivételként, a Short Term Mortality Fluctuations ([STMF](https://www.mortality.org/Data/STMF)) adatbázisból kérjük le az adatokat.
+
+Csak azokat az országokat tartjuk meg, ahonnan legalább 250 hétnyi (tehát kb. 5 évnyi) visszamenőleges adat elérhető 2020 előttről, azaz a járvány előtti érából is, hogy kellően megbízható várt halálozási becslést tudjunk készíteni. Szerencsére ezzel mindössze egyetlen egy országot veszítünk, Írországot. (Írország az STMF-ben nem szerepel, a másik nagy halálozási adatbázisban, a [WMD-ben](https://github.com/akarlinsky/world_mortality) igen, de ott is csak 2015-től, és csak havi, nem heti adatokkal, így semmilyen módon nem tudjuk megmenteni e vizsgálathoz.)
+
+Végezetül kikódoljuk az évet és a hónapot is:
 
 ```{r, message = FALSE}
 <<adatbetoltes>>
@@ -591,12 +594,6 @@ A megmaradt, és a későbbi elemzésben felhasznált országok listája, a röv
 
 ```{r}
 knitr::kable(unique(res[nchar(geo)==2, .(`Kód` = geo, `Angol név` = geoname)])[order(`Kód`)])
-```
-
-Kikódoljuk az évet és a hónapot:
-
-```{r}
-<<evhonap>>
 ```
 
 Csinálunk egy átnevezést, hogy később egyszerűbb legyen az illesztés:

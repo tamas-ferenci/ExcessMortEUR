@@ -352,7 +352,8 @@ gyakorlatban senki sem fog törődni azzal, hogy mondjuk egy autóbaleset
 áldozatának egy évvel korábban volt egy pozitív tesztje, de az nagyon
 fontos lenne, hogy közzé legyen téve, hogy elvileg milyen szempontok
 döntenek abban a kérdésben, hogy kit lehet koronavírusos elhunytnak
-minősíteni. Az európai járványügyi szervezet, az ECDC például [azt az
+minősíteni. Az Európai Unió járványügyi szervezete, az ECDC például [azt
+az
 ajánlást](https://www.ecdc.europa.eu/en/covid-19/surveillance/surveillance-definitions)
 fogalmazza meg, hogy nem koronavírus a halálok akkor, ha (1) van
 egyértelmű, alternatív, a koronavírustól független mechanizmussal ható
@@ -602,9 +603,10 @@ többletet is millió lakosra osztjuk rá, akkor a kettő egymással is jól
 Én az Eurostat
 [adatai](https://ec.europa.eu/eurostat/databrowser/view/demo_r_mwk_ts/)
 alapján kiszámítottam a többlethalálozást, mégpedig heti alapon,
-egységesen az országokra, és valamennyi európai országra. Az elemzéshez
-és ábrázoláshoz használt programot – a „nyílt tudomány” jegyében –
-teljes egészében [nyilvánosságra
+egységesen az országokra, valamennyi Eurostat-nak jelentő EU és EFTA
+országra, valamint az Egyesült Királyságra. Az elemzéshez és
+ábrázoláshoz használt programot – a „nyílt tudomány” jegyében – teljes
+egészében [nyilvánosságra
 hozom](https://github.com/tamas-ferenci/ExcessMortEUR#eredmények-a-hazai-többlethalálozási-adatok-és-európai-viszonyításuk),
 így bárki reprodukálhatja, ellenőrizheti és továbbfejlesztheti a
 számításaimat, illetve itt elolvashatóak a módszertani részletek is.
@@ -613,8 +615,7 @@ A többlethalálozás számítása az egyik legkorszerűbb eljárással, [Acosta
 és Irizzary
 módszerével](https://www.medrxiv.org/content/10.1101/2020.06.06.20120857v3)
 történt, mely kifinomult statisztikai eljárással igyekszik jól
-meghatározni a múltbeli adatokból a viszonyítási alapot. Kihagytam
-azokat az országokat amelyek nem tagjai az EU-nak vagy EFTA-nak.
+meghatározni a múltbeli adatokból a viszonyítási alapot.
 
 Mit tudunk mondani egy adott időpontban aktuális helyzetről? Ezt
 mutatják a heti adatok (piros görbe Magyarország, a szürke görbék a
@@ -1084,7 +1085,7 @@ eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a
 többi kutatót és az érdeklődő laikusokat hasonló számítások
 elvégézésében, mivel itt látnak egy lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2022-08-26. A többlethalálozást
+A számítások aktualizálásának dátuma: 2022-09-01. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.6.1, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) pedig 3.7.10.
 
@@ -1107,15 +1108,28 @@ scalval <- c("Többlethalálozás" = pal[1], "Többlethalálozás az influenzár
 ```
 
 A mortalitási adatokat az Eurostat-tól kérjük le (`demo_r_mwk_ts`
-adatbázis), az `eurostat` csomag használatával. Leszűrjük, hogy mindkét
-nem összesített adata legyen benne (ahogy életkor szerint sem bontunk),
-és megszorítjuk magunkat az EU/EFTA-országokra és az Egyesült
-Királyságra. Ez utóbbi sajnos az Eurostat adatbázisból problémás: az
-adatsor 2020 végén megszakad, ráadásul félő lehet az is, hogy az Unióból
-történő kilépés miatt végleg, éppen ezért az angol adatokat a Short Term
-Mortality Fluctuations (STMF) adatbázisból kérjük le. Csak azokat az
-országokat tartjuk meg, ahonnan legalább 250 hétnyi (tehát kb. 5 évnyi)
-visszamenőleges adat elérhető:
+adatbázis), az `eurostat` csomag használatával. Az EU és EFTA országok
+adatait kérjük le, illetve az Egyesült Királyságét, hiszen a vizsgálati
+időszak elején még az is EU tagállam volt. Ennek deklarálása azért is
+fontos, hogy látszódjon: az országok körét nem önkényesen választottuk
+meg.
+
+Az Egyesült Királyság adatsora sajnos 2020 végén, a kilépésükkel
+megszakad, így ott, egyedüli kivételként, a Short Term Mortality
+Fluctuations ([STMF](https://www.mortality.org/Data/STMF)) adatbázisból
+kérjük le az adatokat.
+
+Csak azokat az országokat tartjuk meg, ahonnan legalább 250 hétnyi
+(tehát kb. 5 évnyi) visszamenőleges adat elérhető 2020 előttről, azaz a
+járvány előtti érából is, hogy kellően megbízható várt halálozási
+becslést tudjunk készíteni. Szerencsére ezzel mindössze egyetlen egy
+országot veszítünk, Írországot. (Írország az STMF-ben nem szerepel, a
+másik nagy halálozási adatbázisban, a
+[WMD-ben](https://github.com/akarlinsky/world_mortality) igen, de ott is
+csak 2015-től, és csak havi, nem heti adatokkal, így semmilyen módon nem
+tudjuk megmenteni e vizsgálathoz.)
+
+Végezetül kikódoljuk az évet és a hónapot is:
 
 ``` r
 RawData <- as.data.table(eurostat::get_eurostat("demo_r_mwk_ts", time_format = "raw"))
@@ -1143,7 +1157,9 @@ RawDataHunAge[ , values := round(values*sum(values)/sum(values[age!="UNK"])), .(
 RawDataHunAge <- RawDataHunAge[age!="UNK"]
 RawData <- rbind(RawData, RawDataHunAge)
 RawData <- RawData[!is.na(RawData$values)]
-RawData <- RawData[geo%in%(RawData[,.N,.(geo)][N>250]$geo)]
+RawData$year <- as.numeric(substring(RawData$time, 1, 4))
+RawData$week <- as.numeric(substring(RawData$time, 6, 7))
+RawData <- RawData[geo%in%(RawData[year<2020,.N,.(geo)][N>250]$geo)]
 ```
 
 A megmaradt, és a későbbi elemzésben felhasznált országok listája, a
@@ -1187,13 +1203,6 @@ knitr::kable(unique(res[nchar(geo)==2, .(`Kód` = geo, `Angol név` = geoname)])
 | SI  | Slovenia       |
 | SK  | Slovakia       |
 | UK  | United Kingdom |
-
-Kikódoljuk az évet és a hónapot:
-
-``` r
-RawData$year <- as.numeric(substring(RawData$time, 1, 4))
-RawData$week <- as.numeric(substring(RawData$time, 6, 7))
-```
 
 Csinálunk egy átnevezést, hogy később egyszerűbb legyen az illesztés:
 
@@ -1386,7 +1395,7 @@ ggplot(res[nuts_level==0&age=="TOTAL"], aes(x = date, y = excess/population*1e6,
         legend.title = element_blank())
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
 
 Ugyanez akkor, ha a várt halálozásra vetítünk:
 
@@ -1451,7 +1460,7 @@ ggplot(res[nuts_level==0&age=="TOTAL"], aes(x = date, y = cumexcess/meanpopulati
         legend.position = "bottom", legend.title = element_blank())
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
 Kérdés, hogy mi a helyzet a várt értékre vetített mutatóval. A probléma
 a kumulálás, hiszen a százalékok természetesen nem adhatóak egyszerűen
