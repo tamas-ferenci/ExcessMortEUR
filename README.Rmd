@@ -1,7 +1,7 @@
 ---
 title: "Többlethalálozási adatok európai összevetésben"
 author:
-  - "Ferenci Tamás (e-mail: tamas.ferenci@medstat.hu, web: http://www.medstat.hu/)"
+  - "Ferenci Tamás (e-mail: tamas.ferenci@medstat.hu, honlap: http://www.medstat.hu/)"
 output:
   github_document:
     toc: true

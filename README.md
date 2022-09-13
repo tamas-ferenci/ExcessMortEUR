@@ -1,6 +1,6 @@
 Többlethalálozási adatok európai összevetésben
 ================
-Ferenci Tamás (e-mail: <tamas.ferenci@medstat.hu>, web:
+Ferenci Tamás (e-mail: <tamas.ferenci@medstat.hu>, honlap:
 <http://www.medstat.hu/>)
 
 -   <a href="#a-többlethalálozási-mutatóról-általában"
