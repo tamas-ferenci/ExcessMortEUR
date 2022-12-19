@@ -673,8 +673,10 @@ A térkép-adatokkal összekapcsoljuk az eredményeket, illetve kibővítjük az
 Most, hogy minden adatfeldolgozzásal végeztünk, az eredményeket kimentjük, hogy más is kényelmesen fel tudja használni:
 
 ```{r}
-fwrite(resFull, "ExcessMortEUR_data.csv", sep = ";", dec = ",", row.names = FALSE)
-saveRDS(resFull, "res.rds")
+fwrite(res, "ExcessMortEUR_data.csv", sep = ";", dec = ",", row.names = FALSE)
+fwrite(resFull, "ExcessMortEUR_full_data.csv", sep = ";", dec = ",", row.names = FALSE)
+saveRDS(res, "res.rds")
+saveRDS(resFull, "resFull.rds")
 ```
 
 ### Az eredmények ábrázolása, a kétféle relatív mutató viszonya

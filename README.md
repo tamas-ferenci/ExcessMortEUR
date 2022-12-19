@@ -3,70 +3,70 @@ Többlethalálozási adatok európai összevetésben
 Ferenci Tamás (e-mail: <tamas.ferenci@medstat.hu>, honlap:
 <http://www.medstat.hu/>)
 
--   <a href="#a-többlethalálozási-mutatóról-általában"
-    id="toc-a-többlethalálozási-mutatóról-általában">A többlethalálozási
-    mutatóról általában</a>
-    -   <a href="#a-halálozási-statisztikák-használatának-általános-motivációja"
-        id="toc-a-halálozási-statisztikák-használatának-általános-motivációja">A
-        halálozási statisztikák használatának általános motivációja</a>
-    -   <a href="#a-haláloki-statisztikák-problémái"
-        id="toc-a-haláloki-statisztikák-problémái">A haláloki statisztikák
-        problémái</a>
-    -   <a href="#a-magyar-haláloki-statisztikák-adatszolgáltatási-folyamata"
-        id="toc-a-magyar-haláloki-statisztikák-adatszolgáltatási-folyamata">A
-        magyar haláloki statisztikák adatszolgáltatási folyamata</a>
-    -   <a href="#a-többlethalálozási-mutató-definíciója-és-logikája"
-        id="toc-a-többlethalálozási-mutató-definíciója-és-logikája">A
-        többlethalálozási mutató definíciója és logikája</a>
-    -   <a href="#a-többlethalálozási-mutató-előnyei-és-hátrányai"
-        id="toc-a-többlethalálozási-mutató-előnyei-és-hátrányai">A
-        többlethalálozási mutató előnyei és hátrányai</a>
-    -   <a href="#a-halálozás-mint-mutató-használatának-általános-problémái"
-        id="toc-a-halálozás-mint-mutató-használatának-általános-problémái">A
-        halálozás mint mutató használatának általános problémái</a>
--   <a
-    href="#eredmények-a-hazai-többlethalálozási-adatok-és-európai-viszonyításuk"
-    id="toc-eredmények-a-hazai-többlethalálozási-adatok-és-európai-viszonyításuk">Eredmények:
-    A hazai többlethalálozási adatok, és európai viszonyításuk</a>
--   <a href="#záró-gondolatok" id="toc-záró-gondolatok">Záró gondolatok</a>
--   <a href="#módszertani-kérdések"
-    id="toc-módszertani-kérdések">Módszertani kérdések</a>
-    -   <a href="#a-várt-halálozások-előrejelzése"
-        id="toc-a-várt-halálozások-előrejelzése">A várt halálozások
-        előrejelzése</a>
-    -   <a href="#acosta-és-irizarry-módszerének-technikai-részletei"
-        id="toc-acosta-és-irizarry-módszerének-technikai-részletei">Acosta és
-        Irizarry módszerének technikai részletei</a>
-    -   <a href="#relatív-és-abszolút-eredmények"
-        id="toc-relatív-és-abszolút-eredmények">Relatív és abszolút
-        eredmények</a>
--   <a href="#a-számítások-részletei-kiegészítő-elemzések"
-    id="toc-a-számítások-részletei-kiegészítő-elemzések">A számítások
-    részletei, kiegészítő elemzések</a>
-    -   <a href="#adatok-előkészítése" id="toc-adatok-előkészítése">Adatok
-        előkészítése</a>
-    -   <a href="#a-többlethalálozás-becslése"
-        id="toc-a-többlethalálozás-becslése">A többlethalálozás becslése</a>
-    -   <a href="#az-eredmények-ábrázolása-a-kétféle-relatív-mutató-viszonya"
-        id="toc-az-eredmények-ábrázolása-a-kétféle-relatív-mutató-viszonya">Az
-        eredmények ábrázolása, a kétféle relatív mutató viszonya</a>
-    -   <a href="#összevetés-a-jelentett-halálozással"
-        id="toc-összevetés-a-jelentett-halálozással">Összevetés a jelentett
-        halálozással</a>
-    -   <a href="#összevetés-a-jelentett-halálozással--magyar-megyei-adatok"
-        id="toc-összevetés-a-jelentett-halálozással--magyar-megyei-adatok">Összevetés
-        a jelentett halálozással – magyar megyei adatok</a>
-    -   <a href="#érzékenységvizsgálat"
-        id="toc-érzékenységvizsgálat">Érzékenységvizsgálat</a>
-    -   <a
-        href="#a-direkt-hatás-elkülönítése-egy-kísérlet-az-influenza-járvány-kezelésére"
-        id="toc-a-direkt-hatás-elkülönítése-egy-kísérlet-az-influenza-járvány-kezelésére">A
-        direkt hatás elkülönítése: egy kísérlet az influenza-járvány
-        kezelésére</a>
--   <a href="#továbbfejlesztési-ötletek"
-    id="toc-továbbfejlesztési-ötletek">Továbbfejlesztési ötletek</a>
--   <a href="#irodalmi-hivatkozások" id="toc-irodalmi-hivatkozások">Irodalmi
-    hivatkozások</a>
+- <a href="#a-többlethalálozási-mutatóról-általában"
+  id="toc-a-többlethalálozási-mutatóról-általában">A többlethalálozási
+  mutatóról általában</a>
+  - <a href="#a-halálozási-statisztikák-használatának-általános-motivációja"
+    id="toc-a-halálozási-statisztikák-használatának-általános-motivációja">A
+    halálozási statisztikák használatának általános motivációja</a>
+  - <a href="#a-haláloki-statisztikák-problémái"
+    id="toc-a-haláloki-statisztikák-problémái">A haláloki statisztikák
+    problémái</a>
+  - <a href="#a-magyar-haláloki-statisztikák-adatszolgáltatási-folyamata"
+    id="toc-a-magyar-haláloki-statisztikák-adatszolgáltatási-folyamata">A
+    magyar haláloki statisztikák adatszolgáltatási folyamata</a>
+  - <a href="#a-többlethalálozási-mutató-definíciója-és-logikája"
+    id="toc-a-többlethalálozási-mutató-definíciója-és-logikája">A
+    többlethalálozási mutató definíciója és logikája</a>
+  - <a href="#a-többlethalálozási-mutató-előnyei-és-hátrányai"
+    id="toc-a-többlethalálozási-mutató-előnyei-és-hátrányai">A
+    többlethalálozási mutató előnyei és hátrányai</a>
+  - <a href="#a-halálozás-mint-mutató-használatának-általános-problémái"
+    id="toc-a-halálozás-mint-mutató-használatának-általános-problémái">A
+    halálozás mint mutató használatának általános problémái</a>
+- <a
+  href="#eredmények-a-hazai-többlethalálozási-adatok-és-európai-viszonyításuk"
+  id="toc-eredmények-a-hazai-többlethalálozási-adatok-és-európai-viszonyításuk">Eredmények:
+  A hazai többlethalálozási adatok, és európai viszonyításuk</a>
+- <a href="#záró-gondolatok" id="toc-záró-gondolatok">Záró gondolatok</a>
+- <a href="#módszertani-kérdések"
+  id="toc-módszertani-kérdések">Módszertani kérdések</a>
+  - <a href="#a-várt-halálozások-előrejelzése"
+    id="toc-a-várt-halálozások-előrejelzése">A várt halálozások
+    előrejelzése</a>
+  - <a href="#acosta-és-irizarry-módszerének-technikai-részletei"
+    id="toc-acosta-és-irizarry-módszerének-technikai-részletei">Acosta és
+    Irizarry módszerének technikai részletei</a>
+  - <a href="#relatív-és-abszolút-eredmények"
+    id="toc-relatív-és-abszolút-eredmények">Relatív és abszolút
+    eredmények</a>
+- <a href="#a-számítások-részletei-kiegészítő-elemzések"
+  id="toc-a-számítások-részletei-kiegészítő-elemzések">A számítások
+  részletei, kiegészítő elemzések</a>
+  - <a href="#adatok-előkészítése" id="toc-adatok-előkészítése">Adatok
+    előkészítése</a>
+  - <a href="#a-többlethalálozás-becslése"
+    id="toc-a-többlethalálozás-becslése">A többlethalálozás becslése</a>
+  - <a href="#az-eredmények-ábrázolása-a-kétféle-relatív-mutató-viszonya"
+    id="toc-az-eredmények-ábrázolása-a-kétféle-relatív-mutató-viszonya">Az
+    eredmények ábrázolása, a kétféle relatív mutató viszonya</a>
+  - <a href="#összevetés-a-jelentett-halálozással"
+    id="toc-összevetés-a-jelentett-halálozással">Összevetés a jelentett
+    halálozással</a>
+  - <a href="#összevetés-a-jelentett-halálozással--magyar-megyei-adatok"
+    id="toc-összevetés-a-jelentett-halálozással--magyar-megyei-adatok">Összevetés
+    a jelentett halálozással – magyar megyei adatok</a>
+  - <a href="#érzékenységvizsgálat"
+    id="toc-érzékenységvizsgálat">Érzékenységvizsgálat</a>
+  - <a
+    href="#a-direkt-hatás-elkülönítése-egy-kísérlet-az-influenza-járvány-kezelésére"
+    id="toc-a-direkt-hatás-elkülönítése-egy-kísérlet-az-influenza-járvány-kezelésére">A
+    direkt hatás elkülönítése: egy kísérlet az influenza-járvány
+    kezelésére</a>
+- <a href="#továbbfejlesztési-ötletek"
+  id="toc-továbbfejlesztési-ötletek">Továbbfejlesztési ötletek</a>
+- <a href="#irodalmi-hivatkozások" id="toc-irodalmi-hivatkozások">Irodalmi
+  hivatkozások</a>
 
 <!-- # ```{r het99statisztika, echo = FALSE} -->
 <!-- # knitr::kable(dcast(RawData[,.(outcome[week==99]/sum(outcome)*100),.(geo, year)], -->
@@ -531,60 +531,60 @@ Függetlenül attól, hogy pontosan hogyan mérjük le, a halálozásnak, mint
 a járvány terhének mutatója, van egy sor hátránya is, általában, pusztán
 amiatt, hogy a halálozáson alapul. A probléma többrétű:
 
--   A „járvány terhe” egy többdimenziós fogalom, ami nem szűkíthető le a
-    elhunytakra (noha kétségtelen, hogy sok tekintetben ez a legdrámaibb
-    teher). Azonban az is teher, ha emberek szenvednek (még ha a végén
-    fel is épülnek), más szempontból de az is teher, ha az egészségügyi
-    ellátórendszer kapacitásait igénybe veszik, megint más szempontból,
-    de az is teher, hogy kiesnek a munkából. A halálozás mindezekről nem
-    ad számot. Mindazonáltal a halálozás használatát mégiscsak védi –
-    túl azon, hogy a legrelevánsabb megjelenése a tehernek – az, hogy
-    általában jól korrelált az összes többi szemponttal is: ha többen
-    halnak meg, akkor tipikusan többen is szenvednek, többen is veszik
-    igénybe az ellátórendszert, többen is esnek ki a munkából.
--   Ha egyszerűen a halálozásokat számoljuk a lakosság egészében, akkor
-    figyelmen kívül hagyjuk az elhunyt minden jellemzőjét: ugyanakkora
-    teher egy makkegészséges 30 évest elveszteni, mint egy egyébként is
-    végstádiumú 85 éves tumoros beteget? A halálozás szempontjából igen,
-    sokan azonban inkább azt érzik, hogy az előző valójában nagyobb
-    teher. Ezt legkézenfekvőbben az elvesztett életévek koncepciója
-    ragadja meg, azaz, hogy az alany hány évet élet *volna*, ha nem
-    viszi el a járvány. Az így kapott életév-veszteség kifejezi azt,
-    amit a halálozás nem: hogy a példánkban szerepelő első alany halála
-    nagyobb teher, hiszen – mind az életkora, mind az egészségi állapota
-    miatt – ő jóval többet élt volna még ha nincs a járvány.
-    (Természetesen itt *népegészségügyi* teherről beszélünk, nem arról,
-    hogy például a családnak mekkora tragédia egy halál, legyen az akár
-    egy 85 éves tumoros beteg halála.) Ezek számítása nem könnyű, hiszen
-    egy fiktív helyzetet kell vizsgálni – ugyan ki mondja meg, hogy
-    valaki mennyit élt *volna*, ha nem kapta *volna* el a fertőzést?
-    Erre természetesen csak becslést lehet adni, a jó hír viszont, hogy
-    a becslés adására vannak bevált demográfiai, statisztikai módszerek.
-    (Ezeket magyar viszonyokra nézve én is [kiszámoltam és
-    közöltem](https://link.springer.com/article/10.1007/s10654-021-00774-0).)
-    A másik lehetőség, hogy kitűzünk egy – ideálisan magasra rakott –
-    rögzített „cél életkort” és [ahhoz
-    viszonyítjuk](https://link.springer.com/article/10.1007/s10654-022-00854-9)
-    az elvesztett éveket. E kérdés vizsgálatához segítséget jelenthet,
-    ha a halálozási adatokat lebontjuk életkorcsoportok szerint.
-    Bizonyos értelemben azonban minden ilyen módszer ingoványos talajt
-    jelent, mert bármennyire is kézenfekvő, ezek a számítások
-    végeredményben mégis azt jelentik, hogy súlyozzuk a különböző
-    halálokat, ami messzire vezető morális kérdéseket vet fel.
--   Még ha az életév-veszteséget is használjuk, akkor is figyelmen kívül
-    marad egy fontos szempont: az életminőség kérdése. (Talán pontosabb
-    lenne úgy fogalmazni, hogy az egészségi állapottal összefüggő
-    életminőség.) Ez két, egymással ellentétes irányban hat. Egyfelől
-    ennél a mostani betegségnél sajnos előfordul, hogy a túlélők
-    maradványtünetekkel gyógyulnak, ami rontja az életminőséget, ezért
-    ha életév helyett minőséggel korrigált életévet használunk, akkor
-    még a felgyógyulóknál is van veszteség, nem csak a végül
-    meghalóknál. A másik, ezzel ellentétes szempont, hogy az idős, több
-    krónikus betegségben szenvedő elhunytaknak, ami a mostani járványnál
-    a többséget jelenti, tipikusan már a fertőzés *előtt* sem volt
-    tökéletes az életminőségük, ezért az ő esetükben a minőséggel
-    korrigált életév használata kisebb veszteséget mutatna ki, mint ha
-    ezt figyelmen kívül hagyjuk.
+- A „járvány terhe” egy többdimenziós fogalom, ami nem szűkíthető le a
+  elhunytakra (noha kétségtelen, hogy sok tekintetben ez a legdrámaibb
+  teher). Azonban az is teher, ha emberek szenvednek (még ha a végén fel
+  is épülnek), más szempontból de az is teher, ha az egészségügyi
+  ellátórendszer kapacitásait igénybe veszik, megint más szempontból, de
+  az is teher, hogy kiesnek a munkából. A halálozás mindezekről nem ad
+  számot. Mindazonáltal a halálozás használatát mégiscsak védi – túl
+  azon, hogy a legrelevánsabb megjelenése a tehernek – az, hogy
+  általában jól korrelált az összes többi szemponttal is: ha többen
+  halnak meg, akkor tipikusan többen is szenvednek, többen is veszik
+  igénybe az ellátórendszert, többen is esnek ki a munkából.
+- Ha egyszerűen a halálozásokat számoljuk a lakosság egészében, akkor
+  figyelmen kívül hagyjuk az elhunyt minden jellemzőjét: ugyanakkora
+  teher egy makkegészséges 30 évest elveszteni, mint egy egyébként is
+  végstádiumú 85 éves tumoros beteget? A halálozás szempontjából igen,
+  sokan azonban inkább azt érzik, hogy az előző valójában nagyobb teher.
+  Ezt legkézenfekvőbben az elvesztett életévek koncepciója ragadja meg,
+  azaz, hogy az alany hány évet élet *volna*, ha nem viszi el a járvány.
+  Az így kapott életév-veszteség kifejezi azt, amit a halálozás nem:
+  hogy a példánkban szerepelő első alany halála nagyobb teher, hiszen –
+  mind az életkora, mind az egészségi állapota miatt – ő jóval többet
+  élt volna még ha nincs a járvány. (Természetesen itt *népegészségügyi*
+  teherről beszélünk, nem arról, hogy például a családnak mekkora
+  tragédia egy halál, legyen az akár egy 85 éves tumoros beteg halála.)
+  Ezek számítása nem könnyű, hiszen egy fiktív helyzetet kell vizsgálni
+  – ugyan ki mondja meg, hogy valaki mennyit élt *volna*, ha nem kapta
+  *volna* el a fertőzést? Erre természetesen csak becslést lehet adni, a
+  jó hír viszont, hogy a becslés adására vannak bevált demográfiai,
+  statisztikai módszerek. (Ezeket magyar viszonyokra nézve én is
+  [kiszámoltam és
+  közöltem](https://link.springer.com/article/10.1007/s10654-021-00774-0).)
+  A másik lehetőség, hogy kitűzünk egy – ideálisan magasra rakott –
+  rögzített „cél életkort” és [ahhoz
+  viszonyítjuk](https://link.springer.com/article/10.1007/s10654-022-00854-9)
+  az elvesztett éveket. E kérdés vizsgálatához segítséget jelenthet, ha
+  a halálozási adatokat lebontjuk életkorcsoportok szerint. Bizonyos
+  értelemben azonban minden ilyen módszer ingoványos talajt jelent, mert
+  bármennyire is kézenfekvő, ezek a számítások végeredményben mégis azt
+  jelentik, hogy súlyozzuk a különböző halálokat, ami messzire vezető
+  morális kérdéseket vet fel.
+- Még ha az életév-veszteséget is használjuk, akkor is figyelmen kívül
+  marad egy fontos szempont: az életminőség kérdése. (Talán pontosabb
+  lenne úgy fogalmazni, hogy az egészségi állapottal összefüggő
+  életminőség.) Ez két, egymással ellentétes irányban hat. Egyfelől
+  ennél a mostani betegségnél sajnos előfordul, hogy a túlélők
+  maradványtünetekkel gyógyulnak, ami rontja az életminőséget, ezért ha
+  életév helyett minőséggel korrigált életévet használunk, akkor még a
+  felgyógyulóknál is van veszteség, nem csak a végül meghalóknál. A
+  másik, ezzel ellentétes szempont, hogy az idős, több krónikus
+  betegségben szenvedő elhunytaknak, ami a mostani járványnál a
+  többséget jelenti, tipikusan már a fertőzés *előtt* sem volt tökéletes
+  az életminőségük, ezért az ő esetükben a minőséggel korrigált életév
+  használata kisebb veszteséget mutatna ki, mint ha ezt figyelmen kívül
+  hagyjuk.
 
 Ezekre a szempontokra tekintettel kell lenni *bármilyen* halálozáson
 alapuló mutató használatakor.
@@ -1086,7 +1086,7 @@ eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a
 többi kutatót és az érdeklődő laikusokat hasonló számítások
 elvégézésében, mivel itt látnak egy lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2022-11-10. A többlethalálozást
+A számítások aktualizálásának dátuma: 2022-12-19. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.6.1, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) pedig 3.7.10.
 
@@ -1370,8 +1370,10 @@ Most, hogy minden adatfeldolgozzásal végeztünk, az eredményeket
 kimentjük, hogy más is kényelmesen fel tudja használni:
 
 ``` r
-fwrite(resFull, "ExcessMortEUR_data.csv", sep = ";", dec = ",", row.names = FALSE)
-saveRDS(resFull, "res.rds")
+fwrite(res, "ExcessMortEUR_data.csv", sep = ";", dec = ",", row.names = FALSE)
+fwrite(resFull, "ExcessMortEUR_full_data.csv", sep = ";", dec = ",", row.names = FALSE)
+saveRDS(res, "res.rds")
+saveRDS(resFull, "resFull.rds")
 ```
 
 ### Az eredmények ábrázolása, a kétféle relatív mutató viszonya
@@ -1552,35 +1554,35 @@ hullámokban. Ennek pontosabb vizsgálata fontos kérdés lenne, itt most
 csak néhány – vélhetően – fontos szerepet játszó szempontra hívnám fel a
 figyelmet:
 
--   A többlethalálozás két előnye közül a haláloki besorolás nem
-    valószínű, hogy egy országon belül lényegesen változott volna
-    időben, de a tesztelési intenzitás már megváltozhat időben.
--   A járvány és annak kezelésének indirekt hatásai szintén nem biztos,
-    hogy időben állandóak.
--   A múltbeli adatokból becsült várt halálozási adatoknál szintén
-    változhat időben a becslés jósága. Ennek legkézenfekvőbb oka az
-    influenza-szezon (mely a legvalószínűbb magyarázat például arra,
-    hogy február elején hogyan lehet, hogy nulla a többlethalálozás,
-    miközben nagyon is van koronavírusos halálozás). Erre a kérdésre még
-    egy külön pontban, jóval részletesebben visszatérek később.
--   Végezetül fontos hangsúlyozni (sajnos a magyar adatközlés ezt nem
-    teszi túl egyértelművé, így sokan félreértik), hogy a regisztrált
-    magyar halálozásoknál a közlés dátuma az a halál *jelentésének* a
-    dátuma, nem a *bekövetkezésének* a dátuma. Márpedig a kettő között
-    akár tetemes különbség is lehet, pláne, ha épp a sok halálozás miatt
-    elmarad az adminisztráció és torlódnak az adatok. Fontos lenne a
-    kérdés számszerű vizsgálata is, tehát, hogy mikor mekkora különbség
-    volt a kettő között és hogy nézne ki a halálozások görbéje a
-    bekövetkezésük dátuma alapján megrajzolva; sajnos a magyar
-    adatközlés ezt nem teszi lehetővé, ugyanis semmilyen adatot nem
-    közöl nyilvánosan a bekövetkezés dátumáról. Megjegyzem, hogy ugyanez
-    a kérdés a többlethalálozásnál is felmerül, szerencsére az [Eurostat
-    adatainál](https://ec.europa.eu/eurostat/cache/metadata/en/demomwk_esms.htm#coher_compar1612863315336)
-    mindegyik általunk használt ország esetében, így Magyarországnál is,
-    a bekövetkezés dátuma alapján gyűjt és közöl adatokat. Az egyedüli
-    kivétel Anglia, ahol nem az Eurostat, hanem az STMF adatai
-    szerepelnek, és azok Anglia esetében a jelentés dátuma szerint
-    mennek (és az Eurostathoz leadott régi adataik is ilyenek voltak).
+- A többlethalálozás két előnye közül a haláloki besorolás nem
+  valószínű, hogy egy országon belül lényegesen változott volna időben,
+  de a tesztelési intenzitás már megváltozhat időben.
+- A járvány és annak kezelésének indirekt hatásai szintén nem biztos,
+  hogy időben állandóak.
+- A múltbeli adatokból becsült várt halálozási adatoknál szintén
+  változhat időben a becslés jósága. Ennek legkézenfekvőbb oka az
+  influenza-szezon (mely a legvalószínűbb magyarázat például arra, hogy
+  február elején hogyan lehet, hogy nulla a többlethalálozás, miközben
+  nagyon is van koronavírusos halálozás). Erre a kérdésre még egy külön
+  pontban, jóval részletesebben visszatérek később.
+- Végezetül fontos hangsúlyozni (sajnos a magyar adatközlés ezt nem
+  teszi túl egyértelművé, így sokan félreértik), hogy a regisztrált
+  magyar halálozásoknál a közlés dátuma az a halál *jelentésének* a
+  dátuma, nem a *bekövetkezésének* a dátuma. Márpedig a kettő között
+  akár tetemes különbség is lehet, pláne, ha épp a sok halálozás miatt
+  elmarad az adminisztráció és torlódnak az adatok. Fontos lenne a
+  kérdés számszerű vizsgálata is, tehát, hogy mikor mekkora különbség
+  volt a kettő között és hogy nézne ki a halálozások görbéje a
+  bekövetkezésük dátuma alapján megrajzolva; sajnos a magyar adatközlés
+  ezt nem teszi lehetővé, ugyanis semmilyen adatot nem közöl nyilvánosan
+  a bekövetkezés dátumáról. Megjegyzem, hogy ugyanez a kérdés a
+  többlethalálozásnál is felmerül, szerencsére az [Eurostat
+  adatainál](https://ec.europa.eu/eurostat/cache/metadata/en/demomwk_esms.htm#coher_compar1612863315336)
+  mindegyik általunk használt ország esetében, így Magyarországnál is, a
+  bekövetkezés dátuma alapján gyűjt és közöl adatokat. Az egyedüli
+  kivétel Anglia, ahol nem az Eurostat, hanem az STMF adatai
+  szerepelnek, és azok Anglia esetében a jelentés dátuma szerint mennek
+  (és az Eurostathoz leadott régi adataik is ilyenek voltak).
 
 Vagy a kétféle adat viszonyát, pontosabban annak alakulását időben az
 összes országra:
@@ -2065,40 +2067,38 @@ is.
 
 ## Továbbfejlesztési ötletek
 
--   [ ] Életkori és nemi lebontás. (Hátha mások a mortalitási trendek! +
-    elvesztett életév aspektus)
--   [ ] Életkorra és nemre standardizálás. (van bármi értelme??)
--   [x] A jelentés teljességének a vizsgálata (mennyire nőnek még az
-    utolsó adatok, és meddig?). Válasz: Eurostat metadata 13.1-es pont.
--   [ ] Területi adatok használata.
--   [x] Egyszeri hatások kiküszöbölése (influenza!) kiegészítő
-    elemzésként.
+- [ ] Életkori és nemi lebontás. (Hátha mások a mortalitási trendek! +
+  elvesztett életév aspektus)
+- [ ] Életkorra és nemre standardizálás. (van bármi értelme??)
+- [x] A jelentés teljességének a vizsgálata (mennyire nőnek még az
+  utolsó adatok, és meddig?). Válasz: Eurostat metadata 13.1-es pont.
+- [ ] Területi adatok használata.
+- [x] Egyszeri hatások kiküszöbölése (influenza!) kiegészítő
+  elemzésként.
 
 ## Irodalmi hivatkozások
 
--   Ariel Karlinsky, Dmitry Kobak. “The World Mortality Dataset:
-    Tracking excess mortality across countries during the COVID-19
-    pandemic.” Elife. 2021 Jun 30;10:e69336. DOI: 10.7554/eLife.69336.
-    [Link](https://elifesciences.org/articles/69336).
--   Nazrul Islam, et al. “Excess deaths associated with covid-19
-    pandemic in 2020: age and sex disaggregated time series analysis in
-    29 high income countries.” BMJ. 2021 May 19;373:n1137. DOI:
-    10.1136/bmj.n1137.
-    [Link](https://www.bmj.com/content/373/bmj.n1137).
--   Vasilis Kontis, et al. “Magnitude, demographics and dynamics of the
-    effect of the first wave of the COVID-19 pandemic on all-cause
-    mortality in 21 industrialized countries.” Nat Med. 2020
-    Dec;26(12):1919-1928. DOI: 10.1038/s41591-020-1112-0.
-    [Link](https://www.nature.com/articles/s41591-020-1112-0).
--   Janine Aron, John Muellbauer. “A pandemic primer on excess mortality
-    statistics and their comparability across countries.” Our World in
-    Data. 2020 June 29. Preprint.
-    [Link](https://ourworldindata.org/covid-excess-mortality).
--   Tóth G. Csaba. “Többlethalandóság a koronavírus-járvány miatt
-    Magyarországon 2020-ban.” Korfa. 2021 March;21(2):1-4.
-    [Link](https://demografia.hu/kiadvanyokonline/index.php/korfa/article/view/2812/2700).
--   Rolando J Acosta, Rafael A Irizarry. “A Flexible Statistical
-    Framework for Estimating Excess Mortality.” medRxiv. 2021 November
-    22;2020.06.06.20120857v3. DOI: 10.1101/2020.06.06.20120857.
-    Preprint.
-    [Link](https://www.medrxiv.org/content/10.1101/2020.06.06.20120857v3).
+- Ariel Karlinsky, Dmitry Kobak. “The World Mortality Dataset: Tracking
+  excess mortality across countries during the COVID-19 pandemic.”
+  Elife. 2021 Jun 30;10:e69336. DOI: 10.7554/eLife.69336.
+  [Link](https://elifesciences.org/articles/69336).
+- Nazrul Islam, et al. “Excess deaths associated with covid-19 pandemic
+  in 2020: age and sex disaggregated time series analysis in 29 high
+  income countries.” BMJ. 2021 May 19;373:n1137. DOI: 10.1136/bmj.n1137.
+  [Link](https://www.bmj.com/content/373/bmj.n1137).
+- Vasilis Kontis, et al. “Magnitude, demographics and dynamics of the
+  effect of the first wave of the COVID-19 pandemic on all-cause
+  mortality in 21 industrialized countries.” Nat Med. 2020
+  Dec;26(12):1919-1928. DOI: 10.1038/s41591-020-1112-0.
+  [Link](https://www.nature.com/articles/s41591-020-1112-0).
+- Janine Aron, John Muellbauer. “A pandemic primer on excess mortality
+  statistics and their comparability across countries.” Our World in
+  Data. 2020 June 29. Preprint.
+  [Link](https://ourworldindata.org/covid-excess-mortality).
+- Tóth G. Csaba. “Többlethalandóság a koronavírus-járvány miatt
+  Magyarországon 2020-ban.” Korfa. 2021 March;21(2):1-4.
+  [Link](https://demografia.hu/kiadvanyokonline/index.php/korfa/article/view/2812/2700).
+- Rolando J Acosta, Rafael A Irizarry. “A Flexible Statistical Framework
+  for Estimating Excess Mortality.” medRxiv. 2021 November
+  22;2020.06.06.20120857v3. DOI: 10.1101/2020.06.06.20120857. Preprint.
+  [Link](https://www.medrxiv.org/content/10.1101/2020.06.06.20120857v3).
