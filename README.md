@@ -1086,7 +1086,7 @@ eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a
 többi kutatót és az érdeklődő laikusokat hasonló számítások
 elvégézésében, mivel itt látnak egy lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2022-12-19. A többlethalálozást
+A számítások aktualizálásának dátuma: 2023-01-22. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.6.1, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) pedig 3.7.10.
 
@@ -1658,26 +1658,27 @@ p
 
 A korábban már felvázolt „lassú” adatszolgáltatási folyamatnak, tehát a
 HVB-k alapján történő, az Egészségügyi Világszervezet protokollját
-követő besorolásnak [egy eredménye van
-meg](https://www.ksh.hu/stadat_files/nep/hu/nep0009.html): a 2020 évi
-összesített adat, e szerint 8981 halálesetet soroltak a mostani
-koronavírus miatt bekövetkezettnek. Érdemes – egy ponttal – ezt is
-megjelölni az ábrán:
+követő besorolásnak az éves [eredményei vannak
+meg](https://www.ksh.hu/stadat_files/nep/hu/nep0010.html): a 2020 évi
+összesített adat szerint 8981 halálesetet, a 2021-es szerint 24838-at
+soroltak a mostani koronavírus miatt bekövetkezettnek. Érdemes –
+pontokkal – ezeket is megjelölni az ábrán:
 
 ``` r
-p + geom_point(data = data.frame(x = as.Date("2020-12-31"), y = 8981),
+p + geom_point(data = data.frame(x = c(as.Date("2020-12-31"), as.Date("2021-12-31")),
+                                 y = c(8981, 8981 + 24838)),
                inherit.aes = FALSE, aes(x = x, y = y, fill = "HVB-k szerinti koronavírus-halálozás"))
 ```
 
 ![](README_files/figure-gfm/magyarkumulalttobbletesjelentetteshvb-1.png)<!-- -->
 
-Mint látszik, nagy különbség nincsen, az eredmény szépen egybecseng a
-másik két adatsorral. Ez fontos abból a szempontból, hogy cáfolja azt a
-vélekedést, miszerint a gyors regisztrálás „boldog-boldogtalant”
-koronavírusos halottnak sorol, szemben a precíz besorolással; igazán
-érdekes azonban a későbbi értéke lesz. Sajnos, mint volt is róla szó,
-ezt legközelebb csak 2021 egész évre fogjuk megtudni, azt is csak
-2022-ben (és nem az elején).
+Mint látszik, érdemi különbség sem 2020-ban, sem 2021-ben nincsen, az
+eredmény szépen egybecseng a másik két adatsorral. Ez fontos abból a
+szempontból, hogy cáfolja azt a vélekedést, miszerint a gyors
+regisztrálás „boldog-boldogtalant” koronavírusos halottnak sorol,
+szemben a precíz besorolással. Sajnos, mint volt is róla szó, a precíz
+szerinti adatokat mindig csak a következő évben tudjuk meg (és nem az
+elején).
 
 ### Összevetés a jelentett halálozással – magyar megyei adatok
 
@@ -1959,14 +1960,16 @@ biztosabb a becslés, ha mindenhol és minél több adatunk van.)
 
 Az egyszerűség kedvéért mondjuk, hogy Magyarországon a
 január-február-március az influenza-szezon, ezt a három hónapot zárjuk
-ki minden évben (kivéve tehát 2020-at). Hogy látható legyen ennek a
-hatása, érdemes megnézni, hogy mi a várt halálozás becsült görbéje a két
-módon
+ki minden olyan 2020 előtti évben, amikor vizuálisan érdemi többlet –
+azaz tényleges influenza-szezon – látszódott. Hogy látható legyen ennek
+a hatása, érdemes megnézni, hogy mi a várt halálozás becsült görbéje a
+két módon
 
 ``` r
-exclude_dates_flu <- c(do.call(c, sapply(2000:2019, function(i) seq(as.Date(paste0(i, "-01-01")),
-                                                                    as.Date(paste0(i, "-03-31")),
-                                                                    by = "day"))),
+exclude_dates_flu <- c(do.call(c, sapply(c(2000, 2003, 2005, 2012, 2013, 2015, 2017, 2018, 2019),
+                                         function(i) seq(as.Date(paste0(i, "-01-01")),
+                                                         as.Date(paste0(i, "-03-31")),
+                                                         by = "day"))),
                        seq(as.Date("2020-03-01"), max(RawData$date), by = "day"))
 
 exp_orig <- with(compute_expected(RawData[geo=="HU"&age=="TOTAL"], exclude = exclude_dates,
@@ -2002,7 +2005,8 @@ res_flu <- rbindlist(lapply(list(`Többlethalálozás` = exclude_dates,
                               with(excess_model(RawData[geo=="HU"&age=="TOTAL"], start = min(RawData[geo=="HU"&age=="TOTAL"]$date),
                                                 end = max(RawData[geo=="HU"&age=="TOTAL"]$date), exclude = ed,
                                                 frequency = nrow(RawData[geo=="HU"&age=="TOTAL"])/
-                                                  (as.numeric(diff(range(RawData[geo=="HU"&age=="TOTAL"]$date)))/365.25)),
+                                                  (as.numeric(diff(range(RawData[geo=="HU"&age=="TOTAL"]$date)))/365.25),
+                                                trend.knots.per.year = if(identical(ed, exclude_dates)) 1/8 else 1/7),
                                    data.table(date = date, observed = observed, expected = expected,
                                               y = 100 * (observed - expected)/expected,
                                               increase = 100 * fitted,
@@ -2025,17 +2029,18 @@ ggplot(res_flu, aes(x = date, y = cumexcess, group = .id, color = .id, label = r
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank()) +
-  coord_cartesian(ylim = ggplot_build(p)$layout$panel_scales_y[[1]]$range$range) +
-  geom_point(data = data.frame(x = as.Date("2020-12-31"), y = 8981),
+  # coord_cartesian(ylim = ggplot_build(p)$layout$panel_scales_y[[1]]$range$range) +
+  geom_point(data = data.frame(x = c(as.Date("2020-12-31"), as.Date("2021-12-31")),
+                                 y = c(8981, 8981 + 24838)),
              inherit.aes = FALSE, aes(x = x, y = y, fill = "HVB-k szerinti koronavírus-halálozás"))
 ```
 
 ![](README_files/figure-gfm/tobbletesinfluenzanelkul-1.png)<!-- -->
 
-Látszik, hogy így számolva a többlethalálozás 22 ezerről 27 ezer főre
-emelkedik, amiben az a nagyon szép, hogy bár teljesen máshogy
-dolgoztunk, de tökéletesen visszajött az influenza-szezon 4-5 ezer fős –
-teljesen reális értékű – halálozása.
+Látszik, hogy így számolva a többlethalálozás megemelkedik, amiben az a
+nagyon szép, hogy bár teljesen máshogy dolgoztunk, de tökéletesen
+visszajött az influenza-szezon 4-5 ezer fős – teljesen reális értékű –
+halálozása.
 
 Érdemes ezt egybevetni a jelentett halálozással is:
 
@@ -2051,7 +2056,8 @@ ggplot(res_flu, aes(x = date, y = cum, group = .id, color = .id, label = round(c
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank()) +
   coord_cartesian(ylim = ggplot_build(p)$layout$panel_scales_y[[1]]$range$range) +
-  geom_point(data = data.frame(x = as.Date("2020-12-31"), y = 8981),
+  geom_point(data = data.frame(x = c(as.Date("2020-12-31"), as.Date("2021-12-31")),
+                                 y = c(8981, 8981 + 24838)),
              inherit.aes = FALSE, aes(x = x, y = y, fill = "HVB-k szerinti koronavírus-halálozás"))
 ```
 
@@ -2099,6 +2105,6 @@ is.
   Magyarországon 2020-ban.” Korfa. 2021 March;21(2):1-4.
   [Link](https://demografia.hu/kiadvanyokonline/index.php/korfa/article/view/2812/2700).
 - Rolando J Acosta, Rafael A Irizarry. “A Flexible Statistical Framework
-  for Estimating Excess Mortality.” medRxiv. 2021 November
-  22;2020.06.06.20120857v3. DOI: 10.1101/2020.06.06.20120857. Preprint.
-  [Link](https://www.medrxiv.org/content/10.1101/2020.06.06.20120857v3).
+  for Estimating Excess Mortality.” Epidemiology. 2022 May
+  1;33(3):346-353. DOI: 10.1097/EDE.0000000000001445.
+  [Link](https://journals.lww.com/epidem/Abstract/2022/05000/A_Flexible_Statistical_Framework_for_Estimating.6.aspx).
