@@ -1399,7 +1399,7 @@ relatív mutatóként:
 ``` r
 ggplot(res[nuts_level==0&age=="TOTAL"], aes(x = date, y = excess/population*1e6, group = geo, label = geo)) +
   geom_line(aes(color = geo=="HU", group = forcats::fct_reorder(geo, geo=="HU", .fun = first))) +
-  geom_abline(slope = 0, intercept = 0, colour = "blue") +
+  geom_hline(yintercept = 0, colour = "blue") +
   scale_color_manual(values = c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
   labs(x = "", y = "Aktuális többlethalálozás [fő/1M fő]",
        caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
@@ -1419,7 +1419,7 @@ ggplot(res[age=="TOTAL"&nuts_level==0], aes(x = date, y = increase, group = geo,
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
   labs(x = "", y = "Aktuális többlethalálozás [%]",
        caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
-  geom_abline(slope = 0, intercept = 0, colour = "blue") +
+  geom_hline(yintercept = 0, colour = "blue") +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
@@ -1464,7 +1464,7 @@ népességszámra vetített ábra:
 ``` r
 ggplot(res[nuts_level==0&age=="TOTAL"], aes(x = date, y = cumexcess/meanpopulation*1e6, group = geo, label = geo)) +
   geom_line(aes(color = geo=="HU", group = forcats::fct_reorder(geo, geo=="HU", .fun = first))) +
-  geom_abline(slope = 0, intercept = 0, colour = "blue") +
+  geom_hline(yintercept = 0, colour = "blue") +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
   labs(x = "", y = "Összesített többlethalálozás [fő/1M fő]",
        caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
@@ -1484,7 +1484,7 @@ többletet és a várt értéket, majd ezeket osztjuk el egymással:
 ``` r
 ggplot(res[age=="TOTAL"&nuts_level==0], aes(x = date, y = cumexcess/cumexpected, group = geo, label = geo)) +
   geom_line(aes(color = geo=="HU", group = forcats::fct_reorder(geo, geo=="HU", .fun = first))) +
-  geom_abline(slope = 0, intercept = 0, colour = "blue") +
+  geom_hline(yintercept = 0, colour = "blue") +
   scale_color_manual(values = c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
   labs(x = "", y = "Összesített többlethalálozás [%]",
        caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
