@@ -116,7 +116,7 @@ RawData <- merge(RawData,
 RawData <- merge(RawData,
                  unique(RawData[, .(geo, age)])[
                    , .(geo, age, tkpy = ifelse((age=="Y70-74"|age=="Y_GE85")&geo=="HU", 7,
-                                               ifelse(age=="Y80-84"&geo=="HU", 4, 9)))],
+                                               ifelse(age=="Y80-84"&geo=="HU", 4, 7)))],
                  by = c("age", "geo"))
 ```
 
@@ -312,13 +312,26 @@ Jól látszik, hogy az első hullám teljesen kimutathatatlan volt (legalábbis 
 
 Érdemes lehet országonként külön-külön is ábrázolni, hogy jobban látható legyen, az egyes országok hogyan teljesítettek a járvány kezelésében, mik a jó és a rossz példák:
 
-```{r aktualislelekszamorszagonkent, echo = FALSE}
+```{r aktualislelekszamorszagonkent, fig.height = 10, echo = FALSE}
 ggplot(res[nuts_level==0&age=="TOTAL"], aes(x = date, y = excess/population*1e6, group = geo)) + geom_line() +
   labs(x = "", y = "Aktuális többlethalálozás [fő/1M fő]",
        caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
-  scale_x_date(date_breaks = "2 months", labels = function(z) gsub("^0", "", strftime(z, "%m"))) +
-  facet_wrap(~geo) + theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
-                           legend.title = element_blank())
+  coord_cartesian(xlim = c(as.Date("2020-01-01"), NA)) +
+  scale_x_date(date_breaks = "years", labels = scales::label_date_short()) + facet_wrap(~geo) +
+  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
+        legend.title = element_blank())
+```
+
+Ha nem a különböző országok egymáshoz való viszonyítása van a fókuszban, hanem az egyes országokat önmagukban akarjuk vizsgálni, akkor érdemes lehet az adatokat úgy is ábrázolni, hogy a függőleges tengelyen megengedjük az eltérő skálázást (az azonos skála értelemszerűen kell az országok összehasonlításához, viszont cserében egyes országokat nehezen láthatóvá tesz, mert a nagy értékkel bíró országok miatt széles lesz a skála, ami miatt a kisebb értékkel bíró országok ingadozásai nem lesznek jól érzékelhetőek):
+
+```{r aktualislelekszamorszagonkentkulonskala, fig.height = 10, echo = FALSE}
+ggplot(res[nuts_level==0&age=="TOTAL"], aes(x = date, y = excess/population*1e6, group = geo)) + geom_line() +
+  labs(x = "", y = "Aktuális többlethalálozás [fő/1M fő]",
+       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  coord_cartesian(xlim = c(as.Date("2020-01-01"), NA)) +
+  scale_x_date(date_breaks = "years", labels = scales::label_date_short()) + facet_wrap(~geo, scales = "free") +
+  theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
+        legend.title = element_blank())
 ```
 
 A járvány egészének értékeléséhez nézzük az összesített adatokat (piros görbe Magyarország, a szürke görbék a többi európai országot jelölik):

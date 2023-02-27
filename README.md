@@ -636,6 +636,17 @@ mik a jó és a rossz példák:
 
 ![](README_files/figure-gfm/aktualislelekszamorszagonkent-1.png)<!-- -->
 
+Ha nem a különböző országok egymáshoz való viszonyítása van a fókuszban,
+hanem az egyes országokat önmagukban akarjuk vizsgálni, akkor érdemes
+lehet az adatokat úgy is ábrázolni, hogy a függőleges tengelyen
+megengedjük az eltérő skálázást (az azonos skála értelemszerűen kell az
+országok összehasonlításához, viszont cserében egyes országokat nehezen
+láthatóvá tesz, mert a nagy értékkel bíró országok miatt széles lesz a
+skála, ami miatt a kisebb értékkel bíró országok ingadozásai nem lesznek
+jól érzékelhetőek):
+
+![](README_files/figure-gfm/aktualislelekszamorszagonkentkulonskala-1.png)<!-- -->
+
 A járvány egészének értékeléséhez nézzük az összesített adatokat (piros
 görbe Magyarország, a szürke görbék a többi európai országot jelölik):
 
@@ -1295,7 +1306,7 @@ szükségünk. Először beállítjuk az érzékenységvizsgálat paramétereit:
 RawData <- merge(RawData,
                  unique(RawData[, .(geo, age)])[
                    , .(geo, age, tkpy = ifelse((age=="Y70-74"|age=="Y_GE85")&geo=="HU", 7,
-                                               ifelse(age=="Y80-84"&geo=="HU", 4, 9)))],
+                                               ifelse(age=="Y80-84"&geo=="HU", 4, 7)))],
                  by = c("age", "geo"))
 ```
 
