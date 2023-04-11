@@ -3,15 +3,20 @@ title: "Többlethalálozási adatok európai összevetésben"
 author:
   - "Ferenci Tamás (e-mail: tamas.ferenci@medstat.hu, honlap: http://www.medstat.hu/)"
 output:
+  pdf_document:
+    toc: true
+    toc_depth: 3
+    latex_engine: lualatex
   github_document:
     toc: true
     toc_depth: 3
-editor_options: 
+knit: (function(...) rmarkdown::render(..., output_format = "all"))
+editor_options:
   chunk_output_type: console
 ---
 
 ```{r setup, include = FALSE}
-knitr::opts_chunk$set(echo = TRUE, fig.width = 12, dpi = 300)
+knitr::opts_chunk$set(echo = knitr::is_html_output(), fig.width = 12, dpi = 300)
 ```
 
 ```{r konyvtar, echo = FALSE}
