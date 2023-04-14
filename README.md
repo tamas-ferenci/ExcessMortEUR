@@ -765,20 +765,21 @@ lehetőségek. Vagy az emberek olyan jellemzőjében van eltérés, ami
 befolyásolja a kórlefolyást, és könnyen eszünkbe is juthatnak
 magyarázatok: mind kockázati tényezőkben (elhízás, dohányzás,
 alkoholfogyasztás), mind krónikus betegségek terén jól ismert a magyar
-lakosság kirívóan rossz állapota. A másik – nem feltétlenül kizáró –
-lehetőség, hogy az egészségügyi ellátásban kell keresni a magyarázatot.
-Az elérhető eszközök, gyógyszerek, az orvosok és szakdolgozók
-képzettsége nem tér el lényegesen, de magyarázatul szolgálhat a
-túlterhelődés? Vagy az, hogy a betegek ellátása nem egységes irányelvek
-mentén zajlik? Itt jön képbe a másik vesszőparipám, járványtól
-függetlenül: az objektív és transzparens teljesítménymérés hiánya a
-magyar egészségügyben. Amíg nincsenek definiált, standard indikátorok,
-melyek jellemzik az ellátásminőséget, fogalmunk sem lehet arról sem,
-hogy egyáltalán ki csinál valamit jól, és ki rosszul, nem tudhatjuk,
-hogy melyik kórházról vagy osztályról kell példát venni, és melyiknél
-feltárni, hogy mi a rossz teljesítmény oka; végképp nem tudjuk az
-egészségügyi rendszer egészét értékelni és összehasonlítani, akár
-időben, akár más országokkal.
+lakosság kirívóan rossz állapota. Sőt: a lelki, mentális egészség, az
+ehhez kapcsolódó betegségek és állapotok is ugyanúgy számíthatnak. A
+másik – előbbieket nem feltétlenül kizáró – lehetőség, hogy az
+egészségügyi ellátásban kell keresni a magyarázatot. Az elérhető
+eszközök, gyógyszerek, az orvosok és szakdolgozók képzettsége nem tér el
+lényegesen, de magyarázatul szolgálhat a túlterhelődés? Vagy az, hogy a
+betegek ellátása nem egységes irányelvek mentén zajlik? Itt jön képbe a
+másik vesszőparipám, járványtól függetlenül: az objektív és transzparens
+teljesítménymérés hiánya a magyar egészségügyben. Amíg nincsenek
+definiált, standard indikátorok, melyek jellemzik az ellátásminőséget,
+fogalmunk sem lehet arról sem, hogy egyáltalán ki csinál valamit jól, és
+ki rosszul, nem tudhatjuk, hogy melyik kórházról vagy osztályról kell
+példát venni, és melyiknél feltárni, hogy mi a rossz teljesítmény oka;
+végképp nem tudjuk az egészségügyi rendszer egészét értékelni és
+összehasonlítani, akár időben, akár más országokkal.
 
 Nem állítom, hogy ezek a kérdések könnyen megválaszolhatóak, és részben
 egyet is értek azzal, hogy a járványkezelés kiértékelése távlatot és
@@ -1097,7 +1098,7 @@ eredményeket), végezetül a harmadik, hogy ezzel is szeretném segíteni a
 többi kutatót és az érdeklődő laikusokat hasonló számítások
 elvégézésében, mivel itt látnak egy lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2023-04-12. A többlethalálozást
+A számítások aktualizálásának dátuma: 2023-04-14. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.6.1, az Eurostat-tól
 adatokat lekérő csomagé (`eurostat`) pedig 3.8.2.
 
