@@ -397,7 +397,7 @@ meghatározott – várt halálozás:
 ![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 Ez nagyon jól mutatja a módszer működését: azt vizsgáljuk, hogy a
-tényleges görbe mikor – és mennnyire – ment a várt fölé. A
+tényleges görbe mikor – és mennyire – ment a várt fölé. A
 koronavírus-járvány hatása nagyon durva, további kommentárt nem is
 nagyon igényel, de érdemes megnézni, hogy közel nem az egyetlen eltérés:
 sok télen látszik egy csúcs (téli többletmortalitás, tipikusan ezt
@@ -1043,7 +1043,7 @@ eredmények megjelenítésének a zárása, maga a számítás felhasználja a
 2023. július 1. utáni adatokat is – értelemszerűen, hiszen ettől lesz az
 ex post számítás ex post.
 
-Visszatértve még egy pillanatra az ábrára: ha ránézünk, az is látszik,
+Visszatérve még egy pillanatra az ábrára: ha ránézünk, az is látszik,
 miért lehet komoly hibaforrás a járvány végének a rossz meghatározása
 (ami pedig, mint láttuk, sajnos egyáltalán nem elképzelhetetlen). A
 2023-as finn adatok nagyon magasak. De vajon ez azért van, mert a finn
@@ -1052,7 +1052,7 @@ meredekebben nőttek, mint gondoltuk – nem lehetetlen, tényleg növekedtek
 már a járvány előtt is, csak kevésbé meredeken – vagy azért ilyen magas,
 mert valójában ebben még igenis benne van a járvány hatása, még nem
 tértünk vissza az alaptrendhez, és ezért emelkedett ki annyira…? (És
-vigyázat, ahogy volt is róla szóla, ide nem csak a direkt hatásokat kell
+vigyázat, ahogy volt is róla szó, ide nem csak a direkt hatásokat kell
 érteni, hanem az indirekteket is.) Ezért az ex post adatokat is óvatosan
 kell kezelni.
 
@@ -2316,38 +2316,38 @@ pargrid <- as.data.table(merge(as.data.frame(params),
                                   model = c("quasipoisson", "poisson", "correlated"))))
 pargrid <- pargrid[substring(geo, 1, 2)=="HU"|ED!="Flu"]
 
-if(!file.exists("resFull.rds")) {
-  cl <- parallel::makeCluster(parallel::detectCores()-1)
-  parallel::clusterExport(cl, c("RawData", "pargrid", "exclude_dates"), envir = environment())
-  
-  res <- parallel::parLapply(cl, 1:nrow(pargrid), function(i) {
-    geodat <- RawData[RawData$geo==pargrid$geo[i]&RawData$age==pargrid$age[i],]
-    with(excessmort::excess_model(geodat, start = min(geodat$date), end = max(geodat$date),
-                                  model = pargrid$model[i],
-                                  exclude = exclude_dates[[pargrid$ED[i]]],
-                                  control.dates = seq(
-                                    min(geodat$date),
-                                    min(min(geodat$date) + 4999,
-                                        min(exclude_dates[[pargrid$ED[i]]]) - 1), by = "day"),
-                                  frequency = nrow(geodat)/(as.numeric(diff(
-                                    range(geodat$date)))/365.25),
-                                  trend.knots.per.year =
-                                    if(pargrid$it[i]) 1/pargrid$tkpy[i] else 1,
-                                  include.trend = pargrid$it[i]),
-         data.table::data.table(pargrid[i], date = date, observed = observed,
-                                expected = expected, y = (observed - expected)/expected,
-                                increase = fitted,  excess = expected * fitted,
-                                se = sapply(1:length(date), function(i) {
-                                  mu <- matrix(expected[i], nr = 1)
-                                  x <- matrix(x[i,], nr = 1)
-                                  sqrt(mu %*% x %*% betacov %*% t(x) %*% t(mu))
-                                })))
-  })
-  
-  parallel::stopCluster(cl)
-  
-  res <- rbindlist(res)
-} else res <- readRDS("resFull.rds")
+cl <- parallel::makeCluster(parallel::detectCores()-1)
+parallel::clusterExport(cl, c("RawData", "pargrid", "exclude_dates"), envir = environment())
+
+res <- parallel::parLapply(cl, 1:nrow(pargrid), function(i) {
+  geodat <- RawData[RawData$geo==pargrid$geo[i]&RawData$age==pargrid$age[i],]
+  with(excessmort::excess_model(geodat, start = min(geodat$date), end = max(geodat$date),
+                                model = pargrid$model[i],
+                                exclude = exclude_dates[[pargrid$ED[i]]],
+                                control.dates = seq(
+                                  min(geodat$date),
+                                  min(min(geodat$date) + 4999,
+                                      min(exclude_dates[[pargrid$ED[i]]]) - 1), by = "day"),
+                                frequency = nrow(geodat)/(as.numeric(diff(
+                                  range(geodat$date)))/365.25),
+                                trend.knots.per.year =
+                                  if(pargrid$it[i]) 1/pargrid$tkpy[i] else 1,
+                                include.trend = pargrid$it[i]),
+       data.table::data.table(pargrid[i], date = date, observed = observed,
+                              expected = expected, y = (observed - expected)/expected,
+                              increase = fitted,  excess = expected * fitted,
+                              se = sapply(1:length(date), function(i) {
+                                mu <- matrix(expected[i], nr = 1)
+                                x <- matrix(x[i,], nr = 1)
+                                sqrt(mu %*% x %*% betacov %*% t(x) %*% t(mu))
+                              })))
+})
+
+parallel::stopCluster(cl)
+
+res <- rbindlist(res)
+
+# res <- readRDS("resFull.rds")
 
 resFull <- res
 ```
