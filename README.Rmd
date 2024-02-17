@@ -114,35 +114,35 @@ pargrid <- as.data.table(merge(as.data.frame(params),
                                                                        "correlated"))))
 pargrid <- pargrid[substring(geo, 1, 2)=="HU"|ED!="Flu"]
 
-cl <- parallel::makeCluster(parallel::detectCores()-1)
-parallel::clusterExport(cl, c("RawData", "pargrid", "exclude_dates"), envir = environment())
-
-res <- parallel::parLapply(cl, 1:nrow(pargrid), function(i) {
-  geodat <- RawData[RawData$geo==pargrid$geo[i]&RawData$age==pargrid$age[i],]
-  with(excessmort::excess_model(geodat, start = min(geodat$date), end = max(geodat$date),
-                                model = pargrid$model[i], exclude = exclude_dates[[pargrid$ED[i]]],
-                                control.dates = seq(min(geodat$date),
-                                                    min(min(geodat$date) + 4999,
-                                                        min(exclude_dates[[pargrid$ED[i]]]) - 1),
-                                                    by = "day"),
-                                frequency = nrow(geodat)/(as.numeric(diff(range(geodat$date)))/365.25),
-                                trend.knots.per.year = if(pargrid$it[i]) 1/pargrid$tkpy[i] else 1,
-                                include.trend = pargrid$it[i]),
-       data.table::data.table(pargrid[i], date = date, observed = observed, expected = expected,
-                              y = (observed - expected)/expected,
-                              increase = fitted,  excess = expected * fitted,
-                              se = sapply(1:length(date), function(i) {
-                                mu <- matrix(expected[i], nr = 1)
-                                x <- matrix(x[i,], nr = 1)
-                                sqrt(mu %*% x %*% betacov %*% t(x) %*% t(mu))
-                              })))
-})
-
-parallel::stopCluster(cl)
-
-res <- rbindlist(res)
-
-# res <- readRDS("resFull.rds")
+if(!file.exists("resFull.rds")) {
+  cl <- parallel::makeCluster(parallel::detectCores()-1)
+  parallel::clusterExport(cl, c("RawData", "pargrid", "exclude_dates"), envir = environment())
+  
+  res <- parallel::parLapply(cl, 1:nrow(pargrid), function(i) {
+    geodat <- RawData[RawData$geo==pargrid$geo[i]&RawData$age==pargrid$age[i],]
+    with(excessmort::excess_model(geodat, start = min(geodat$date), end = max(geodat$date),
+                                  model = pargrid$model[i], exclude = exclude_dates[[pargrid$ED[i]]],
+                                  control.dates = seq(min(geodat$date),
+                                                      min(min(geodat$date) + 4999,
+                                                          min(exclude_dates[[pargrid$ED[i]]]) - 1),
+                                                      by = "day"),
+                                  frequency = nrow(geodat)/(as.numeric(diff(range(geodat$date)))/365.25),
+                                  trend.knots.per.year = if(pargrid$it[i]) 1/pargrid$tkpy[i] else 1,
+                                  include.trend = pargrid$it[i]),
+         data.table::data.table(pargrid[i], date = date, observed = observed, expected = expected,
+                                y = (observed - expected)/expected,
+                                increase = fitted,  excess = expected * fitted,
+                                se = sapply(1:length(date), function(i) {
+                                  mu <- matrix(expected[i], nr = 1)
+                                  x <- matrix(x[i,], nr = 1)
+                                  sqrt(mu %*% x %*% betacov %*% t(x) %*% t(mu))
+                                })))
+  })
+  
+  parallel::stopCluster(cl)
+  
+  res <- rbindlist(res)
+} else res <- readRDS("resFull.rds")
 
 resFull <- res
 ```
