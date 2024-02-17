@@ -32,7 +32,8 @@ library(ggplot2)
 source("helper.R")
 theme_set(theme_bw())
 captionlab <- paste0("Ferenci Tamás, https://github.com/tamas-ferenci/ExcessMortEUR/\n",
-                     "Adatok forrása: Eurostat, lekérdezés dátuma: ")
+                     "Adatok forrása: Eurostat, lekérdezés dátuma: ",
+                     format(Sys.Date(), "%Y. %m. %d."))
 ```
 
 ```{r adatbetoltes, message = FALSE, echo = FALSE}
@@ -62,7 +63,8 @@ RawData <- RawData[, .(geo, age = "TOTAL", year, week, date = TIME_PERIOD, outco
 ```{r hatterpopulacio, message = FALSE, echo = FALSE}
 PopData <- as.data.table(eurostat::get_eurostat("demo_pjangroup", use.data.table = TRUE))
 PopData <- PopData[!age%in%c("UNK", "Y_GE75", "Y_GE80")]
-PopDataHunNUTS <- as.data.table(eurostat::get_eurostat("demo_r_pjanaggr3", use.data.table = TRUE))
+PopDataHunNUTS <- as.data.table(eurostat::get_eurostat("demo_r_pjanaggr3",
+                                                       use.data.table = TRUE))
 PopDataHunNUTS <- PopDataHunNUTS[substring(geo, 1, 2)=="HU"&nchar(geo)==5&geo!="HUXXX"]
 PopDataHunNUTS <- PopDataHunNUTS[age=="TOTAL"]
 PopData <- rbind(PopData, PopDataHunNUTS)
@@ -104,14 +106,15 @@ params[it==FALSE]$tkpy <- 5
 ```{r szamitas, message = FALSE, echo = FALSE}
 exclude_dates <- list(ExAnte = seq(as.Date("2020-03-01"), max(RawData$date), by = "day"),
                       ExPost = seq(as.Date("2020-03-01"), as.Date("2023-07-01"), by = "day"),
-                      Flu = c(do.call(c, sapply(c(2003, 2005, 2012, 2013, 2015, 2017, 2018, 2019),
+                      Flu = c(do.call(c, sapply(c(2003, 2005, 2012, 2013, 2015,
+                                                  2017, 2018, 2019),
                                                 function(i) seq(as.Date(paste0(i, "-01-01")),
                                                                 as.Date(paste0(i, "-03-31")),
                                                                 by = "day"))),
                               seq(as.Date("2020-03-01"), max(RawData$date), by = "day")))
 pargrid <- as.data.table(merge(as.data.frame(params),
-                               CJ(ED = names(exclude_dates), model = c("quasipoisson", "poisson",
-                                                                       "correlated"))))
+                               CJ(ED = names(exclude_dates),
+                                  model = c("quasipoisson", "poisson", "correlated"))))
 pargrid <- pargrid[substring(geo, 1, 2)=="HU"|ED!="Flu"]
 
 if(!file.exists("resFull.rds")) {
@@ -121,16 +124,19 @@ if(!file.exists("resFull.rds")) {
   res <- parallel::parLapply(cl, 1:nrow(pargrid), function(i) {
     geodat <- RawData[RawData$geo==pargrid$geo[i]&RawData$age==pargrid$age[i],]
     with(excessmort::excess_model(geodat, start = min(geodat$date), end = max(geodat$date),
-                                  model = pargrid$model[i], exclude = exclude_dates[[pargrid$ED[i]]],
-                                  control.dates = seq(min(geodat$date),
-                                                      min(min(geodat$date) + 4999,
-                                                          min(exclude_dates[[pargrid$ED[i]]]) - 1),
-                                                      by = "day"),
-                                  frequency = nrow(geodat)/(as.numeric(diff(range(geodat$date)))/365.25),
-                                  trend.knots.per.year = if(pargrid$it[i]) 1/pargrid$tkpy[i] else 1,
+                                  model = pargrid$model[i],
+                                  exclude = exclude_dates[[pargrid$ED[i]]],
+                                  control.dates = seq(
+                                    min(geodat$date),
+                                    min(min(geodat$date) + 4999,
+                                        min(exclude_dates[[pargrid$ED[i]]]) - 1), by = "day"),
+                                  frequency = nrow(geodat)/(as.numeric(diff(
+                                    range(geodat$date)))/365.25),
+                                  trend.knots.per.year =
+                                    if(pargrid$it[i]) 1/pargrid$tkpy[i] else 1,
                                   include.trend = pargrid$it[i]),
-         data.table::data.table(pargrid[i], date = date, observed = observed, expected = expected,
-                                y = (observed - expected)/expected,
+         data.table::data.table(pargrid[i], date = date, observed = observed,
+                                expected = expected, y = (observed - expected)/expected,
                                 increase = fitted,  excess = expected * fitted,
                                 se = sapply(1:length(date), function(i) {
                                   mu <- matrix(expected[i], nr = 1)
@@ -165,11 +171,12 @@ res$geo <- forcats::fct_relevel(as.factor(res$geo), "HU", after = Inf)
 ```
 
 ```{r terkepelokeszites, message = FALSE, echo = FALSE, warning = FALSE}
-geodata <- eurostat::get_eurostat_geospatial(output_class = "sf", resolution = "01", year = "2021")
+geodata <- eurostat::get_eurostat_geospatial(output_class = "sf", resolution = "01",
+                                             year = "2021")
 geodata <- merge(geodata, res[sens==FALSE&ED=="ExPost"&model=="quasipoisson"&
-                                date=="2023-06-26", .(y = cumexcess/meanpopulation*1e6, geo, age,
-                                                      tkpy, it, sens,
-                                                      ED, model, nuts_level)], by = "geo")
+                                date=="2023-06-26",
+                              .(y = cumexcess/meanpopulation*1e6, geo, age, tkpy, it, sens,
+                                ED, model, nuts_level)], by = "geo")
 res <- merge(res,
              data.table(geo = c(unique(RawData[nchar(geo)==2]$geo),
                                 c("HU110", "HU120", "HU211", "HU212", "HU213", "HU221", "HU222",
@@ -177,10 +184,10 @@ res <- merge(res,
                                   "HU321", "HU322", "HU323", "HU331", "HU332", "HU333")),
                         geoname = c(countrycode::countrycode(unique(RawData[nchar(geo)==2]$geo),
                                                              "eurostat", "country.name"),
-                                    c("Budapest", "Pest", "Fejér", "KE", "Veszprém", "GyMS", "Vas",
-                                      "Zala", "Baranya", "Somogy", "Tolna", "BAZ", "Heves", "Nógrád",
-                                      "Hajdú-Bihar", "JNSz", "SzSzB", "Bács-Kiskun", "Békés",
-                                      "Csongrád"))))
+                                    c("Budapest", "Pest", "Fejér", "KE", "Veszprém", "GyMS",
+                                      "Vas", "Zala", "Baranya", "Somogy", "Tolna", "BAZ",
+                                      "Heves", "Nógrád", "Hajdú-Bihar", "JNSz", "SzSzB",
+                                      "Bács-Kiskun", "Békés", "Csongrád"))))
 ```
 
 ```{r isokodok, echo = FALSE}
@@ -241,7 +248,8 @@ ggplot(DemData[Country.Region=="Czechia"&date>="2020-09-16"&date<="2020-12-16"],
   scale_y_continuous(sec.axis = sec_axis(~ . / 60)) +
   scale_x_date(sec.axis = sec_axis(~., breaks = seq.Date(as.Date("2020-09-16"),
                                                          as.Date("2020-12-16"), by = "weeks"),
-                                   labels = seq.Date(as.Date("2020-09-16"), as.Date("2020-12-16"),
+                                   labels = seq.Date(as.Date("2020-09-16"),
+                                                     as.Date("2020-12-16"),
                                                      by = "weeks")-as.Date("2020-10-14"))) +
   geom_vline(xintercept = as.Date("2020-10-14")) +
   labs(x = "", y = "", color = "",
@@ -291,10 +299,9 @@ Félig előrefutva, így néz ki az elmúlt bő két évtized tényleges magyar 
 ggplot(melt(resFull[geo=="HU"&age=="TOTAL"&sens==FALSE&ED=="ExPost"&model=="quasipoisson",
                     .(date, `Tényleges` = observed, `Várt` = expected)],
             id.vars = "date"),
-       aes(x = lubridate::isoweek(date), y = value, group = variable, color = variable)) + geom_line() +
-  facet_wrap(~lubridate::isoyear(date)) +
-  labs(x = "Hét", y = "Halálozások száma [fő/hét]",
-       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+       aes(x = lubridate::isoweek(date), y = value, group = variable, color = variable)) +
+  geom_line() + facet_wrap(~lubridate::isoyear(date)) +
+  labs(x = "Hét", y = "Halálozások száma [fő/hét]", caption = captionlab) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank())
 ```
@@ -323,8 +330,8 @@ ggplot(melt(data.table(openxlsx::read.xlsx(
   aes(x = Év, y = value, group = variable, color = variable)) + geom_line() + geom_point() +
   scale_color_discrete(labels = c("Motorosjármű-baleset", "Szándékos önártalom")) +
   labs(y = "Halálozások száma [fő/év]", color = "",
-       caption = paste0("Ferenci Tamás, https://github.com/tamas-ferenci/ExcessMortEUR/\nAdatok",
-                        "forrása: KSH")) +
+       caption = paste0("Ferenci Tamás, https://github.com/tamas-ferenci/ExcessMortEUR/\n",
+                        "Adatok forrása: KSH")) +
   theme(legend.position = "bottom", plot.caption = element_text(face = "bold", hjust = 0))
 ```
 
@@ -528,7 +535,8 @@ Ennek finomabb részleteit egy külön pontban ismertetem, itt most talán annyi
 
 ```{r aisimitas}
 ggplot(melt(res[age=="TOTAL"&geo=="HU"&sens==FALSE&ED=="ExAnte"&model=="quasipoisson"&
-                  date<="2023-07-01", .(date, `Nyers` = y*100, `Acosta-Irizarry` = increase*100)],
+                  date<="2023-07-01", .(date, `Nyers` = y*100,
+                                        `Acosta-Irizarry` = increase*100)],
             id.vars = "date"), aes(x = date, y = value, group = variable, color = variable)) +
   geom_line() + labs(x = "Dátum", y = "Százalékos többlet") +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
@@ -596,11 +604,11 @@ Mit tudunk mondani egy adott időpontban aktuális helyzetről? E kérdés megv�
 ggplot(res[nuts_level==0&age=="TOTAL"&sens==FALSE&ED=="ExAnte"&model=="quasipoisson"&
              date<="2023-07-01"],
        aes(x = date, y = excess/population*1e6, group = geo, label = geo)) +
-  geom_line(aes(color = geo=="HU", group = forcats::fct_reorder(geo, geo=="HU", .fun = first))) +
+  geom_line(aes(color = geo=="HU",
+                group = forcats::fct_reorder(geo, geo=="HU", .fun = first))) +
   geom_hline(yintercept = 0, colour = "blue") +
   scale_color_manual(values = c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
-  labs(x = "", y = "Ex ante aktuális\ntöbblethalálozás [fő/1M fő]",
-       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  labs(x = "", y = "Ex ante aktuális\ntöbblethalálozás [fő/1M fő]", caption = captionlab) +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
@@ -615,8 +623,7 @@ Jól látszik, hogy az első hullám teljesen kimutathatatlan volt (legalábbis 
 ggplot(res[nuts_level==0&age=="TOTAL"&sens==FALSE&ED=="ExAnte"&model=="quasipoisson"&
              date<="2023-07-01"],
        aes(x = date, y = excess/population*1e6, group = geo)) + geom_line() +
-  labs(x = "", y = "Ex ante aktuális\ntöbblethalálozás [fő/1M fő]",
-       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  labs(x = "", y = "Ex ante aktuális\ntöbblethalálozás [fő/1M fő]", caption = captionlab) +
   coord_cartesian(xlim = c(as.Date("2020-01-01"), NA)) +
   scale_x_date(date_breaks = "years", labels = scales::label_date_short()) + facet_wrap(~geo) +
   geom_hline(yintercept = 0, colour = "blue") +
@@ -630,11 +637,11 @@ A járvány egészének értékeléséhez nézzük egyrészt a kumulált, másr�
 ggplot(res[nuts_level==0&age=="TOTAL"&sens==FALSE&ED=="ExPost"&model=="quasipoisson"&
              date<="2023-07-01"],
        aes(x = date, y = cumexcess/meanpopulation*1e6, group = geo, label = geo)) +
-  geom_line(aes(color = geo=="HU", group = forcats::fct_reorder(geo, geo=="HU", .fun = first))) +
+  geom_line(aes(color = geo=="HU",
+                group = forcats::fct_reorder(geo, geo=="HU", .fun = first))) +
   geom_hline(yintercept = 0, colour = "blue") +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
-  labs(x = "", y = "Ex post kumulált\ntöbblethalálozás [fő/1M fő]",
-       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  labs(x = "", y = "Ex post kumulált\ntöbblethalálozás [fő/1M fő]", caption = captionlab) +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
   theme(plot.caption = element_text(face = "bold", hjust = 0),
@@ -648,8 +655,7 @@ ggplot(res[nuts_level==0&age=="TOTAL"&sens==FALSE&ED=="ExPost"&model=="quasipois
              date=="2023-06-26"][order(cumexcess/meanpopulation)],
        aes(x = factor(geo, levels = geo), y = cumexcess/meanpopulation*1e6, fill = geo=="HU")) +
   geom_col() + guides(fill = "none") +
-  labs(x = "", y = "Ex post kumulált\ntöbblethalálozás [fő/1M fő]",
-       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  labs(x = "", y = "Ex post kumulált\ntöbblethalálozás [fő/1M fő]", caption = captionlab) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank())
 ```
@@ -661,9 +667,9 @@ Látványos lehet ugyanezeket az adatokat térképen is ábrázolni. Itt ugyan a
 
 ```{r utolsoallapotterkep, echo = FALSE}
 ggplot(geodata[geodata$nuts_level==0&geodata$age=="TOTAL",], aes(fill = y)) + geom_sf() +
-  coord_sf(xlim = c(-25, 50), ylim = c(33, 73)) + scale_fill_distiller(palette = "Oranges", direction = 1) +
-  labs(fill = "Ex post kumulált\ntöbblethalálozás [fő/1M fő]",
-       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  coord_sf(xlim = c(-25, 50), ylim = c(33, 73)) +
+  scale_fill_distiller(palette = "Oranges", direction = 1) +
+  labs(fill = "Ex post kumulált\ntöbblethalálozás [fő/1M fő]", caption = captionlab) +
   theme(plot.caption = element_text(face = "bold", hjust = 0))
 ```
 
@@ -674,14 +680,14 @@ Hogy ennek mennyi értelme van? Magyar viszonylatban sajnos egy szempontból eg�
 Az aktuális helyzet alakulása megyei szinten (a piros vonal ezen az ábrán az országos értéket jelenti):
 
 ```{r megyeaktualislelekszam, echo = FALSE}
-ggplot(res[age=="TOTAL"&(nuts_level==3|geo=="HU")&sens==FALSE&ED=="ExAnte"&model=="quasipoisson"&
-             date<="2023-07-01"],
+ggplot(res[age=="TOTAL"&(nuts_level==3|geo=="HU")&sens==FALSE&ED=="ExAnte"&
+             model=="quasipoisson"&date<="2023-07-01"],
        aes(x = date, y = excess/population*1e6, group = geoname, label = geoname)) +
-  geom_line(aes(color = geo=="HU", group = forcats::fct_reorder(geo, geo=="HU", .fun = first))) +
+  geom_line(aes(color = geo=="HU",
+                group = forcats::fct_reorder(geo, geo=="HU", .fun = first))) +
   geom_hline(yintercept = 0, colour = "blue") +
   scale_color_manual(values = c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
-  labs(x = "", y = "Ex ante aktuális\ntöbblethalálozás [fő/1M fő]",
-       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  labs(x = "", y = "Ex ante aktuális\ntöbblethalálozás [fő/1M fő]", caption = captionlab) +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
@@ -691,13 +697,12 @@ ggplot(res[age=="TOTAL"&(nuts_level==3|geo=="HU")&sens==FALSE&ED=="ExAnte"&model
 Az utolsó állapotról itt is készíthetünk oszlopdiagramot, természetesen ehhez is a kumulált adatokat használjuk, ex post számításban:
 
 ```{r megyeutolsoallapotoszlopdiagram, echo = FALSE}
-ggplot(res[(nuts_level==3|geo=="HU")&age=="TOTAL"&sens==FALSE&ED=="ExPost"&model=="quasipoisson"&
-             date=="2023-06-26"][order(cumexcess/meanpopulation)],
+ggplot(res[(nuts_level==3|geo=="HU")&age=="TOTAL"&sens==FALSE&ED=="ExPost"&
+             model=="quasipoisson"&date=="2023-06-26"][order(cumexcess/meanpopulation)],
        aes(x = factor(geoname, levels = geoname), y = cumexcess/meanpopulation*1e6,
            fill = geo=="HU")) +
   geom_col() + guides(fill = "none") +
-  labs(x = "", y = "Ex post kumulált\ntöbblethalálozás [fő/1M fő]",
-       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  labs(x = "", y = "Ex post kumulált\ntöbblethalálozás [fő/1M fő]", caption = captionlab) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank()) + guides(x = guide_axis(angle = 45))
 ```
@@ -707,8 +712,7 @@ Itt is kézenfekvő ötlet térképet rajzolni:
 ```{r megyeutolsoallapotterkep, echo = FALSE}
 ggplot(geodata[geodata$age=="TOTAL"&geodata$nuts_level==3,], aes(fill = y)) + geom_sf() +
   scale_fill_distiller(palette = "Oranges", direction = 1) +
-  labs(fill = "Ex post kumulált\ntöbblethalálozás [fő/1M fő]",
-       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  labs(fill = "Ex post kumulált\ntöbblethalálozás [fő/1M fő]", caption = captionlab) +
   theme(plot.caption = element_text(face = "bold", hjust = 0))
 ```
 
@@ -730,8 +734,7 @@ ggplot(res[geo=="HU"&age=="TOTAL"&ED=="ExAnte"&date<="2023-07-01",
              model = ifelse(model=="correlated", "Korrelált", "Kvázi-Poisson"))],
        aes(x = date, y = excess/population*1e6, color = paste0(tkpy, ", ", model, " modell"))) +
   geom_line() + geom_hline(yintercept = 0, colour = "blue") +
-  labs(x = "", y = "Ex ante aktuális\ntöbblethalálozás [fő/1M fő]",
-       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  labs(x = "", y = "Ex ante aktuális\ntöbblethalálozás [fő/1M fő]", caption = captionlab) +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank())
@@ -746,10 +749,11 @@ ggplot(res[nuts_level==0&age=="TOTAL"&ED=="ExPost"&date=="2023-06-26",
            .(geo, sens = ifelse(sens, "Érzékenység-vizsgáló", "Elsődleges"),
              model = ifelse(model=="correlated", "Korrelált", "Kvázi-Poisson"),
              y = cumexcess/meanpopulation*1e6)],
-       aes(x = y, y = forcats::fct_reorder(geo, y, .desc = TRUE), color = sens, shape = model)) +
+       aes(x = y, y = forcats::fct_reorder(geo, y, .desc = TRUE), color = sens,
+           shape = model)) +
   geom_point() + geom_vline(xintercept = 0, color = "blue") +
   labs(x = "", y = "Ex post kumulált\ntöbblethalálozás [fő/1M fő]", color = "Spline",
-       shape = "Modell", caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+       shape = "Modell", caption = captionlab) +
   theme(plot.caption = element_text(face = "bold", hjust = 0))
 ```
 
@@ -769,8 +773,7 @@ ggplot(melt(res[geo=="HU"&age=="TOTAL"&sens==FALSE&ED=="ExAnte"&model=="quasipoi
                 .(date, `Többlethalálozás` = excess/population*1e6,
                   `Regisztrált koronavírus-halálozás` = new_deaths/population*1e6)],
             id.vars = "date"), aes(x = date, y = value, group = variable, color = variable)) +
-  geom_line() + labs(x = "", y = "Halálozás [fő/1M fő]",
-                     caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  geom_line() + labs(x = "", y = "Halálozás [fő/1M fő]", caption = captionlab) +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank())
@@ -791,8 +794,8 @@ ggplot(res[nuts_level==0&age=="TOTAL"&sens==FALSE&ED=="ExPost"&model=="quasipois
        aes(x = cumexcess/population*1e6, y = cumnewdeaths/population*1e6, label = geo)) +
   geom_point(aes(col = geo=="HU")) + geom_abline() + geom_text(hjust = "left", nudge_x = 30) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
-  labs(x = "Összesített többlethalálozás [fő/1M fő]", y = "Összesített jelentett halálozás [fő/M fő]",
-       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  labs(x = "Összesített többlethalálozás [fő/1M fő]",
+       y = "Összesített jelentett halálozás [fő/M fő]", caption = captionlab) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank())
 ```
@@ -803,11 +806,12 @@ Zárásként nézzük meg Magyarország esetén a kumulált, ex post értékek i
 
 ```{r magyarkumulalttobbletesjelentett}
 p <- ggplot(melt(res[geo=="HU"&age=="TOTAL"&sens==FALSE&ED=="ExPost"&model=="quasipoisson"&
-                       date<="2023-07-01", .(date, `Többlethalálozás` = cumexcess,
-                                             `Regisztrált koronavírus-halálozás` = cumnewdeaths)],
+                       date<="2023-07-01", 
+                     .(date, `Többlethalálozás` = cumexcess,
+                       `Regisztrált koronavírus-halálozás` = cumnewdeaths)],
                  id.vars = "date"), aes(x = date, y = value, group = variable, color = variable,
                                         label = round(value, -2))) + geom_line() +
-  labs(x = "", y = "Halálozás [fő]", caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  labs(x = "", y = "Halálozás [fő]", caption = captionlab) +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank())
@@ -820,7 +824,8 @@ A korábban már felvázolt "lassú" adatszolgáltatási folyamatnak, tehát a H
 p + geom_point(data = data.frame(x = c(as.Date("2020-12-31"), as.Date("2021-12-31"),
                                        as.Date("2022-12-31")),
                                  y = c(8981, 8981 + 24838, 8981 + 24838 + 7685)),
-               inherit.aes = FALSE, aes(x = x, y = y, fill = "HVB-k szerinti koronavírus-halálozás"))
+               inherit.aes = FALSE, aes(x = x, y = y,
+                                        fill = "HVB-k szerinti koronavírus-halálozás"))
 ```
 
 Mint látszik, érdemi különbség 2020-ban nincs, 2021-ben és 2022-ben pedig egy kisebb eltérés alakult ki: a napi gyorsjelentett halálozások száma némileg a halottvizsgálati szám fölé kerül, ám a különbség nem jelentős (2022-ig összesítve a jelentett halálozás `r format(res[geo=="HU"&age=="TOTAL"&sens==FALSE&ED=="ExPost"&model=="quasipoisson"&date=="2022-12-26"]$cumnewdeaths, scientific = FALSE)` fő, a halottvizsgálati érték `r format(8981 + 24838 + 7685, scientific = FALSE)` fő, tehát a különbség `r round((res[geo=="HU"&age=="TOTAL"&sens==FALSE&ED=="ExPost"&model=="quasipoisson"&date=="2022-12-26"]$cumnewdeaths/(8981 + 24838 + 7685)-1)*100, 1)`%). Ez fontos abból a szempontból, hogy cáfolja azt a vélekedést, miszerint a gyors regisztrálás "boldog-boldogtalant" koronavírusos halottnak sorol, szemben a precíz besorolással. Sajnos, mint volt is róla szó, a precíz, HVB szerinti adatokat mindig csak a következő évben tudjuk meg (és nem is az elején).
@@ -864,10 +869,10 @@ Ugyanez akkor, ha a várt halálozásra vetítünk:
 ```{r aktualisvart}
 ggplot(res[nuts_level==0&age=="TOTAL"&sens==FALSE&ED=="ExAnte"&model=="quasipoisson"&
              date<="2023-07-01"], aes(x = date, y = increase*100, group = geo, label = geo)) +
-  geom_line(aes(color = geo=="HU", group = forcats::fct_reorder(geo, geo=="HU", .fun = first))) +
+  geom_line(aes(color = geo=="HU",
+                group = forcats::fct_reorder(geo, geo=="HU", .fun = first))) +
   scale_color_manual(values=c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
-  labs(x = "", y = "Aktuális többlethalálozás [%]",
-       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  labs(x = "", y = "Aktuális többlethalálozás [%]", caption = captionlab) +
   geom_hline(yintercept = 0, colour = "blue") +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
@@ -878,9 +883,10 @@ ggplot(res[nuts_level==0&age=="TOTAL"&sens==FALSE&ED=="ExAnte"&model=="quasipois
 Látszik, hogy a kétféle relatív mutató között nincs nagy különbség. Kicsit direktebben is összevethetjük őket, ha országonként külön-külön ábrázoljuk, egymással szemben:
 
 ```{r lelekszamvsvart}
-ggplot(res[age=="TOTAL"&nuts_level==0], aes(x = increase*100, y = excess/population*1e6)) + geom_line() +
+ggplot(res[age=="TOTAL"&nuts_level==0], aes(x = increase*100, y = excess/population*1e6)) +
+  geom_line() +
   labs(x = "Aktuális többlethalálozás [%]", y = "Aktuális többlethalálozás [fő/1M fő]",
-       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+       caption = captionlab) +
   facet_wrap(~geo) + geom_abline(intercept = 0, slope =  2, alpha = 0.3) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank())
@@ -900,11 +906,11 @@ Kérdés, hogy mi a helyzet a várt értékre vetített mutatóval. A probléma 
 ggplot(res[nuts_level==0&age=="TOTAL"&sens==FALSE&ED=="ExPost"&model=="quasipoisson"&
              date<="2023-07-01"],
        aes(x = date, y = cumexcess/cumexpected*100, group = geo, label = geo)) +
-  geom_line(aes(color = geo=="HU", group = forcats::fct_reorder(geo, geo=="HU", .fun = first))) +
+  geom_line(aes(color = geo=="HU",
+                group = forcats::fct_reorder(geo, geo=="HU", .fun = first))) +
   geom_hline(yintercept = 0, colour = "blue") +
   scale_color_manual(values = c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
-  labs(x = "", y = "Összesített többlethalálozás [%]",
-       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  labs(x = "", y = "Összesített többlethalálozás [%]", caption = captionlab) +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   directlabels::geom_dl(method = list("last.points", cex = 0.6)) +
   theme(plot.caption = element_text(face = "bold", hjust = 0),
@@ -921,7 +927,7 @@ ggplot(res[nuts_level==0&age=="TOTAL"&sens==FALSE&ED=="ExPost"&model=="quasipois
   geom_vline(xintercept = 0, colour = "blue") + geom_text(hjust = "left", nudge_x = 30) +
   scale_color_manual(values = c("FALSE" = "gray", "TRUE" = "red")) + guides(color = "none") +
   labs(x = "Összesített többlethalálozás [fő/1M fő]", y = "Összesített többlethalálozás [%]",
-       caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+       caption = captionlab) +
   theme(plot.caption = element_text(face = "bold", hjust = 0),
         legend.position = "bottom", legend.title = element_blank())
 ```
@@ -947,7 +953,8 @@ A dolog azonban ennél egy kicsit bonyolultabb: azt sem tehetjük meg, hogy az �
 Az egyszerűség kedvéért mondjuk, hogy Magyarországon a január-február-március az influenza-szezon, ezt a három hónapot zárjuk ki minden olyan 2020 előtti évben, amikor vizuálisan érdemi többlet -- azaz tényleges influenza-szezon -- látszódott. Hogy látható legyen ennek a hatása, érdemes megnézni, hogy mi a várt halálozás becsült görbéje a két módon:
 
 ```{r influenzahatasa, message = FALSE}
-ggplot(resFull[geo=="HU"&age=="TOTAL"&sens==FALSE&ED%in%c("ExPost", "Flu")&model=="quasipoisson",
+ggplot(resFull[geo=="HU"&age=="TOTAL"&sens==FALSE&ED%in%c("ExPost", "Flu")&
+                 model=="quasipoisson",
                .(date, expected,
                  ED = ifelse(ED=="ExPost", "Eredeti", "Influenza-szezonok kizárásával"))],
        aes(x = date, y = expected, color = ED)) + geom_line() +
@@ -962,15 +969,17 @@ Szépen látszik, hogy az influenza-szezonok nélkül becsültetett modell kevé
 ```{r tobbletesinfluenzanelkul, message = FALSE}
 ggplot(res[geo=="HU"&age=="TOTAL"&sens==FALSE&ED%in%c("ExPost", "Flu")&model=="quasipoisson"&
              date<="2023-07-01",
-           .(date, cumexcess, ED = ifelse(ED=="ExPost", "Eredeti", "Influenza-szezonok kizárásával"))],
+           .(date, cumexcess, ED = ifelse(ED=="ExPost", "Eredeti",
+                                          "Influenza-szezonok kizárásával"))],
        aes(x = date, y = cumexcess, group = ED, color = ED, label = round(cumexcess, -2))) +
   geom_line() +
   directlabels::geom_dl(data = res[geo=="HU"&age=="TOTAL"&sens==FALSE&ED%in%c("ExPost", "Flu")&
                                      model=="quasipoisson"&date=="2023-06-26",
-                                   .(date, cumexcess, ED = ifelse(ED=="ExPost", "Eredeti",
-                                                                  "Influenza-szezonok kizárásával"))],
+                                   .(date, cumexcess,
+                                     ED = ifelse(ED=="ExPost", "Eredeti",
+                                                 "Influenza-szezonok kizárásával"))],
                         method = list("last.points", cex = 0.6)) +
-  labs(x = "", y = "Halálozás [fő]", caption = paste0(captionlab, format(Sys.Date(), "%Y. %m. %d."))) +
+  labs(x = "", y = "Halálozás [fő]", caption = captionlab) +
   scale_x_date(date_breaks = "months", labels = scales::label_date_short()) +
   theme(plot.caption = element_text(face = "bold", hjust = 0), legend.position = "bottom",
         legend.title = element_blank())
