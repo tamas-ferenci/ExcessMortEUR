@@ -1729,10 +1729,10 @@ ggplot(res[nuts_level==0&age=="TOTAL"&sens==FALSE&ED=="ExPost"&model=="quasipois
 Ami az említett különbségeket illeti, vegyük példának Szlovákiát és
 Lettországot. Szlovákia szűk háromszor nagyobb ország lélekszámban (5,5
 és 1,9 millió fő) és szűk háromszor annyi az abszolút többlethalálozása
-is (31000 és 11000). Ezért kerültek szinte pontosan egymás fölé: a
+is (30800 és 10800). Ezért kerültek szinte pontosan egymás fölé: a
 lélekszámra vetített többlethalálozásaik nagyon pontosan egyeznek. Igen
 ám, de Lettországban sokkal nagyobb a várt halandóság! A járvány
-időszaka alatt kumuláltan 92400 fő, míg Szlovákiában 178500 fő (ne
+időszaka alatt kumuláltan 92600 fő, míg Szlovákiában 178700 fő (ne
 felejtsük el, hogy Szlovákia majdnem háromszor akkora lélekszámmal bír).
 Ez az alapján sem meglepő, hogy Lettországban egyszerűen nagyobb a nyers
 halandóság, például a koronavírus-járványt megelőző 5 évben 14.7/1000
@@ -1993,8 +1993,8 @@ hogy ezzel is szeretném segíteni a többi kutatót és az érdeklődő
 laikusokat hasonló számítások elvégézésében, mivel itt látnak egy
 lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2024-02-17. A többlethalálozást
-számító csomag (`excessmort`) verziószáma 0.6.3.
+A számítások aktualizálásának dátuma: 2024-04-10. A többlethalálozást
+számító csomag (`excessmort`) verziószáma 0.7.0.
 
 Elsőként betöltjük a szükséges könyvtárakat, elvégzünk pár egyéb
 előkészületet:
