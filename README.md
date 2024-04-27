@@ -184,12 +184,22 @@ jelentkezni. Mindezeket tökéletesen szemléleti a koronavírus-járvány
 
 Ez egy jól vizsgálható szituáció, mert a csehek egyetlen időpontban,
 koncentráltan hoztak egy komoly szigorítást október közepén, ezt jelzi a
-függőleges fekete vonal. Ettől még mind a fertőzöttek száma, mind a
-halálozások száma vidáman nőtt tovább, mígnem a beszélt egy-két hét
-múlva a fertőzött-szám növekedése megállt (a felső tengelyen láthatóak
-az intézkedés bevezetése után eltelt napok száma). Igen ám, de a
-halottak száma még *ekkor is* teljesen változatlanul nőtt tovább, még jó
-egy-két hétig! Ez a járványkezelés tehetetlensége, és mellesleg egy
+függőleges fekete vonal. (Ezt fontos külön is hangsúlyozni:
+általánosságban véve a görbék összevetése az intézkedésekkel egy *nagyon
+rossz* ötlet, mert a feltüntetett intézkedéseken vagy eseményeken kívül
+ezernyi tényező változik az időben, így könnyen lehet fals, ha az ember
+a tapasztalt változást automatikusan a feltüntettt dolgoknak tudja be.
+Mi van, ha az igazi oka az ezernyi egyéb tényező egyike, vagy ezek
+valamilyen keveréke? Itt menti a helyzetet, hogy egy nagyon rövid
+időszakot nézünk, ami relatíve homogén volt intézkedések szempontjából,
+és az egyetlen történés időben koncentrált volt.)
+
+Mit látunk? Az, hogy ettől az intézkedéstől még mind a fertőzöttek
+száma, mind a halálozások száma vidáman nőtt tovább, mígnem a beszélt
+egy-két hét múlva a fertőzött-szám növekedése megállt (a felső tengelyen
+láthatóak az intézkedés bevezetése után eltelt napok száma). Igen ám, de
+a halottak száma még *ekkor is* teljesen változatlanul nőtt tovább, még
+jó egy-két hétig! Ez a járványkezelés tehetetlensége, és mellesleg egy
 nagyon fontos tanulsággal bír: a járványkezelésben nagyon veszélyes
 taktika, hogy megvárjuk, amíg elromlik a helyzet, és majd akkor lépünk,
 hiszen így fertőzöttek tekintetében még egy-két hétig, halálozásokban
@@ -474,8 +484,8 @@ meg is jelentek.
 
 Nézzük meg például, hogy a [KSH
 adatai](https://www.ksh.hu/stadat_files/nep/hu/nep0010.html) alapján
-hogyan alakult 2010 óta az autóbalesetben és az öngyilkosság miatt
-meghaltak száma Magyarországon:
+hogyan alakult a járvány első évében az autóbalesetben és az
+öngyilkosság miatt meghaltak száma Magyarországon:
 
 ![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
 
@@ -1156,7 +1166,7 @@ adatokat, tehát a fenti ábra jobb szélét, a záráskor, 2023. júliusában
 
 Látható, hogy Magyarország a legkedvezőtlenebb harmad elején-közepén
 van. Hogy egy számszerű érték is szerepeljen: a kumulált
-többlethalálozásunk a járvány alatt ex post számításban 45000 fő volt.
+többlethalálozásunk a járvány alatt ex post számításban 46400 fő volt.
 
 Látványos lehet ugyanezeket az adatokat térképen is ábrázolni. Itt ugyan
 az értékeket nehezebb leolvasni, illetve összehasonlítani, hiszen egy
@@ -1729,10 +1739,10 @@ ggplot(res[nuts_level==0&age=="TOTAL"&sens==FALSE&ED=="ExPost"&model=="quasipois
 Ami az említett különbségeket illeti, vegyük példának Szlovákiát és
 Lettországot. Szlovákia szűk háromszor nagyobb ország lélekszámban (5,5
 és 1,9 millió fő) és szűk háromszor annyi az abszolút többlethalálozása
-is (30800 és 10800). Ezért kerültek szinte pontosan egymás fölé: a
+is (31300 és 11200). Ezért kerültek szinte pontosan egymás fölé: a
 lélekszámra vetített többlethalálozásaik nagyon pontosan egyeznek. Igen
 ám, de Lettországban sokkal nagyobb a várt halandóság! A járvány
-időszaka alatt kumuláltan 92600 fő, míg Szlovákiában 178700 fő (ne
+időszaka alatt kumuláltan 92100 fő, míg Szlovákiában 178200 fő (ne
 felejtsük el, hogy Szlovákia majdnem háromszor akkora lélekszámmal bír).
 Ez az alapján sem meglepő, hogy Lettországban egyszerűen nagyobb a nyers
 halandóság, például a koronavírus-járványt megelőző 5 évben 14.7/1000
@@ -1993,7 +2003,7 @@ hogy ezzel is szeretném segíteni a többi kutatót és az érdeklődő
 laikusokat hasonló számítások elvégézésében, mivel itt látnak egy
 lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2024-04-10. A többlethalálozást
+A számítások aktualizálásának dátuma: 2024-04-27. A többlethalálozást
 számító csomag (`excessmort`) verziószáma 0.7.0.
 
 Elsőként betöltjük a szükséges könyvtárakat, elvégzünk pár egyéb
