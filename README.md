@@ -192,9 +192,9 @@ a tapasztalt változást automatikusan a feltüntettt dolgoknak tudja be.
 Mi van, ha az igazi oka az ezernyi egyéb tényező egyike, vagy ezek
 valamilyen keveréke? Itt menti a helyzetet, hogy egy nagyon rövid
 időszakot nézünk, ami relatíve homogén volt intézkedések szempontjából,
-és az egyetlen történés időben koncentrált volt.)
+és az egyetlen történés nagy hatású és időben koncentrált volt.)
 
-Mit látunk? Az, hogy ettől az intézkedéstől még mind a fertőzöttek
+Mit látunk? Azt, hogy ettől az intézkedéstől még mind a fertőzöttek
 száma, mind a halálozások száma vidáman nőtt tovább, mígnem a beszélt
 egy-két hét múlva a fertőzött-szám növekedése megállt (a felső tengelyen
 láthatóak az intézkedés bevezetése után eltelt napok száma). Igen ám, de
