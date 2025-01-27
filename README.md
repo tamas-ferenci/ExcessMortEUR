@@ -1166,7 +1166,7 @@ adatokat, tehát a fenti ábra jobb szélét, a záráskor, 2023. júliusában
 
 Látható, hogy Magyarország a legkedvezőtlenebb harmad elején-közepén
 van. Hogy egy számszerű érték is szerepeljen: a kumulált
-többlethalálozásunk a járvány alatt ex post számításban 48900 fő volt.
+többlethalálozásunk a járvány alatt ex post számításban 47700 fő volt.
 
 Látványos lehet ugyanezeket az adatokat térképen is ábrázolni. Itt ugyan
 az értékeket nehezebb leolvasni, illetve összehasonlítani, hiszen egy
@@ -1739,10 +1739,10 @@ ggplot(res[nuts_level==0&age=="TOTAL"&sens==FALSE&ED=="ExPost"&model=="quasipois
 Ami az említett különbségeket illeti, vegyük példának Szlovákiát és
 Lettországot. Szlovákia szűk háromszor nagyobb ország lélekszámban (5,5
 és 1,9 millió fő) és szűk háromszor annyi az abszolút többlethalálozása
-is (31600 és 12100). Ezért kerültek szinte pontosan egymás fölé: a
+is (31100 és 12500). Ezért kerültek szinte pontosan egymás fölé: a
 lélekszámra vetített többlethalálozásaik nagyon pontosan egyeznek. Igen
 ám, de Lettországban sokkal nagyobb a várt halandóság! A járvány
-időszaka alatt kumuláltan 91200 fő, míg Szlovákiában 178000 fő (ne
+időszaka alatt kumuláltan 90900 fő, míg Szlovákiában 178500 fő (ne
 felejtsük el, hogy Szlovákia majdnem háromszor akkora lélekszámmal bír).
 Ez az alapján sem meglepő, hogy Lettországban egyszerűen nagyobb a nyers
 halandóság, például a koronavírus-járványt megelőző 5 évben 14.7/1000
@@ -2003,8 +2003,8 @@ hogy ezzel is szeretném segíteni a többi kutatót és az érdeklődő
 laikusokat hasonló számítások elvégézésében, mivel itt látnak egy
 lehetséges példát.
 
-A számítások aktualizálásának dátuma: 2024-09-18. A többlethalálozást
-számító csomag (`excessmort`) verziószáma 0.7.0.
+A számítások aktualizálásának dátuma: 2025-01-28. A többlethalálozást
+számító csomag (`excessmort`) verziószáma 0.8.0.
 
 Elsőként betöltjük a szükséges könyvtárakat, elvégzünk pár egyéb
 előkészületet:
@@ -2015,7 +2015,7 @@ library(excessmort)
 library(ggplot2)
 source("helper.R")
 theme_set(theme_bw())
-captionlab <- paste0("Ferenci Tamás, https://github.com/tamas-ferenci/ExcessMortEUR/\n",
+captionlab <- paste0("Ferenci Tamás, https://www.medstat.hu/\n",
                      "Adatok forrása: Eurostat, lekérdezés dátuma: ",
                      format(Sys.Date(), "%Y. %m. %d."))
 ```
@@ -2427,7 +2427,7 @@ tartalmazza a jelentett halálozás adatait, majd kiszámoljuk ott is az
 évet és a hetet:
 
 ``` r
-EpiData <- fread("https://covid19.who.int/WHO-COVID-19-global-data.csv")
+EpiData <- fread("https://srhdpeuwpubsa.blob.core.windows.net/whdh/COVID/WHO-COVID-19-global-data.csv")
 EpiData$year <- lubridate::isoyear(EpiData$Date_reported)
 EpiData$week <- lubridate::isoweek(EpiData$Date_reported)
 EpiData$New_deaths[is.na(EpiData$New_deaths)] <- 0

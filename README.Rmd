@@ -31,7 +31,7 @@ library(excessmort)
 library(ggplot2)
 source("helper.R")
 theme_set(theme_bw())
-captionlab <- paste0("Ferenci Tamás, https://github.com/tamas-ferenci/ExcessMortEUR/\n",
+captionlab <- paste0("Ferenci Tamás, https://www.medstat.hu/\n",
                      "Adatok forrása: Eurostat, lekérdezés dátuma: ",
                      format(Sys.Date(), "%Y. %m. %d."))
 ```
@@ -196,7 +196,7 @@ res$iso_code <- countrycode::countrycode(ifelse(res$nuts_level==3, NA_character_
 ```
 
 ```{r epidata, echo = FALSE}
-EpiData <- fread("https://covid19.who.int/WHO-COVID-19-global-data.csv")
+EpiData <- fread("https://srhdpeuwpubsa.blob.core.windows.net/whdh/COVID/WHO-COVID-19-global-data.csv")
 EpiData$year <- lubridate::isoyear(EpiData$Date_reported)
 EpiData$week <- lubridate::isoweek(EpiData$Date_reported)
 EpiData$New_deaths[is.na(EpiData$New_deaths)] <- 0
@@ -253,7 +253,7 @@ ggplot(DemData[Country.Region=="Czechia"&date>="2020-09-16"&date<="2020-12-05"],
                                                      by = "weeks")-as.Date("2020-10-14"))) +
   geom_vline(xintercept = as.Date("2020-10-14")) +
   labs(x = "", y = "", color = "",
-       caption = "Ferenci Tamás, https://github.com/tamas-ferenci/ExcessMortEUR/") +
+       caption = "Ferenci Tamás, https://www.medstat.hu/") +
   theme(legend.position = "bottom", axis.text.y.left = element_text(color = "#F8766D"),
         axis.text.y.right = element_text(color = "#00BFC4"),
         plot.caption = element_text(face = "bold", hjust = 0))
@@ -333,7 +333,7 @@ ggplot(melt(data.table(openxlsx::read.xlsx(
   geom_point() +
   scale_color_discrete(labels = c("Motorosjármű-baleset", "Szándékos önártalom")) +
   labs(y = "Halálozások száma [fő/év]", color = "",
-       caption = paste0("Ferenci Tamás, https://github.com/tamas-ferenci/ExcessMortEUR/\n",
+       caption = paste0("Ferenci Tamás, https://www.medstat.hu/\n",
                         "Adatok forrása: KSH")) +
   theme(legend.position = "bottom", plot.caption = element_text(face = "bold", hjust = 0))
 ```
