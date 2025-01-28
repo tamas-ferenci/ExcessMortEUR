@@ -1143,7 +1143,7 @@ Jól látszik, hogy az első hullám teljesen kimutathatatlan volt
 (legalábbis többlethalálozás tekintetében) Magyarországon, addig a
 második már súlyosan érintett minket, a harmadikban pedig gyakorlatilag
 egész Európában a legrosszabbak között volt az aktuális járványügyi
-helyzetünk. Ezután egy évvel még egy hullám jelentkezett, mely az
+helyzetünk. Ezután fél évvel még egy hullám jelentkezett, mely az
 előzőekkel teljesen összevethető nagyságú volt.
 
 Érdemes lehet országonként külön-külön is ábrázolni, hogy jobban látható

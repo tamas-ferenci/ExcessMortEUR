@@ -618,7 +618,7 @@ ggplot(res[nuts_level==0&age=="TOTAL"&sens==FALSE&ED=="ExAnte"&model=="quasipois
         legend.title = element_blank())
 ```
 
-Jól látszik, hogy az első hullám teljesen kimutathatatlan volt (legalábbis többlethalálozás tekintetében) Magyarországon, addig a második már súlyosan érintett minket, a harmadikban pedig gyakorlatilag egész Európában a legrosszabbak között volt az aktuális járványügyi helyzetünk. Ezután egy évvel még egy hullám jelentkezett, mely az előzőekkel teljesen összevethető nagyságú volt.
+Jól látszik, hogy az első hullám teljesen kimutathatatlan volt (legalábbis többlethalálozás tekintetében) Magyarországon, addig a második már súlyosan érintett minket, a harmadikban pedig gyakorlatilag egész Európában a legrosszabbak között volt az aktuális járványügyi helyzetünk. Ezután fél évvel még egy hullám jelentkezett, mely az előzőekkel teljesen összevethető nagyságú volt.
 
 Érdemes lehet országonként külön-külön is ábrázolni, hogy jobban látható legyen, az egyes országok hogyan teljesítettek a járvány kezelésében, mik a jó és a rossz példák:
 
